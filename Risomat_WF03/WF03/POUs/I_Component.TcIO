@@ -8,11 +8,11 @@ VAR_INPUT
 	bStart      	: BOOL;
 	bHalt			: BOOL;
 	bStop       	: BOOL;
-	eMode       	: E_ComponentMode; 		// 0=OFF, 1=AUTO, 2=MANUAL
+	eMode       	: E_ComponentMode;
 END_VAR
 
 VAR_OUTPUT
-	eState			: E_ComponentState;		// 0=READY, 1=BUSY, 2=DONE
+	eState			: E_ComponentState;
 	iErrorCode		: INT;
 	sStatusText 	: STRING[50];
 END_VAR]]></Declaration>

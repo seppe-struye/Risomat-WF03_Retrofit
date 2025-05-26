@@ -5,9 +5,10 @@
 {attribute 'strict'}
 TYPE E_ComponentState :
 (
-	READY 	:= 0,
-	BUSY	:= 1,
-	DONE	:= 2
+	DONE 	:= 0,
+	READY	:= 1,
+	BUSY	:= 2,
+	HALTED	:= 3
 );
 END_TYPE
 ]]></Declaration>
@@ -16,18 +17,23 @@ END_TYPE
         <o xml:space="preserve" t="TextListEnumerationTextListObject">
           <l n="TextList" t="ArrayList" cet="TextListRow">
             <o>
-              <v n="TextID">"READY"</v>
+              <v n="TextID">"DONE"</v>
               <v n="TextDefault">"0"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
-              <v n="TextID">"BUSY"</v>
+              <v n="TextID">"READY"</v>
               <v n="TextDefault">"1"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
-              <v n="TextID">"DONE"</v>
+              <v n="TextID">"BUSY"</v>
               <v n="TextDefault">"2"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"HALTED"</v>
+              <v n="TextDefault">"3"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

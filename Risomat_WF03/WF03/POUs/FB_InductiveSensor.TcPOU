@@ -9,10 +9,7 @@ VAR_INPUT
 // Interface vars
 	sName			: STRING[20];
 	bEnable     	: BOOL;
-	bStart      	: BOOL;
-	bHalt			: BOOL;
-	bStop       	: BOOL;
-	eMode       	: E_ComponentMode; 		// 0=OFF, 1=AUTO, 2=MANUAL	
+	eMode       	: E_ComponentMode;
 END_VAR
 
 VAR_OUTPUT
@@ -20,18 +17,21 @@ VAR_OUTPUT
 	bRising			: BOOL;
 	bFalling		: BOOL;
 // interface vars
-	eState			: E_ComponentState;		// 0=READY, 1=BUSY, 2=DONE
+	eState			: E_ComponentState;
 	iErrorCode		: INT;
 	sStatusText 	: STRING[50];
 END_VAR
 
 VAR
+	bStart      	: BOOL;
+	bHalt			: BOOL;
+	bStop       	: BOOL;
 	bLastSignal		: BOOL;
 	tDebTimer		: TON;
 	bSignalStable	: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF bEnable THEN
+      <ST><![CDATA[IF bEnable AND eState = (E_ComponentState.READY OR E_ComponentState.BUSY) THEN
 	IF bLastSignal <> bSignal THEN
 		tDebTimer(IN := TRUE, PT := tDebounce);
 		eState := E_ComponentState.BUSY;
@@ -59,28 +59,30 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD Halt : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Read" Id="{bddb87fd-a3a6-46c2-996c-bd7bd9b3500c}">
-      <Declaration><![CDATA[METHOD Read : BOOL
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[Read := bSensor;]]></ST>
+        <ST><![CDATA[bActive 	:= FALSE;
+bRising		:= FALSE;
+bFalling	:= FALSE;
+tDebTimer(IN := FALSE);
+eState := E_ComponentState.HALTED;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Start" Id="{332d80dd-0194-4918-b2f7-7e712950268d}">
       <Declaration><![CDATA[METHOD Start : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[eState := E_ComponentState.READY;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Stop" Id="{1e590e11-4492-46f6-8aed-701c371c3bb9}">
       <Declaration><![CDATA[METHOD Stop : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF eState <> E_ComponentState.BUSY THEN
+	bActive 	:= FALSE;
+	bRising		:= FALSE;
+	bFalling	:= FALSE;
+	eState := E_ComponentState.DONE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_InductiveSensor">
@@ -106,16 +108,16 @@ END_IF]]></ST>
       <LineId Id="27" Count="0" />
     </LineIds>
     <LineIds Name="FB_InductiveSensor.Halt">
+      <LineId Id="6" Count="3" />
       <LineId Id="4" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_InductiveSensor.Read">
-      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_InductiveSensor.Start">
       <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_InductiveSensor.Stop">
       <LineId Id="4" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="6" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>
