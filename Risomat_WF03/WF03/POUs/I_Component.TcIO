@@ -5,9 +5,6 @@
 VAR_INPUT
 	sName			: STRING[20];
 	bEnable     	: BOOL;
-	bStart      	: BOOL;
-	bHalt			: BOOL;
-	bStop       	: BOOL;
 	eMode       	: E_ComponentMode;
 END_VAR
 
