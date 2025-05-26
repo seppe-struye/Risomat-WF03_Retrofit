@@ -5,10 +5,10 @@
 {attribute 'strict'}
 TYPE E_LenzeJogFreq :
 (
-	F0HZ 	:= 0,
-	F20HZ	:= 1,
-	F30HZ	:= 2,
-	F40HZ	:= 3
+	F0FF 	:= 0,
+	F1		:= 1,
+	F2		:= 2,
+	F3		:= 3
 );
 END_TYPE
 ]]></Declaration>
@@ -17,22 +17,22 @@ END_TYPE
         <o xml:space="preserve" t="TextListEnumerationTextListObject">
           <l n="TextList" t="ArrayList" cet="TextListRow">
             <o>
-              <v n="TextID">"F0HZ"</v>
+              <v n="TextID">"F0FF"</v>
               <v n="TextDefault">"0"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
-              <v n="TextID">"F20HZ"</v>
+              <v n="TextID">"F1"</v>
               <v n="TextDefault">"1"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
-              <v n="TextID">"F30HZ"</v>
+              <v n="TextID">"F2"</v>
               <v n="TextDefault">"2"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
-              <v n="TextID">"F40HZ"</v>
+              <v n="TextID">"F3"</v>
               <v n="TextDefault">"3"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>

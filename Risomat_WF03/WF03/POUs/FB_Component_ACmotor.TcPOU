@@ -4,6 +4,7 @@
     <Declaration><![CDATA[// Function block for AC motors controlled with the LENZE d-31855 frequency inverter
 FUNCTION_BLOCK FB_Component_ACmotor IMPLEMENTS I_Component
 VAR_INPUT
+	bDeviceActive	: BOOL; // relay contact freq inv
 	// Interface vars
 	sName			: STRING[20];
 	bEnable     	: BOOL;
@@ -28,19 +29,19 @@ VAR
 	eJogFreq		: E_LenzeJogFreq;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF bEnable AND eState = (E_ComponentState.READY OR E_ComponentState.BUSY) THEN
+      <ST><![CDATA[IF bDeviceActive AND bEnable AND (eState = E_ComponentState.READY OR eState = E_ComponentState.BUSY) THEN
 	// set jog frequency
 	CASE eJogFreq OF
-		E_LenzeJogFreq.F0HZ: 	bE1jog1 := FALSE;
+		E_LenzeJogFreq.F0FF: 	bE1jog1 := FALSE;
 								bE2jog2 := FALSE;
 								eState	:= E_ComponentState.READY;
-		E_LenzeJogFreq.F20HZ: 	bE1jog1 := TRUE;
+		E_LenzeJogFreq.F1: 		bE1jog1 := TRUE;
 								bE2jog2 := FALSE;
 								eState	:= E_ComponentState.BUSY;
-		E_LenzeJogFreq.F30HZ: 	bE1jog1 := FALSE;
+		E_LenzeJogFreq.F2: 		bE1jog1 := FALSE;
 								bE2jog2 := TRUE;
 								eState	:= E_ComponentState.BUSY;
-		E_LenzeJogFreq.F40HZ: 	bE1jog1 := TRUE;
+		E_LenzeJogFreq.F3: 		bE1jog1 := TRUE;
 								bE2jog2 := TRUE;
 								eState	:= E_ComponentState.BUSY;
 	END_CASE

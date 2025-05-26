@@ -6,6 +6,7 @@ FUNCTION_BLOCK FB_Component_InductiveSensor IMPLEMENTS  I_Component
 VAR_INPUT
 	bSignal			: BOOL;				// Raw input sensor
 	tDebounce		: TIME := T#0MS;	// Debounce time
+	tTimeOut		: TIME := T#0MS;
 // Interface vars
 	sName			: STRING[20];
 	bEnable     	: BOOL;
@@ -25,10 +26,11 @@ END_VAR
 VAR
 	bLastSignal		: BOOL;
 	tDebTimer		: TON;
+	tTimeOutTimer	: TOF;
 	bSignalStable	: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF bEnable AND eState = (E_ComponentState.READY OR E_ComponentState.BUSY) THEN
+      <ST><![CDATA[IF bEnable AND (eState = E_ComponentState.READY OR eState = E_ComponentState.BUSY) AND NOT tTimeOutTimer.Q THEN
 	IF bLastSignal <> bSignal THEN
 		tDebTimer(IN := TRUE, PT := tDebounce);
 		eState := E_ComponentState.BUSY;
@@ -37,6 +39,7 @@ END_VAR]]></Declaration>
 	END_IF
 	
 	IF tDebTimer.Q THEN
+		tTimeOutTimer(IN := TRUE, PT := tTimeOut);
 		bSignalStable 	:= bSignal;
 		bLastSignal 	:= bSignal;
 		eState := E_ComponentState.READY;
@@ -91,7 +94,9 @@ END_IF]]></ST>
       <LineId Id="51" Count="0" />
       <LineId Id="50" Count="0" />
       <LineId Id="49" Count="0" />
-      <LineId Id="53" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="54" Count="0" />
       <LineId Id="56" Count="0" />
       <LineId Id="73" Count="0" />
       <LineId Id="55" Count="0" />
