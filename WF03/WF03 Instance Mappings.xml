@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<VarLinks>
+	<OwnerA Name="InputDst" Prefix="TIPC^WF03^WF03 Instance" Type="1">
+		<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL1809)">
+			<Link VarA="GVL.bDoorToolHolderDown" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Input" Size="1"/>
+			<Link VarA="GVL.bDoorToolHolderLock" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1"/>
+			<Link VarA="GVL.bWireClampRetracted" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 12^Input" Size="1"/>
+			<Link VarA="GVL.bWireClampTransverse1Extended" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 14^Input" Size="1"/>
+			<Link VarA="GVL.bWireClampTransverse1Retracted" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 13^Input" Size="1"/>
+			<Link VarA="GVL.bWireClampTransverse2Extended" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 16^Input" Size="1"/>
+			<Link VarA="GVL.bWireClampTransverse2Retracted" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 15^Input" Size="1"/>
+			<Link VarA="GVL.bWirePusherDisengaged" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1"/>
+			<Link VarA="GVL.bWirePusherEngaged" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1"/>
+		</OwnerB>
+		<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1809)">
+			<Link VarA="GVL.bCoilHolderIndexBit1" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1"/>
+			<Link VarA="GVL.bCoilHolderIndexBit2" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1"/>
+			<Link VarA="GVL.bCoilHolderIndexBit3" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1"/>
+			<Link VarA="GVL.bCoilHolderIndexBit4" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Input" Size="1"/>
+			<Link VarA="GVL.bCoilHolderIndexBit5" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^Input" Size="1"/>
+			<Link VarA="GVL.bCoilHolderIndexReady" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 6^Input" Size="1"/>
+			<Link VarA="GVL.bCoilHolderLocked" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^Input" Size="1"/>
+			<Link VarA="GVL.bCoilHolderUnlocked" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 7^Input" Size="1"/>
+			<Link VarA="GVL.bToolHolderIndexBit1" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 9^Input" Size="1"/>
+			<Link VarA="GVL.bToolHolderIndexBit2" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 10^Input" Size="1"/>
+			<Link VarA="GVL.bToolHolderLocked" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 11^Input" Size="1"/>
+			<Link VarA="GVL.bToolHolderUnlocked" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 12^Input" Size="1"/>
+			<Link VarA="GVL.bWireHolderPos1" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 13^Input" Size="1"/>
+			<Link VarA="GVL.bWireHolderPos2" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 14^Input" Size="1"/>
+			<Link VarA="GVL.bWireHolderPos3" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 15^Input" Size="1"/>
+			<Link VarA="GVL.bWireHolderPos4" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 16^Input" Size="1"/>
+		</OwnerB>
+		<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL1809)">
+			<Link VarA="GVL.bCoilPusherExtended" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1"/>
+			<Link VarA="GVL.bCoilPusherRetracted" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1"/>
+			<Link VarA="GVL.bMainPressureSense" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 16^Input" Size="1"/>
+			<Link VarA="GVL.bWire1NotAvailable" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^Input" Size="1"/>
+			<Link VarA="GVL.bWire2NotAvailable" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 6^Input" Size="1"/>
+			<Link VarA="GVL.bWire3NotAvailable" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 7^Input" Size="1"/>
+			<Link VarA="GVL.bWire4NotAvailable" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^Input" Size="1"/>
+		</OwnerB>
+		<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL1809)">
+			<Link VarA="GVL.bCoilRotate" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 16^Input" Size="1"/>
+			<Link VarA="GVL.bCoilTranslate" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 15^Input" Size="1"/>
+			<Link VarA="GVL.bControlOnBtn" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^Input" Size="1"/>
+			<Link VarA="GVL.bFeedBackSafetyRelay" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 6^Input" Size="1"/>
+			<Link VarA="GVL.bLenze1Relay" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 13^Input" Size="1"/>
+			<Link VarA="GVL.bLenze2Relay" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 14^Input" Size="1"/>
+			<Link VarA="GVL.bReadyToOperate603" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 11^Input" Size="1"/>
+			<Link VarA="GVL.bReadyToOperate614" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 12^Input" Size="1"/>
+			<Link VarA="GVL.bSafetyContactBreakers" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 9^Input" Size="1"/>
+			<Link VarA="GVL.bStartBtn" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1"/>
+			<Link VarA="GVL.bStartPosBtn" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1"/>
+			<Link VarA="GVL.bStopBtn" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1"/>
+			<Link VarA="GVL.bToolingRotationBtn" GrpA="PlcTask Inputs" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Input" Size="1"/>
+		</OwnerB>
+	</OwnerA>
+	<OwnerA Name="OutputSrc" Prefix="TIPC^WF03^WF03 Instance" Type="2">
+		<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 6 (EL2809)">
+			<Link VarA="GVL.b603Enable" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 9^Output" Size="1"/>
+			<Link VarA="GVL.b614Enable" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 10^Output" Size="1"/>
+			<Link VarA="GVL.bCloseToolCarrierDoor" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 15^Output" Size="1"/>
+			<Link VarA="GVL.bLenze1Direction" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Output" Size="1"/>
+			<Link VarA="GVL.bLenze1InjectionBrake" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Output" Size="1"/>
+			<Link VarA="GVL.bLenze1JogBit1" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Output" Size="1"/>
+			<Link VarA="GVL.bLenze1JogBit2" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Output" Size="1"/>
+			<Link VarA="GVL.bLenze2JogBit1" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^Output" Size="1"/>
+			<Link VarA="GVL.bLenze2JogBit2" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 6^Output" Size="1"/>
+			<Link VarA="GVL.bLenze2njectionBrake" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 7^Output" Size="1"/>
+			<Link VarA="GVL.bOpenToolCarrierDoor" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 14^Output" Size="1"/>
+			<Link VarA="GVL.bPushCoil" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 16^Output" Size="1"/>
+			<Link VarA="GVL.bServosDigitalIn1" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^Output" Size="1"/>
+			<Link VarA="GVL.bStartBtnLight" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 11^Output" Size="1"/>
+			<Link VarA="GVL.bStartPosBtnLight" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 12^Output" Size="1"/>
+			<Link VarA="GVL.bToolingRotationBtnLight" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 13^Output" Size="1"/>
+		</OwnerB>
+		<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EL2809)">
+			<Link VarA="GVL.bEngageWireClamp" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 7^Output" Size="1"/>
+			<Link VarA="GVL.bExtendWireClamp" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 12^Output" Size="1"/>
+			<Link VarA="GVL.bExtendWireHolder" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^Output" Size="1"/>
+			<Link VarA="GVL.bExtendWireHolderTransverse1" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 9^Output" Size="1"/>
+			<Link VarA="GVL.bExtendWireHolderTransverse2" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 16^Output" Size="1"/>
+			<Link VarA="GVL.bLockDoor" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Output" Size="1"/>
+			<Link VarA="GVL.bReleaseWireClamp" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 6^Output" Size="1"/>
+			<Link VarA="GVL.bRetractWireClamp" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 11^Output" Size="1"/>
+			<Link VarA="GVL.bRetractWireHolder" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Output" Size="1"/>
+			<Link VarA="GVL.bRetractWireHolderTransverse1" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^Output" Size="1"/>
+			<Link VarA="GVL.bRetractWireHolderTransverse2" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 15^Output" Size="1"/>
+			<Link VarA="GVL.bUnlockCoilHolder" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 13^Output" Size="1"/>
+			<Link VarA="GVL.bUnlockToolHolder" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 14^Output" Size="1"/>
+			<Link VarA="GVL.bWirecutterForward" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 10^Output" Size="1"/>
+		</OwnerB>
+		<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 8 (EL2809)">
+			<Link VarA="GVL.bCutWire" GrpA="PlcTask Outputs" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Output" Size="1"/>
+		</OwnerB>
+	</OwnerA>
+</VarLinks>

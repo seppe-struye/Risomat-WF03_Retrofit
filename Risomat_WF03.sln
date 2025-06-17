@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # TcXaeShell Solution File, Format Version 11.00
 VisualStudioVersion = 15.0.35116.124
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "Risomat_WF03", "Risomat_WF03\Risomat_WF03.tsproj", "{380762D7-A62E-4D39-9F30-6F84D9D62887}"
+Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "Risomat_WF03", "Risomat_WF03.tsproj", "{380762D7-A62E-4D39-9F30-6F84D9D62887}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +54,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D1DA2F35-5867-4B09-A221-F8B83AF1BDBF}
+		SolutionGuid = {497A1951-8079-4C56-8294-E1289710238D}
 	EndGlobalSection
 EndGlobal
