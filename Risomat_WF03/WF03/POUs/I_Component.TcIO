@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <Itf Name="I_Component" Id="{3337d348-193e-4804-bc6d-8f5b2d280baf}">
+    <Declaration><![CDATA[INTERFACE I_Component
+VAR_INPUT
+	sName			: STRING[20];
+	bEnable     	: BOOL;
+	eMode       	: E_ComponentMode;
+END_VAR
+
+VAR_OUTPUT
+	eState			: E_ComponentState;
+	iErrorCode		: INT;
+	sStatusText 	: STRING[50];
+END_VAR]]></Declaration>
+    <Method Name="Halt" Id="{65f0acb6-737d-487e-a1b7-0fd6741c7d88}">
+      <Declaration><![CDATA[METHOD Halt : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Start" Id="{d12c8e5a-4245-4c17-b9b0-a0ee94e9265a}">
+      <Declaration><![CDATA[METHOD Start : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Stop" Id="{4d9a5b11-9982-4955-97b8-a30e468e1c2f}">
+      <Declaration><![CDATA[METHOD Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

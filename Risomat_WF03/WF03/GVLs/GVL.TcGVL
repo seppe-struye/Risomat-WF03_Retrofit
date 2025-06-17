@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <GVL Name="GVL" Id="{124d719c-af1b-4432-bc8a-4c1a357fa674}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+/////////////////////////////////////////////////////////////////////////////////////////////
+// 									DIGITAL INPUTS								   		   //
+/////////////////////////////////////////////////////////////////////////////////////////////
+	//--------------------------------
+	// TERM 2 : EL1809 Digital In
+	//--------------------------------
+	bWirePusherDisengaged			AT %I*	: BOOL;	// S5.18	term 2.1
+	bWirePusherEngaged				AT %I*	: BOOL;	// S5.17	term 2.2
+	bDoorToolHolderLock				AT %I*	: BOOL;	//			term 2.3
+	bDoorToolHolderDown				AT %I*	: BOOL;	// S5.20	term 2.4
+	// term 2.5-11 --> unused
+	bWireClampRetracted				AT %I*	: BOOL;	// S5.28	term 2.12
+	bWireClampTransverse1Retracted	AT %I*	: BOOL;	// S5.30	term 2.13
+	bWireClampTransverse1Extended	AT %I*	: BOOL;	// S5.29	term 2.14
+	bWireClampTransverse2Retracted	AT %I*	: BOOL;	// S5.32	term 2.15
+	bWireClampTransverse2Extended	AT %I*	: BOOL;	// S5.31	term 2.16
+	//--------------------------------
+	// TERM 3 : EL1809 Digital In
+	//--------------------------------
+	bCoilHolderIndexBit1			AT %I*	: BOOL;	// S5.1		term 3.1
+	bCoilHolderIndexBit2			AT %I*	: BOOL;	// S5.2		term 3.2
+	bCoilHolderIndexBit3			AT %I*	: BOOL;	// S5.3		term 3.3
+	bCoilHolderIndexBit4			AT %I*	: BOOL;	// S5.4		term 3.4
+	bCoilHolderIndexBit5			AT %I*	: BOOL;	// S5.5		term 3.5
+	bCoilHolderIndexReady			AT %I*	: BOOL;	// S5.6		term 3.6
+	bCoilHolderUnlocked				AT %I*	: BOOL; // S5.8		term 3.7	
+	bCoilHolderLocked				AT %I*	: BOOL; // S5.7		term 3.8
+	bToolHolderIndexBit1			AT %I*	: BOOL; // S5.9		term 3.9
+	bToolHolderIndexBit2			AT %I*	: BOOL; // S5.10	term 3.10
+	bToolHolderLocked   			AT %I*	: BOOL; // S5.11	term 3.11
+	bToolHolderUnlocked				AT %I*	: BOOL; // S5.12	term 3.12
+	bWireHolderPos1					AT %I*	: BOOL; // S5.13	term 3.13
+	bWireHolderPos2					AT %I*	: BOOL; // S5.14	term 3.14
+	bWireHolderPos3					AT %I*	: BOOL; // S5.15	term 3.15
+	bWireHolderPos4					AT %I*	: BOOL; // S5.16	term 3.16
+	//--------------------------------
+	// TERM 4 : EL1809 Digital In
+	//--------------------------------
+	bCoilPusherRetracted			AT %I*	: BOOL;	// S4.17	term 4.1
+	bCoilPusherExtended				AT %I*	: BOOL;	// S4.18	term 4.2
+	// term 4.3-4 --> unused
+	bWire1NotAvailable				AT %I*	: BOOL;	// S4.21	term 4.5
+	bWire2NotAvailable				AT %I*	: BOOL;	// S4.22	term 4.6
+	bWire3NotAvailable				AT %I*	: BOOL;	// S4.23	term 4.7
+	bWire4NotAvailable				AT %I*	: BOOL;	// S4.24	term 4.8
+	// term 4.9-15 --> unused
+	bMainPressureSense				AT %I*	: BOOL;	// S4.32	term 4.16
+	//--------------------------------
+	// TERM 5 : EL1809 Digital In
+	//--------------------------------
+	bStopBtn						AT %I*	: BOOL;	//			term 5.1
+	bStartBtn						AT %I*	: BOOL;	//			term 5.2
+	bStartPosBtn					AT %I*	: BOOL;	//			term 5.3
+	bToolingRotationBtn				AT %I*	: BOOL;	//			term 5.4
+	bControlOnBtn					AT %I*	: BOOL;	//			term 5.5
+	bFeedBackSafetyRelay			AT %I*	: BOOL; //			term 5.6
+	// term 5.7 check why connected to GND											// !!
+	// term 5.8	check what contactor K1.1 does and if also checks other stuff		// !!
+	bSafetyContactBreakers			AT %I*	: BOOL;	//			term 5.9
+	// term 5.10 --> unused
+	bReadyToOperate603				AT %I*	: BOOL;	//			term 5.11			// rename
+	bReadyToOperate614				AT %I*	: BOOL;	//			term 5.12			// rename
+	bLenze1Relay					AT %I*	: BOOL;	//			term 5.13			// rename
+	bLenze2Relay					AT %I*	: BOOL;	//			term 5.14			// rename
+	bCoilTranslate					AT %I*	: BOOL;	//			term 5.15			// rename
+	bCoilRotate						AT %I*	: BOOL;	//			term 5.16			// rename
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// 									DIGITAL OUTPUTS								   		   //
+/////////////////////////////////////////////////////////////////////////////////////////////
+	//--------------------------------
+	// TERM 6 : EL2809 Digital Out
+	//--------------------------------
+	bLenze1JogBit1					AT %Q*	: BOOL;	//			term 6.1
+	bLenze1JogBit2					AT %Q*	: BOOL;	//			term 6.2
+	bLenze1InjectionBrake			AT %Q*	: BOOL; //			term 6.3
+	bLenze1Direction				AT %Q*	: BOOL;	//			term 6.4
+	bLenze2JogBit1					AT %Q*	: BOOL;	//			term 6.5
+	bLenze2JogBit2					AT %Q*	: BOOL;	//			term 6.6
+	bLenze2njectionBrake			AT %Q*	: BOOL; //			term 6.7
+	bServosDigitalIn1				AT %Q*	: BOOL; //			term 6.8
+	b603Enable						AT %Q*	: BOOL;	//			term 6.9
+	b614Enable						AT %Q*	: BOOL;	//			term 6.10
+	bStartBtnLight					AT %Q*	: BOOL; //			term 6.11
+	bStartPosBtnLight				AT %Q*	: BOOL; //			term 6.12
+	bToolingRotationBtnLight		AT %Q*	: BOOL; //			term 6.13
+	bOpenToolCarrierDoor			AT %Q*	: BOOL; // Y6.4		term 6.14
+	bCloseToolCarrierDoor			AT %Q*	: BOOL; // Y6.5		term 6.15
+	bPushCoil						AT %Q*	: BOOL; // Y6.9		term 6.16
+	//--------------------------------
+	// TERM 7 : EL2809 Digital Out
+	//--------------------------------
+	// term 7.1 --> unused
+	bLockDoor						AT %Q*	: BOOL; //			term 7.2
+	// term 7.3 --> unused
+	bRetractWireHolder				AT %Q*	: BOOL; // Y6.13	term 7.4
+	bExtendWireHolder				AT %Q*	: BOOL; // Y6.14	term 7.5
+	bReleaseWireClamp				AT %Q*	: BOOL; // Y6.15	term 7.6
+	bEngageWireClamp				AT %Q*	: BOOL; // Y6.16	term 7.7
+	bRetractWireHolderTransverse1	AT %Q*	: BOOL; // Y7.7		term 7.8
+	bExtendWireHolderTransverse1	AT %Q*	: BOOL; // Y7.8		term 7.9
+	bWirecutterForward				AT %Q*	: BOOL; // Y7.9		term 7.10
+	bRetractWireClamp				AT %Q*	: BOOL; // Y7.10	term 7.11
+	bExtendWireClamp				AT %Q*	: BOOL; // Y7.11	term 7.12
+	bUnlockCoilHolder				AT %Q*	: BOOL; // Y7.12	term 7.13
+	bUnlockToolHolder				AT %Q*	: BOOL; // Y7.13	term 7.14
+	bRetractWireHolderTransverse2	AT %Q*	: BOOL; // Y7.14	term 7.15
+	bExtendWireHolderTransverse2	AT %Q*	: BOOL; // Y7.15	term 7.16
+	//--------------------------------
+	// TERM 8 : EL2809 Digital Out
+	//--------------------------------
+	bCutWire						AT %Q*	: BOOL; // Y8.1		term 7.1
+	// term 8.2-9 --> unused
+	// term 8.16-16 --> free
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Component_Valve" Id="{e241cca9-8ad1-4d32-953d-80e7ad832e70}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Component_Valve IMPLEMENTS I_Component
+VAR_INPUT
+	bSignal			: BOOL;				// Input valve
+// Interface vars
+	sName			: STRING[20];
+	bEnable     	: BOOL;
+	//eMode       	: E_ComponentMode;
+END_VAR
+
+VAR_OUTPUT
+	bOutput			: BOOL;
+	// interface vars
+	eState			: E_ComponentState;
+	iErrorCode		: INT;
+	sStatusText 	: STRING[50];
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF 	bEnable AND (eState = E_ComponentState.READY OR eState = E_ComponentState.BUSY) THEN
+	bOutput 	:= bSignal;
+ELSE
+	bOutput 	:= FALSE;
+	sStatusText := 'Disabled';
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="Halt" Id="{d6d164e4-6ff2-4655-bb53-7508a90ca844}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD Halt : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Start" Id="{3b5e4edb-f27f-4280-94ac-c799f1f4bcbc}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD Start : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Stop" Id="{8f25114a-9d10-4e85-92e5-9d523c21fcd3}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD Stop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Component_Valve">
+      <LineId Id="9" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Valve.Halt">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Valve.Start">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Valve.Stop">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Component_ReedSwitch" Id="{f639b4a8-9d3e-46fd-a4ee-568d4dd5739a}" SpecialFunc="None">
+    <Declaration><![CDATA[// function block for reed switch with the option of debouncing + rising and falling edge detection.
+FUNCTION_BLOCK FB_Component_ReedSwitch IMPLEMENTS I_Component
+VAR_INPUT
+	bSignal			: BOOL;				// Raw input sensor
+	tDebounce		: TIME := T#0MS;	// Debounce time
+	tTimeOut		: TIME := T#0MS;
+// Interface vars
+	sName			: STRING[20];
+	bEnable     	: BOOL;
+	//eMode       	: E_ComponentMode;
+END_VAR
+
+VAR_OUTPUT
+	bActive			: BOOL;
+	bRising			: BOOL;
+	bFalling		: BOOL;
+// interface vars
+	eState			: E_ComponentState;
+	iErrorCode		: INT;
+	sStatusText 	: STRING[50];
+END_VAR
+
+VAR
+	bLastSignal		: BOOL;
+	tDebTimer		: TON;
+	tTimeOutTimer	: TOF;
+	bSignalStable	: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bEnable AND (eState = E_ComponentState.READY OR eState = E_ComponentState.BUSY) AND NOT tTimeOutTimer.Q THEN
+	IF bLastSignal <> bSignal THEN
+		tDebTimer(IN := TRUE, PT := tDebounce);
+		eState := E_ComponentState.BUSY;
+	ELSE
+		tDebTimer(IN := FALSE);
+	END_IF
+	
+	IF tDebTimer.Q THEN
+		tTimeOutTimer(IN := TRUE, PT := tTimeOut);
+		bSignalStable 	:= bSignal;
+		bLastSignal 	:= bSignal;
+		eState := E_ComponentState.READY;
+	END_IF
+	
+	bRising		:= (bSignalStable AND NOT bActive);
+	bFalling	:= (NOT bSignalStable AND bActive);
+	bActive 	:= bSignalStable;
+ELSE
+	bActive 	:= FALSE;
+	bRising		:= FALSE;
+	bFalling	:= FALSE;
+	tDebTimer(IN := FALSE);
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="Halt" Id="{c94396e9-4b2a-428e-b504-c709afbc748b}">
+      <Declaration><![CDATA[METHOD Halt : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bActive 	:= FALSE;
+bRising		:= FALSE;
+bFalling	:= FALSE;
+tDebTimer(IN := FALSE);
+eState := E_ComponentState.HALTED;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Start" Id="{3ee6110b-c203-4bb9-9caa-b0b18392f854}">
+      <Declaration><![CDATA[METHOD Start : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eState := E_ComponentState.READY;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Stop" Id="{60cdd494-a322-4122-a75f-cf6898b5dc26}">
+      <Declaration><![CDATA[METHOD Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState <> E_ComponentState.BUSY THEN
+	bActive 	:= FALSE;
+	bRising		:= FALSE;
+	bFalling	:= FALSE;
+	eState := E_ComponentState.DONE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Component_ReedSwitch">
+      <LineId Id="36" Count="8" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="45" Count="12" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ReedSwitch.Halt">
+      <LineId Id="6" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ReedSwitch.Start">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ReedSwitch.Stop">
+      <LineId Id="6" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
