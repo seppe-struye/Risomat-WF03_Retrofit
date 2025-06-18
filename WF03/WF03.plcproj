@@ -52,6 +52,9 @@
     <Compile Include="POUs\FB_Component_Valve.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_Module_CoilHolder.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\I_Component.TcIO">
       <SubType>Code</SubType>
     </Compile>

@@ -12,25 +12,25 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Halt" Id="{e670ceb9-7bbb-4f32-865f-4279a3ed37e2}">
+    <Method Name="M_Halt" Id="{e670ceb9-7bbb-4f32-865f-4279a3ed37e2}">
       <Declaration><![CDATA[{warning 'add method implementation '}
-METHOD Halt : BOOL
+METHOD M_Halt : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Start" Id="{5850c2fb-1fd2-46fc-baa0-6de215783738}">
+    <Method Name="M_Start" Id="{5850c2fb-1fd2-46fc-baa0-6de215783738}">
       <Declaration><![CDATA[{warning 'add method implementation '}
-METHOD Start : BOOL
+METHOD M_Start : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Stop" Id="{a7e4a841-9d33-4e88-80db-37d91db85604}">
+    <Method Name="M_Stop" Id="{a7e4a841-9d33-4e88-80db-37d91db85604}">
       <Declaration><![CDATA[{warning 'add method implementation '}
-METHOD Stop : BOOL
+METHOD M_Stop : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
@@ -39,13 +39,13 @@ METHOD Stop : BOOL
     <LineIds Name="FB_Component_ServoMotor">
       <LineId Id="9" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Component_ServoMotor.Halt">
+    <LineIds Name="FB_Component_ServoMotor.M_Halt">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Component_ServoMotor.Start">
+    <LineIds Name="FB_Component_ServoMotor.M_Start">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Component_ServoMotor.Stop">
+    <LineIds Name="FB_Component_ServoMotor.M_Stop">
       <LineId Id="4" Count="0" />
     </LineIds>
   </POU>

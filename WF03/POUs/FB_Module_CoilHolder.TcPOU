@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Module_CoilHolder" Id="{40d3fec2-1e88-465a-be78-81dbe38d536d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_CoilHolder IMPLEMENTS I_Module
+VAR_INPUT
+	bEnable			: BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Components		: ARRAY [0..9] OF I_Component;
+
+	fbACmotor		: FB_Component_ACmotor;
+	fbCoilLock		: FB_Component_SingleValve;
+	fbReedLock		: FB_Component_ReedSwitch;
+	fbReedUnlock	: FB_Component_ReedSwitch;
+	
+	fbIndexBit1		: FB_Component_InductiveSensor;
+	fbIndexBit2		: FB_Component_InductiveSensor;
+	fbIndexBit3		: FB_Component_InductiveSensor;
+	fbIndexBit4		: FB_Component_InductiveSensor;
+	fbIndexBit5		: FB_Component_InductiveSensor;
+	fbIndexReady	: FB_Component_InductiveSensor;
+	
+	nIndex			: UINT;
+	i				: INT;
+	bDir: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bEnable THEN
+	fbACmotor(
+		bDeviceActive 	:= GVL.bLenze1Relay,
+		sName			:= 'AC motor plate',
+		bEnable			:= TRUE,
+		bE1jog1			:= GVL.bLenze1JogBit1,
+		bE2jog2			:= GVL.bLenze1JogBit2,
+		bE3DCbrake		:= GVL.bLenze1InjectionBrake,
+		eE4Direction	:= GVL.bLenze1Direction);
+		
+	fbCoilLock(
+		sName 	:= 'Coil Lock',
+		bEnable := TRUE,
+		bOutput := GVL.bUnlockCoilHolder);
+		
+	fbReedLock(
+		bRawSignal	:= GVL.bCoilHolderLocked,
+		tDebounce	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'plate locked reed',
+		bEnable		:= TRUE);
+		
+	fbReedUnlock(
+		bRawSignal	:= GVL.bCoilHolderUnlocked,
+		tDebounce	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'plate unlocked reed',
+		bEnable		:= TRUE);
+		
+	fbIndexBit1(bRawSignal := GVL.bCoilHolderIndexBit1,
+		tDebounce 	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'plate index 1',
+		bEnable		:= TRUE);
+		
+	fbIndexBit2(bRawSignal := GVL.bCoilHolderIndexBit2,
+		tDebounce 	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'plate index 2',
+		bEnable		:= TRUE);
+		
+	fbIndexBit3(bRawSignal := GVL.bCoilHolderIndexBit3,
+		tDebounce 	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'plate index 3',
+		bEnable		:= TRUE);
+		
+	fbIndexBit4(bRawSignal := GVL.bCoilHolderIndexBit4,
+		tDebounce 	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'plate index 4',
+		bEnable		:= TRUE);
+		
+	fbIndexBit5(bRawSignal := GVL.bCoilHolderIndexBit5,
+		tDebounce 	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'plate index 5',
+		bEnable		:= TRUE);
+		
+	fbIndexReady(bRawSignal := GVL.bCoilHolderIndexReady,
+		tDebounce 	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'plate index ready',
+		bEnable		:= TRUE);
+
+	Components[0] := fbACmotor;
+	Components[1] := fbCoilLock;
+	Components[2] := fbReedLock;
+	Components[3] := fbReedUnlock;
+	Components[4] := fbIndexBit1;
+	Components[5] := fbIndexBit2;
+	Components[6] := fbIndexBit3;
+	Components[7] := fbIndexBit4;
+	Components[8] := fbIndexBit5;
+	Components[9] := fbIndexReady;
+	
+	FOR i := 0 TO 9 DO
+    	Components[i].M_Start();
+	END_FOR;
+	
+	IF fbIndexReady.bSensorActive THEN
+		nIndex := 	SHL(TO_UINT(fbIndexBit5.bSensorActive), 4) OR
+					SHL(TO_UINT(fbIndexBit4.bSensorActive), 3) OR
+					SHL(TO_UINT(fbIndexBit3.bSensorActive), 2) OR
+					SHL(TO_UINT(fbIndexBit2.bSensorActive), 1) OR
+					(TO_UINT(fbIndexBit1.bSensorActive));
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="M_GoTo" Id="{17639c7b-edb3-4e9d-a3ae-83a1b7ed444e}">
+      <Declaration><![CDATA[METHOD M_GoTo : BOOL
+VAR_INPUT
+	nTargetIndex	: INT;
+END_VAR
+
+VAR
+	cwSteps: INT;
+	target: INT;
+	ccwSteps: INT;
+	shortestDistance : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nTargetIndex = nIndex THEN
+	fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F0FF);
+	RETURN;
+END_IF
+
+cwSteps  := (nTargetIndex - TO_INT(nIndex) + 24) MOD 24;
+ccwSteps := (TO_INT(nIndex) - nTargetIndex + 24) MOD 24;
+
+IF cwSteps <= ccwSteps THEN
+	fbACmotor.SetDir(Direction := E_RotationDirection.CW);
+	shortestDistance := cwSteps;
+ELSE
+	fbACmotor.SetDir(Direction := E_RotationDirection.CCW);	
+	shortestDistance := ccwSteps;
+END_IF
+
+IF TO_INT(nIndex) <> nTargetIndex THEN
+	IF shortestDistance <= 1 THEN
+		fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F1);	
+	ELSIF shortestDistance <= 2 THEN
+		fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F2);
+	ELSE
+		fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F3);
+	END_IF
+ELSE
+	fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F0FF);
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Unlock" Id="{61de0c27-1f3d-4aac-a25b-a947746ff848}">
+      <Declaration><![CDATA[METHOD M_Unlock : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Module_CoilHolder">
+      <LineId Id="9" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="57" Count="3" />
+      <LineId Id="62" Count="4" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="71" Count="4" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="79" Count="4" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="84" Count="3" />
+      <LineId Id="89" Count="2" />
+      <LineId Id="93" Count="3" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="100" Count="3" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="106" Count="3" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="112" Count="3" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="118" Count="3" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="28" Count="6" />
+      <LineId Id="36" Count="3" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="133" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_CoilHolder.M_GoTo">
+      <LineId Id="27" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_CoilHolder.M_Unlock">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
