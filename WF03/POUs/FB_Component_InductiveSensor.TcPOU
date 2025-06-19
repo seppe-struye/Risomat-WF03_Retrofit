@@ -15,6 +15,8 @@ END_VAR
 VAR_OUTPUT
 	bSensorActive	: BOOL;
 	bTimeout		: BOOL;
+	bRisingEdge		: BOOL;
+	bFallingEdge	: BOOL;
 	eState			: E_ComponentState;
 	sStatusText 	: STRING[100];
 END_VAR
@@ -23,8 +25,8 @@ VAR
 	tDebounceTimer	: TON;
 	tTimeoutTimer	: TON;
 	
-	bLastStableSignal: BOOL;
-	bPendingSignal: BOOL;
+	bLastStableSignal	: BOOL;
+	bPendingSignal		: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[tDebounceTimer.PT 	:= tDebounce;
@@ -52,6 +54,10 @@ IF bEnable THEN
 									sStatusText := 'Debouncing sensor';
 									
 		E_ComponentState.TIMEOUT:	tTimeoutTimer(IN := TRUE);
+									
+									bRisingEdge  := NOT bLastStableSignal AND bPendingSignal;
+	 								bFallingEdge := bLastStableSignal AND NOT bPendingSignal;
+											
 									bLastStableSignal := bPendingSignal;			// output stable signal
 									bSensorActive	  := bLastStableSignal;
 									IF tTimeoutTimer.Q THEN
@@ -72,6 +78,16 @@ END_IF
       <Implementation>
         <ST><![CDATA[tDebounceTimer(IN := FALSE);
 eState := E_ComponentState.HALTED;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ResetEdge" Id="{c361819e-d8ca-4034-91ec-d2f2b326dd4e}">
+      <Declaration><![CDATA[METHOD M_ResetEdge : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bRisingEdge 	:= FALSE;
+bFallingEdge	:= FALSE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Start" Id="{332d80dd-0194-4918-b2f7-7e712950268d}">
@@ -114,6 +130,9 @@ END_IF]]></ST>
       <LineId Id="421" Count="0" />
       <LineId Id="415" Count="0" />
       <LineId Id="371" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="450" Count="1" />
+      <LineId Id="449" Count="0" />
       <LineId Id="383" Count="0" />
       <LineId Id="405" Count="0" />
       <LineId Id="409" Count="2" />
@@ -129,6 +148,9 @@ END_IF]]></ST>
     <LineIds Name="FB_Component_InductiveSensor.M_Halt">
       <LineId Id="9" Count="0" />
       <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_InductiveSensor.M_ResetEdge">
+      <LineId Id="5" Count="1" />
     </LineIds>
     <LineIds Name="FB_Component_InductiveSensor.M_Start">
       <LineId Id="6" Count="0" />

@@ -11,9 +11,13 @@ VAR
 	bState		: BOOL;
 	eDirection	: E_RotationDirection := E_RotationDirection.CW;
 	nCount 		: INT;
-	nTarget		: INT := 10;
+	
 	
 	fbCoilHolder	: FB_Module_CoilHolder;
+	bGoto			: BOOL;
+	nTarget			: INT := 1;
+	fbToolHolder	: FB_Module_ToolHolder;
+	bSwitch			: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -77,11 +81,19 @@ CASE nCount OF
 	3:	fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F3);
 END_CASE*)
 
-GVL.bUnlockCoilHolder := TRUE;
 
+// coil holder demo
 fbCoilHolder(bEnable := TRUE);
+//fbCoilHolder.M_Unlock();
+IF bGoto THEN
+	bGoto := NOT fbCoilHolder.M_GoTo(nTargetIndex := nTarget);
+END_IF
 
-fbCoilHolder.M_GoTo(nTargetIndex := nTarget);
+// tool holder demo
+fbToolHolder(bEnable := TRUE);
+IF bSwitch THEN
+	bSwitch := NOT fbToolHolder.M_Switch();
+END_IF;
 
 ]]></ST>
     </Implementation>
@@ -126,7 +138,15 @@ fbCoilHolder.M_GoTo(nTargetIndex := nTarget);
       <LineId Id="94" Count="0" />
       <LineId Id="93" Count="0" />
       <LineId Id="96" Count="0" />
+      <LineId Id="123" Count="0" />
       <LineId Id="95" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="119" Count="0" />
       <LineId Id="64" Count="0" />
       <LineId Id="14" Count="0" />
     </LineIds>

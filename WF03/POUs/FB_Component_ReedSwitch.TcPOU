@@ -54,7 +54,7 @@ IF bEnable THEN
 									
 		E_ComponentState.TIMEOUT:	tTimeoutTimer(IN := TRUE);
 									bLastStableSignal := bPendingSignal;			// output stable signal
-			
+									bSensorActive := bLastStableSignal;
 									IF tTimeoutTimer.Q THEN
 										eState := E_ComponentState.DONE;
 									END_IF

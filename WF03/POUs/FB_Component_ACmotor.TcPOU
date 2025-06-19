@@ -63,6 +63,26 @@ bE2jog2 := FALSE;
 eState := E_ComponentState.HALTED;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_SetDir" Id="{d6a197ac-aaf3-4f2e-919c-b2334f169d78}">
+      <Declaration><![CDATA[METHOD M_SetDir : BOOL
+VAR_INPUT
+	Direction: E_RotationDirection;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eE4Direction := TO_BOOL(Direction);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetFreq" Id="{387ee47f-c4da-4cf1-a6b6-e28ea3f37257}">
+      <Declaration><![CDATA[METHOD M_SetFreq : BOOL
+VAR_INPUT
+	Frequency: E_LenzeJogFreq;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eJogFreq := Frequency;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Start" Id="{8c2f0a58-166c-44b6-b1c3-800306693fc7}">
       <Declaration><![CDATA[METHOD M_Start : BOOL
 ]]></Declaration>
@@ -81,30 +101,6 @@ END_IF;]]></ST>
 	bE2jog2 := FALSE;	
 	eState := E_ComponentState.DONE;
 END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="SetDir" Id="{d6a197ac-aaf3-4f2e-919c-b2334f169d78}">
-      <Declaration><![CDATA[METHOD SetDir : BOOL
-VAR_INPUT
-	Direction: E_RotationDirection;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF Direction = E_RotationDirection.CCW THEN
-	eE4Direction := TRUE;
-ELSE
-	eE4Direction := FALSE;
-END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="SetFreq" Id="{387ee47f-c4da-4cf1-a6b6-e28ea3f37257}">
-      <Declaration><![CDATA[METHOD SetFreq : BOOL
-VAR_INPUT
-	Frequency: E_LenzeJogFreq;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[eJogFreq := Frequency;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Component_ACmotor">
@@ -135,6 +131,12 @@ END_VAR
       <LineId Id="5" Count="0" />
       <LineId Id="4" Count="0" />
     </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_SetDir">
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_SetFreq">
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Component_ACmotor.M_Start">
       <LineId Id="9" Count="0" />
       <LineId Id="4" Count="0" />
@@ -145,14 +147,6 @@ END_VAR
       <LineId Id="16" Count="0" />
       <LineId Id="14" Count="1" />
       <LineId Id="11" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Component_ACmotor.SetDir">
-      <LineId Id="10" Count="1" />
-      <LineId Id="13" Count="1" />
-      <LineId Id="12" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Component_ACmotor.SetFreq">
-      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Module_ToolHolder" Id="{b8caeb05-c46f-4fb5-a22c-c7afa5dce2ec}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolder IMPLEMENTS I_Module
+VAR_INPUT
+	bEnable				: BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Components			: ARRAY [0..5] OF I_Component;
+	
+	fbACmotor			: FB_Component_ACmotor;
+	
+	fbToolHolderLock	: FB_Component_SingleValve;
+	fbReedLock			: FB_Component_ReedSwitch;
+	fbReedUnlock		: FB_Component_ReedSwitch;
+	
+	fbIndexBit1			: FB_Component_InductiveSensor;
+	fbIndexBit2			: FB_Component_InductiveSensor;
+	i					: INT;
+	bDir				: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bEnable THEN
+	fbACmotor(
+		bDeviceActive 	:= GVL.bLenze1Relay,
+		sName			:= 'AC motor holder',
+		bEnable			:= TRUE,
+		bE1jog1			:= GVL.bLenze2JogBit1,
+		bE2jog2			:= GVL.bLenze2JogBit2,
+		bE3DCbrake		:= GVL.bLenze2njectionBrake,
+		eE4Direction	:= bDir);
+		
+	fbToolHolderLock(
+		sName 	:= 'Holder Lock',
+		bEnable := TRUE,
+		bOutput := GVL.bUnlockToolHolder);
+		
+	fbReedLock(
+		bRawSignal	:= GVL.bToolHolderUnlocked,
+		tDebounce	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'holder locked reed',
+		bEnable		:= TRUE);
+		
+	fbReedUnlock(
+		bRawSignal	:= GVL.bToolHolderLocked,
+		tDebounce	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'holder unlocked reed',
+		bEnable		:= TRUE);
+		
+	fbIndexBit1(bRawSignal := GVL.bToolHolderIndexBit1,
+		tDebounce 	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'holder index 1',
+		bEnable		:= TRUE);
+		
+	fbIndexBit2(bRawSignal := GVL.bToolHolderIndexBit2,
+		tDebounce 	:= T#5MS,
+		tTimeout	:= T#0S,
+		sName		:= 'holder index 2',
+		bEnable		:= TRUE);
+		
+	Components[0] 	:= fbACmotor;
+	Components[1] 	:= fbToolHolderLock;
+	Components[2] 	:= fbReedLock;
+	Components[3] 	:= fbReedUnlock;
+	Components[4] 	:= fbIndexBit1;
+	Components[5] 	:= fbIndexBit2;
+	
+	FOR i := 0 TO 5 DO
+    	Components[i].M_Start();
+	END_FOR;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="M_Lock" Id="{be180632-11d0-40d6-9843-f03e84e63f14}">
+      <Declaration><![CDATA[METHOD M_Lock : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbToolHolderLock.M_Retract();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Switch" Id="{d42bd0d4-106d-41e3-8483-38e40bc74aa0}">
+      <Declaration><![CDATA[METHOD M_Switch : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	tTrigger1 	: R_TRIG;
+	tTrigger2 	: R_TRIG;
+	b1			: BOOL;
+	b2			: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF fbReedUnlock.bSensorActive THEN
+	tTrigger1(CLK := fbIndexBit1.bRisingEdge);
+	tTrigger2(CLK := fbIndexBit2.bRisingEdge);
+	
+	fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F3);
+	
+	IF tTrigger1.Q THEN
+		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F1);
+	END_IF
+	IF tTrigger2.Q THEN
+		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
+		fbIndexBit1.M_ResetEdge();
+		fbIndexBit2.M_ResetEdge();
+		M_lock();
+		M_Switch := TRUE;
+	END_IF
+ELSE
+	M_Unlock();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Unlock" Id="{d0392bfa-8354-4867-a771-cbf55ec92350}">
+      <Declaration><![CDATA[METHOD M_Unlock : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbToolHolderLock.M_Extend();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Module_ToolHolder">
+      <LineId Id="9" Count="0" />
+      <LineId Id="26" Count="6" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="51" Count="23" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="75" Count="6" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Lock">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Switch">
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Unlock">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

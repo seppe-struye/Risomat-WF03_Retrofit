@@ -22,9 +22,9 @@ VAR
 	fbIndexBit5		: FB_Component_InductiveSensor;
 	fbIndexReady	: FB_Component_InductiveSensor;
 	
-	nIndex			: UINT;
+	nIndex			: INT;
 	i				: INT;
-	bDir: BOOL;
+	bDir			: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -109,11 +109,11 @@ END_VAR
 	END_FOR;
 	
 	IF fbIndexReady.bSensorActive THEN
-		nIndex := 	SHL(TO_UINT(fbIndexBit5.bSensorActive), 4) OR
+		nIndex := 	TO_INT(SHL(TO_UINT(fbIndexBit5.bSensorActive), 4) OR
 					SHL(TO_UINT(fbIndexBit4.bSensorActive), 3) OR
 					SHL(TO_UINT(fbIndexBit3.bSensorActive), 2) OR
 					SHL(TO_UINT(fbIndexBit2.bSensorActive), 1) OR
-					(TO_UINT(fbIndexBit1.bSensorActive));
+					(TO_UINT(fbIndexBit1.bSensorActive)));
 	END_IF
 END_IF]]></ST>
     </Implementation>
@@ -130,36 +130,54 @@ VAR
 	shortestDistance : INT;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF nTargetIndex = nIndex THEN
-	fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F0FF);
-	RETURN;
-END_IF
-
-cwSteps  := (nTargetIndex - TO_INT(nIndex) + 24) MOD 24;
-ccwSteps := (TO_INT(nIndex) - nTargetIndex + 24) MOD 24;
-
-IF cwSteps <= ccwSteps THEN
-	fbACmotor.SetDir(Direction := E_RotationDirection.CW);
-	shortestDistance := cwSteps;
-ELSE
-	fbACmotor.SetDir(Direction := E_RotationDirection.CCW);	
-	shortestDistance := ccwSteps;
-END_IF
-
-IF TO_INT(nIndex) <> nTargetIndex THEN
-	IF shortestDistance <= 1 THEN
-		fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F1);	
-	ELSIF shortestDistance <= 2 THEN
-		fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F2);
+        <ST><![CDATA[IF fbReedUnlock.bSensorActive THEN
+	IF nTargetIndex = nIndex THEN
+		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
+		M_Lock();
+		M_GoTo := TRUE;
+		RETURN;
+	END_IF
+	
+	cwSteps  := (nTargetIndex - nIndex + 24) MOD 24;
+	ccwSteps := (nIndex - nTargetIndex + 24) MOD 24;
+	
+	IF cwSteps <= ccwSteps THEN
+		fbACmotor.M_SetDir(Direction := E_RotationDirection.CW);
+		shortestDistance := cwSteps;
 	ELSE
-		fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F3);
+		fbACmotor.M_SetDir(Direction := E_RotationDirection.CCW);	
+		shortestDistance := ccwSteps;
+	END_IF
+	
+	IF nIndex <> nTargetIndex THEN
+		IF shortestDistance <= 1 THEN
+			fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F1);	
+		ELSIF shortestDistance <= 2 THEN
+			fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F2);
+		ELSE
+			fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F3);
+		END_IF
+	ELSE
+		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
+		M_Lock();
+		M_GoTo := TRUE;
 	END_IF
 ELSE
-	fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F0FF);
+	// handle error coil holder locked
+	M_Unlock();
 END_IF
 
 
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Lock" Id="{cfd8b06a-dab1-4668-91c4-cb1bfb600106}">
+      <Declaration><![CDATA[METHOD M_Lock : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbCoilLock.M_Retract();]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Unlock" Id="{61de0c27-1f3d-4aac-a25b-a947746ff848}">
@@ -168,7 +186,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[fbCoilLock.M_Extend();]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Module_CoilHolder">
@@ -214,8 +232,11 @@ END_VAR
       <LineId Id="133" Count="0" />
     </LineIds>
     <LineIds Name="FB_Module_CoilHolder.M_GoTo">
+      <LineId Id="57" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="31" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="65" Count="0" />
       <LineId Id="29" Count="1" />
       <LineId Id="34" Count="0" />
       <LineId Id="36" Count="0" />
@@ -234,10 +255,16 @@ END_VAR
       <LineId Id="42" Count="1" />
       <LineId Id="23" Count="0" />
       <LineId Id="32" Count="1" />
+      <LineId Id="63" Count="1" />
       <LineId Id="17" Count="0" />
+      <LineId Id="59" Count="2" />
+      <LineId Id="58" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_CoilHolder.M_Lock">
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Module_CoilHolder.M_Unlock">
       <LineId Id="5" Count="0" />
