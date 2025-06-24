@@ -18,8 +18,8 @@ VAR
 	
 	fbIndexBit1			: FB_Component_InductiveSensor;
 	fbIndexBit2			: FB_Component_InductiveSensor;
-	i					: INT;
-	bDir				: BOOL;
+	idx					: INT;
+	bDir				: BOOL; // placeholder because this motor is single direction
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -71,18 +71,50 @@ END_VAR
 	Components[4] 	:= fbIndexBit1;
 	Components[5] 	:= fbIndexBit2;
 	
-	FOR i := 0 TO 5 DO
-    	Components[i].M_Start();
+	FOR idx := 0 TO 5 DO
+    	Components[idx].M_Start();
 	END_FOR;
 END_IF]]></ST>
     </Implementation>
-    <Method Name="M_Lock" Id="{be180632-11d0-40d6-9843-f03e84e63f14}">
-      <Declaration><![CDATA[METHOD M_Lock : BOOL
+    <Method Name="M_Halt" Id="{f4fd5710-ad40-4a73-9d1f-e22168ac17cc}">
+      <Declaration><![CDATA[METHOD M_Halt : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[fbToolHolderLock.M_Retract();]]></ST>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Lock" Id="{be180632-11d0-40d6-9843-f03e84e63f14}">
+      <Declaration><![CDATA[METHOD M_Lock : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	eState: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable AND fbACmotor.eState <> E_ComponentState.BUSY THEN 
+		fbToolHolderLock.M_Retract();
+END_IF;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Start" Id="{d25814ce-c93f-4e9d-95a8-b52a3b6266b0}">
+      <Declaration><![CDATA[METHOD M_Start : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{7b921080-9dcf-40c5-a818-6ca94e76f031}">
+      <Declaration><![CDATA[METHOD M_Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Switch" Id="{d42bd0d4-106d-41e3-8483-38e40bc74aa0}">
@@ -93,28 +125,29 @@ END_VAR
 VAR
 	tTrigger1 	: R_TRIG;
 	tTrigger2 	: R_TRIG;
-	b1			: BOOL;
-	b2			: BOOL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF fbReedUnlock.bSensorActive THEN
-	tTrigger1(CLK := fbIndexBit1.bRisingEdge);
+        <ST><![CDATA[IF bEnable AND fbReedUnlock.bSensorActive THEN	
+	tTrigger1(CLK := fbIndexBit1.bRisingEdge);					// triggers to detect rising edge of index bits
 	tTrigger2(CLK := fbIndexBit2.bRisingEdge);
 	
-	fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F3);
+	fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F3);		// when no index bit has triggered, high speed
 	
-	IF tTrigger1.Q THEN
+	IF tTrigger1.Q THEN											// when first index is triggered, switch to lowest speed
 		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F1);
 	END_IF
-	IF tTrigger2.Q THEN
+	
+	IF tTrigger2.Q THEN											// when last index bit has triggered, turn of motor
 		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
-		fbIndexBit1.M_ResetEdge();
-		fbIndexBit2.M_ResetEdge();
-		M_lock();
-		M_Switch := TRUE;
+		IF fbACmotor.eState <> E_ComponentState.BUSY THEN		// if motor is off, lock plate and signal operation done
+			M_lock();
+			M_Switch := TRUE;
+		END_IF;
 	END_IF
 ELSE
-	M_Unlock();
+	M_Unlock();													// unlock plate of locked and reset edges for detecting indexes
+	fbIndexBit1.M_ResetEdge();
+	fbIndexBit2.M_ResetEdge();
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -124,7 +157,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[fbToolHolderLock.M_Extend();]]></ST>
+        <ST><![CDATA[IF bEnable AND fbACmotor.eState <> E_ComponentState.BUSY THEN 
+		fbToolHolderLock.M_Extend();
+END_IF;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Module_ToolHolder">
@@ -143,30 +178,45 @@ END_VAR
       <LineId Id="84" Count="0" />
       <LineId Id="23" Count="0" />
     </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Halt">
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Module_ToolHolder.M_Lock">
+      <LineId Id="9" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Start">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Stop">
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Module_ToolHolder.M_Switch">
       <LineId Id="5" Count="0" />
-      <LineId Id="14" Count="0" />
+      <LineId Id="52" Count="0" />
       <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="23" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="54" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="28" Count="0" />
       <LineId Id="22" Count="0" />
+      <LineId Id="55" Count="0" />
       <LineId Id="19" Count="0" />
       <LineId Id="29" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="31" Count="0" />
       <LineId Id="34" Count="0" />
+      <LineId Id="49" Count="0" />
       <LineId Id="30" Count="0" />
+      <LineId Id="50" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="32" Count="1" />
+      <LineId Id="44" Count="1" />
       <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="FB_Module_ToolHolder.M_Unlock">
-      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="9" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

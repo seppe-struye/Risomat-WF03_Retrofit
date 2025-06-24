@@ -25,7 +25,7 @@ VAR
 	tDebounceTimer	: TON;
 	tTimeoutTimer	: TON;
 	
-	bLastStableSignal	: BOOL;
+	bLastStableSignal	: BOOL := bRawSignal;
 	bPendingSignal		: BOOL;
 END_VAR]]></Declaration>
     <Implementation>

@@ -131,17 +131,18 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF fbReedUnlock.bSensorActive THEN
-	IF nTargetIndex = nIndex THEN
+	
+	IF nTargetIndex = nIndex THEN									// if target index is reached, turn off motor, lock plate and signal done
 		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
 		M_Lock();
 		M_GoTo := TRUE;
 		RETURN;
 	END_IF
 	
-	cwSteps  := (nTargetIndex - nIndex + 24) MOD 24;
+	cwSteps  := (nTargetIndex - nIndex + 24) MOD 24;				// calculate how much cw & ccw steps needed to go to target
 	ccwSteps := (nIndex - nTargetIndex + 24) MOD 24;
 	
-	IF cwSteps <= ccwSteps THEN
+	IF cwSteps <= ccwSteps THEN										// set direction for shortest path to target
 		fbACmotor.M_SetDir(Direction := E_RotationDirection.CW);
 		shortestDistance := cwSteps;
 	ELSE
@@ -150,25 +151,57 @@ END_VAR]]></Declaration>
 	END_IF
 	
 	IF nIndex <> nTargetIndex THEN
-		IF shortestDistance <= 1 THEN
+		IF shortestDistance <= 1 THEN								// if 1 from the target, set speed to slowest
 			fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F1);	
-		ELSIF shortestDistance <= 2 THEN
+		ELSIF shortestDistance <= 2 THEN							// if 2 from the target, set speed to slow
 			fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F2);
 		ELSE
-			fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F3);
+			fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F3);	// if further set to highest speed
 		END_IF
 	ELSE
-		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
+		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);		// for safety, should be handled by first if
 		M_Lock();
 		M_GoTo := TRUE;
 	END_IF
 ELSE
-	// handle error coil holder locked
-	M_Unlock();
+	M_Unlock();														// unlock plate if locked
 END_IF
 
 
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{2d8dc12e-6061-4f13-b2a5-14d3305cde08}">
+      <Declaration><![CDATA[METHOD M_Halt : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <CFC>
+          <XmlArchive>
+            <Data>
+              <o xml:space="preserve" t="CFCImplementationObject">
+                <o n="Items" t="CFCItemList">
+                  <l2 n="InnerList" />
+                </o>
+                <n n="ParameterInitializationMethodGenerator" />
+                <o n="RoutingPathTable" t="CFCRoutingPathTable">
+                  <d2 n="InnerDictionary" />
+                </o>
+                <v n="AutoSizeCanvas">true</v>
+                <v n="CanvasWidth">0</v>
+                <v n="CanvasHeight">0</v>
+              </o>
+            </Data>
+            <TypeList>
+              <Type n="Boolean">System.Boolean</Type>
+              <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
+              <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
+              <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
+              <Type n="Int32">System.Int32</Type>
+            </TypeList>
+          </XmlArchive>
+        </CFC>
       </Implementation>
     </Method>
     <Method Name="M_Lock" Id="{cfd8b06a-dab1-4668-91c4-cb1bfb600106}">
@@ -178,6 +211,72 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[fbCoilLock.M_Retract();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Start" Id="{c5a11795-bbe1-49cd-9dac-cdadbc4959da}">
+      <Declaration><![CDATA[METHOD M_Start : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <CFC>
+          <XmlArchive>
+            <Data>
+              <o xml:space="preserve" t="CFCImplementationObject">
+                <o n="Items" t="CFCItemList">
+                  <l2 n="InnerList" />
+                </o>
+                <n n="ParameterInitializationMethodGenerator" />
+                <o n="RoutingPathTable" t="CFCRoutingPathTable">
+                  <d2 n="InnerDictionary" />
+                </o>
+                <v n="AutoSizeCanvas">true</v>
+                <v n="CanvasWidth">0</v>
+                <v n="CanvasHeight">0</v>
+              </o>
+            </Data>
+            <TypeList>
+              <Type n="Boolean">System.Boolean</Type>
+              <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
+              <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
+              <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
+              <Type n="Int32">System.Int32</Type>
+            </TypeList>
+          </XmlArchive>
+        </CFC>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{b19820e9-a53f-4b85-a742-f97acd7d8932}">
+      <Declaration><![CDATA[METHOD M_Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <CFC>
+          <XmlArchive>
+            <Data>
+              <o xml:space="preserve" t="CFCImplementationObject">
+                <o n="Items" t="CFCItemList">
+                  <l2 n="InnerList" />
+                </o>
+                <n n="ParameterInitializationMethodGenerator" />
+                <o n="RoutingPathTable" t="CFCRoutingPathTable">
+                  <d2 n="InnerDictionary" />
+                </o>
+                <v n="AutoSizeCanvas">true</v>
+                <v n="CanvasWidth">0</v>
+                <v n="CanvasHeight">0</v>
+              </o>
+            </Data>
+            <TypeList>
+              <Type n="Boolean">System.Boolean</Type>
+              <Type n="CFCImplementationObject">{32d3375e-c010-41e2-9e43-b2fbf4f2b374}</Type>
+              <Type n="CFCItemList">{cd57ba20-558b-4b98-96c1-73c6000c3087}</Type>
+              <Type n="CFCRoutingPathTable">{4b8bcc79-5980-4868-b49e-005a8148859b}</Type>
+              <Type n="Int32">System.Int32</Type>
+            </TypeList>
+          </XmlArchive>
+        </CFC>
       </Implementation>
     </Method>
     <Method Name="M_Unlock" Id="{61de0c27-1f3d-4aac-a25b-a947746ff848}">
@@ -234,6 +333,7 @@ END_VAR
     <LineIds Name="FB_Module_CoilHolder.M_GoTo">
       <LineId Id="57" Count="0" />
       <LineId Id="27" Count="0" />
+      <LineId Id="77" Count="0" />
       <LineId Id="31" Count="0" />
       <LineId Id="66" Count="0" />
       <LineId Id="65" Count="0" />
@@ -257,7 +357,8 @@ END_VAR
       <LineId Id="32" Count="1" />
       <LineId Id="63" Count="1" />
       <LineId Id="17" Count="0" />
-      <LineId Id="59" Count="2" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="61" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="12" Count="0" />
