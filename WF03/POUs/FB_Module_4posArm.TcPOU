@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Module_4posArm" Id="{6e54f69a-70c3-4a40-bea0-3fce0ccc7cde}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_4posArm IMPLEMENTS  I_Module
+VAR_INPUT
+	bEnable			: BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Components		: ARRAY [0..4] OF I_Component;	
+
+	fbPiston		: FB_Component_DualValve;
+	fbIndex1		: FB_Component_ReedSwitch;
+	fbIndex2		: FB_Component_ReedSwitch;
+	fbIndex3		: FB_Component_ReedSwitch;
+	fbIndex4		: FB_Component_ReedSwitch;
+	
+	nCurrentIndex	: INT;
+	
+	idx				: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bEnable THEN
+	fbPiston(
+		sName		:= '4pospistion',
+		bEnable		:= TRUE,
+		bOutputA	:= GVL.bExtendWireHolder,
+		bOutputB	:= GVL.bRetractWireHolder);
+		
+	fbIndex1(
+		bRawSignal	:= GVL.bWireHolderPos1,
+		tDebounce	:= T#0MS,
+		tTimeout	:= T#0MS,
+		sName		:= 'arm index 1',
+		bEnable		:= TRUE);
+		
+	fbIndex2(
+		bRawSignal	:= GVL.bWireHolderPos2,
+		tDebounce	:= T#0MS,
+		tTimeout	:= T#0MS,
+		sName		:= 'arm index 2',
+		bEnable		:= TRUE);
+
+	fbIndex3(
+		bRawSignal	:= GVL.bWireHolderPos3,
+		tDebounce	:= T#0MS,
+		tTimeout	:= T#0MS,
+		sName		:= 'arm index 3',
+		bEnable		:= TRUE);
+
+	fbIndex4(
+		bRawSignal	:= GVL.bWireHolderPos4,
+		tDebounce	:= T#0MS,
+		tTimeout	:= T#0MS,
+		sName		:= 'arm index 4',
+		bEnable		:= TRUE);	
+		
+	Components[0]	:= fbPiston;
+	Components[1]	:= fbIndex1;
+	Components[2]	:= fbIndex2;
+	Components[3]	:= fbIndex3;
+	Components[4]	:= fbIndex4;
+	
+	FOR idx := 0 TO 4 DO
+    	Components[idx].M_Start();
+	END_FOR;
+	
+	IF fbIndex1.bSensorActive THEN
+		nCurrentIndex := 1;
+	ELSIF fbIndex2.bSensorActive THEN
+		nCurrentIndex := 2;
+	ELSIF fbIndex3.bSensorActive THEN
+		nCurrentIndex := 3;
+	ELSIF fbIndex4.bSensorActive THEN
+		nCurrentIndex := 4;
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="M_Goto" Id="{953aba2f-1ab4-4bb1-afe8-e3b77832ed9a}">
+      <Declaration><![CDATA[METHOD M_Goto : BOOL
+VAR_INPUT
+	nTargetIndex	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nTargetIndex > nCurrentIndex THEN
+	fbPiston.M_Extend();
+ELSIF	nTargetIndex < nCurrentIndex THEN
+	fbPiston.M_Retract();
+ELSE
+	fbPiston.M_Hold();
+	M_Goto := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{13b778b4-c6d1-49c9-aa72-4e0de94b9cb2}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Home" Id="{b3bda9d9-60c7-48f3-9541-30d4b98cc9e5}">
+      <Declaration><![CDATA[METHOD M_Home : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT fbIndex1.bSensorActive THEN
+	fbPiston.M_Retract();
+ELSE
+	fbPiston.M_Hold();
+	M_Home := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Start" Id="{28a05839-3289-4efe-8212-e19abd42a929}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Start : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{8dfdbb91-166e-4d77-939c-66bdd03274a5}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Stop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Module_4posArm">
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="10" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="4" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="40" Count="5" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="47" Count="5" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="53" Count="6" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="73" Count="3" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Goto">
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Halt">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Home">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Start">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Stop">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

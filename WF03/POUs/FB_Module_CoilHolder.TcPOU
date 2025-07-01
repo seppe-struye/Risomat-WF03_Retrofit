@@ -23,8 +23,7 @@ VAR
 	fbIndexReady	: FB_Component_InductiveSensor;
 	
 	nIndex			: INT;
-	i				: INT;
-	bDir			: BOOL;
+	idx				: INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -104,10 +103,11 @@ END_VAR
 	Components[8] := fbIndexBit5;
 	Components[9] := fbIndexReady;
 	
-	FOR i := 0 TO 9 DO
-    	Components[i].M_Start();
+	FOR idx := 0 TO 9 DO
+    	Components[idx].M_Start();
 	END_FOR;
 	
+	// when index ready bit is triggered, convert index bits to integer
 	IF fbIndexReady.bSensorActive THEN
 		nIndex := 	TO_INT(SHL(TO_UINT(fbIndexBit5.bSensorActive), 4) OR
 					SHL(TO_UINT(fbIndexBit4.bSensorActive), 3) OR
@@ -131,7 +131,6 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF fbReedUnlock.bSensorActive THEN
-	
 	IF nTargetIndex = nIndex THEN									// if target index is reached, turn off motor, lock plate and signal done
 		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
 		M_Lock();
@@ -322,6 +321,7 @@ END_VAR
       <LineId Id="42" Count="1" />
       <LineId Id="41" Count="0" />
       <LineId Id="122" Count="0" />
+      <LineId Id="159" Count="0" />
       <LineId Id="125" Count="0" />
       <LineId Id="130" Count="0" />
       <LineId Id="126" Count="0" />
@@ -332,7 +332,6 @@ END_VAR
     </LineIds>
     <LineIds Name="FB_Module_CoilHolder.M_GoTo">
       <LineId Id="57" Count="0" />
-      <LineId Id="27" Count="0" />
       <LineId Id="77" Count="0" />
       <LineId Id="31" Count="0" />
       <LineId Id="66" Count="0" />

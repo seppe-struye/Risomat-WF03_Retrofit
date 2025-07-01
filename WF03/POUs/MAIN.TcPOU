@@ -18,6 +18,9 @@ VAR
 	nTarget			: INT := 1;
 	fbToolHolder	: FB_Module_ToolHolder;
 	bSwitch			: BOOL;
+	
+	fb4posArm		: FB_Module_4posArm;
+	bHome			: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -81,7 +84,7 @@ CASE nCount OF
 	3:	fbACmotor.SetFreq(Frequency := E_LenzeJogFreq.F3);
 END_CASE*)
 
-
+(*
 // coil holder demo
 fbCoilHolder(bEnable := TRUE);
 //fbCoilHolder.M_Unlock();
@@ -94,6 +97,18 @@ fbToolHolder(bEnable := TRUE);
 IF bSwitch THEN
 	bSwitch := NOT fbToolHolder.M_Switch();
 END_IF;
+*)
+
+// 4 pos arm demo
+fb4posArm(bEnable := TRUE);
+IF bHome THEN
+	bHome := NOT fb4posArm.M_Home();
+END_IF
+
+IF bGoto THEN
+	bGoto := NOT fb4posArm.M_GoTo(nTargetIndex := nTarget);
+END_IF
+	
 
 ]]></ST>
     </Implementation>
@@ -147,6 +162,14 @@ END_IF;
       <LineId Id="116" Count="0" />
       <LineId Id="115" Count="0" />
       <LineId Id="119" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="156" Count="2" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="151" Count="2" />
+      <LineId Id="149" Count="0" />
       <LineId Id="64" Count="0" />
       <LineId Id="14" Count="0" />
     </LineIds>
