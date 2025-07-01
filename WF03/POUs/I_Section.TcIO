@@ -3,5 +3,23 @@
   <Itf Name="I_Section" Id="{6d8ad716-c3e6-4f30-9312-f6cd6b03bf2c}">
     <Declaration><![CDATA[INTERFACE I_Section
 ]]></Declaration>
+    <Method Name="M_Halt" Id="{29fe174d-055d-40b2-af71-7ac8fe162162}">
+      <Declaration><![CDATA[METHOD M_Halt : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="M_Start" Id="{4ffe5018-9feb-4ed1-9802-f14eb2a93351}">
+      <Declaration><![CDATA[METHOD M_Start : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="M_Stop" Id="{abfdaff5-9299-4460-ab00-219cd7c4dc3c}">
+      <Declaration><![CDATA[METHOD M_Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

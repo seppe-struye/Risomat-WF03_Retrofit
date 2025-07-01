@@ -100,13 +100,13 @@ VAR_GLOBAL
 	// term 7.3 --> unused
 	bRetractWireHolder				AT %Q*	: BOOL; // Y6.13	term 7.4
 	bExtendWireHolder				AT %Q*	: BOOL; // Y6.14	term 7.5
-	bReleaseWireClamp				AT %Q*	: BOOL; // Y6.15	term 7.6
-	bEngageWireClamp				AT %Q*	: BOOL; // Y6.16	term 7.7
+	bRetractWireClamp				AT %Q*	: BOOL; // Y7.10	term 7.6		// pushes forward clamp
+	bExtendWireClamp				AT %Q*	: BOOL; // Y7.11	term 7.7
 	bRetractWireHolderTransverse1	AT %Q*	: BOOL; // Y7.7		term 7.8
 	bExtendWireHolderTransverse1	AT %Q*	: BOOL; // Y7.8		term 7.9
-	bWirecutterForward				AT %Q*	: BOOL; // Y7.9		term 7.10
-	bRetractWireClamp				AT %Q*	: BOOL; // Y7.10	term 7.11
-	bExtendWireClamp				AT %Q*	: BOOL; // Y7.11	term 7.12
+	bWirePusherForward				AT %Q*	: BOOL; // Y7.9		term 7.10		// bent thingy pushing the wire at the top
+	bReleaseWireClamp				AT %Q*	: BOOL; // Y6.15	term 7.11		// clamps wire
+	bEngageWireClamp				AT %Q*	: BOOL; // Y6.16	term 7.12
 	bUnlockCoilHolder				AT %Q*	: BOOL; // Y7.12	term 7.13
 	bUnlockToolHolder				AT %Q*	: BOOL; // Y7.13	term 7.14
 	bRetractWireHolderTransverse2	AT %Q*	: BOOL; // Y7.14	term 7.15

@@ -15,7 +15,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A4152FC6-D2EC-43E0-9651-E43C12E257C3}" Name="WF03" PrjFilePath="WF03\WF03.plcproj" TmcFilePath="WF03\WF03.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{8466B22D-C7F8-25BC-BA84-E915DAD0EDD9}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{CD653CD1-8D73-D146-5B25-7A509353B168}">
 					<Name>WF03 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -250,6 +250,11 @@
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
+							<Name>GVL.bWirePusherForward</Name>
+							<Comment><![CDATA[ Y7.9		term 7.10		// bent thingy pushing the wire at the top]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL.bLenze1JogBit1</Name>
 							<Comment><![CDATA[//////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////]]></Comment>
@@ -347,12 +352,12 @@
 						</Var>
 						<Var>
 							<Name>GVL.bReleaseWireClamp</Name>
-							<Comment><![CDATA[ Y6.15	term 7.6]]></Comment>
+							<Comment><![CDATA[ Y6.15	term 7.11		// clamps wire]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL.bEngageWireClamp</Name>
-							<Comment><![CDATA[ Y6.16	term 7.7]]></Comment>
+							<Comment><![CDATA[ Y6.16	term 7.12]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -366,18 +371,13 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.bWirecutterForward</Name>
-							<Comment><![CDATA[ Y7.9		term 7.10]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL.bRetractWireClamp</Name>
-							<Comment><![CDATA[ Y7.10	term 7.11]]></Comment>
+							<Comment><![CDATA[ Y7.10	term 7.6		// pushes forward clamp]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL.bExtendWireClamp</Name>
-							<Comment><![CDATA[ Y7.11	term 7.12]]></Comment>
+							<Comment><![CDATA[ Y7.11	term 7.7]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -1170,20 +1170,20 @@
 				<Link VarA="PlcTask Outputs^GVL.bToolingRotationBtnLight" VarB="Channel 13^Output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EL2809)">
-				<Link VarA="PlcTask Outputs^GVL.bEngageWireClamp" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^GVL.bExtendWireClamp" VarB="Channel 12^Output"/>
+				<Link VarA="PlcTask Outputs^GVL.bEngageWireClamp" VarB="Channel 12^Output"/>
+				<Link VarA="PlcTask Outputs^GVL.bExtendWireClamp" VarB="Channel 7^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bExtendWireHolder" VarB="Channel 5^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bExtendWireHolderTransverse1" VarB="Channel 9^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bExtendWireHolderTransverse2" VarB="Channel 16^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bLockDoor" VarB="Channel 2^Output"/>
-				<Link VarA="PlcTask Outputs^GVL.bReleaseWireClamp" VarB="Channel 6^Output"/>
-				<Link VarA="PlcTask Outputs^GVL.bRetractWireClamp" VarB="Channel 11^Output"/>
+				<Link VarA="PlcTask Outputs^GVL.bReleaseWireClamp" VarB="Channel 11^Output"/>
+				<Link VarA="PlcTask Outputs^GVL.bRetractWireClamp" VarB="Channel 6^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bRetractWireHolder" VarB="Channel 4^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bRetractWireHolderTransverse1" VarB="Channel 8^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bRetractWireHolderTransverse2" VarB="Channel 15^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bUnlockCoilHolder" VarB="Channel 13^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bUnlockToolHolder" VarB="Channel 14^Output"/>
-				<Link VarA="PlcTask Outputs^GVL.bWirecutterForward" VarB="Channel 10^Output"/>
+				<Link VarA="PlcTask Outputs^GVL.bWirePusherForward" VarB="Channel 10^Output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 8 (EL2809)">
 				<Link VarA="PlcTask Outputs^GVL.bCutWire" VarB="Channel 1^Output"/>

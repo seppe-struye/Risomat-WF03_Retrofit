@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Section_Cutter" Id="{048b7ae8-7578-4c9e-94ba-9d05fdb204f8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Section_Cutter IMPLEMENTS  I_Section
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	fbModule4posArm		: FB_Module_4posArm;
+	fbWireCutter		: FB_Component_SingleValve;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_Halt" Id="{f78b4a38-00ef-4672-b78c-9ceab0768fae}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Start" Id="{61a31985-be50-47c0-a74d-d1980bffbd3c}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Start : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{ac3b80a8-a924-442d-a964-8ee4d147a60f}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Stop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Section_Cutter">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_Cutter.M_Halt">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_Cutter.M_Start">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_Cutter.M_Stop">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
