@@ -21,6 +21,11 @@ VAR
 	
 	fb4posArm		: FB_Module_4posArm;
 	bHome			: BOOL;
+	
+	fbCutter		: FB_Section_Cutter;
+	Seq: BOOL;
+	Seq_1: BOOL;
+	Seq_2: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -99,6 +104,7 @@ IF bSwitch THEN
 END_IF;
 *)
 
+(*
 // 4 pos arm demo
 fb4posArm(bEnable := TRUE);
 IF bHome THEN
@@ -108,7 +114,24 @@ END_IF
 IF bGoto THEN
 	bGoto := NOT fb4posArm.M_GoTo(nTargetIndex := nTarget);
 END_IF
-	
+*)
+
+// cutter demo
+fbCutter(bEnable := TRUE);
+IF bHome THEN
+	bHome := NOT fbCutter.M_GotoPos1();
+END_IF
+
+IF Seq_1 THEN
+	IF fbCutter.M_Seq_1() THEN
+		Seq_1 	:= FALSE;
+		Seq_2	:= TRUE;
+	END_IF
+END_IF
+
+IF Seq_2 THEN
+	Seq_2 := NOT fbCutter.M_Seq_2();
+END_IF
 
 ]]></ST>
     </Implementation>
@@ -163,6 +186,7 @@ END_IF
       <LineId Id="115" Count="0" />
       <LineId Id="119" Count="0" />
       <LineId Id="143" Count="0" />
+      <LineId Id="180" Count="0" />
       <LineId Id="145" Count="0" />
       <LineId Id="144" Count="0" />
       <LineId Id="146" Count="0" />
@@ -170,6 +194,19 @@ END_IF
       <LineId Id="155" Count="0" />
       <LineId Id="151" Count="2" />
       <LineId Id="149" Count="0" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="186" Count="2" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="230" Count="1" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="235" Count="1" />
       <LineId Id="64" Count="0" />
       <LineId Id="14" Count="0" />
     </LineIds>

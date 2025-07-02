@@ -15,10 +15,10 @@ VAR_GLOBAL
 	bDoorToolHolderDown				AT %I*	: BOOL;	// S5.20	term 2.4
 	// term 2.5-11 --> unused
 	bWireClampRetracted				AT %I*	: BOOL;	// S5.28	term 2.12
-	bWireClampTransverse1Retracted	AT %I*	: BOOL;	// S5.30	term 2.13
 	bWireClampTransverse1Extended	AT %I*	: BOOL;	// S5.29	term 2.14
-	bWireClampTransverse2Retracted	AT %I*	: BOOL;	// S5.32	term 2.15
+	bWireClampTransverse1Retracted	AT %I*	: BOOL;	// S5.30	term 2.13
 	bWireClampTransverse2Extended	AT %I*	: BOOL;	// S5.31	term 2.16
+	bWireClampTransverse2Retracted	AT %I*	: BOOL;	// S5.32	term 2.15
 	//--------------------------------
 	// TERM 3 : EL1809 Digital In
 	//--------------------------------
@@ -102,15 +102,15 @@ VAR_GLOBAL
 	bExtendWireHolder				AT %Q*	: BOOL; // Y6.14	term 7.5
 	bRetractWireClamp				AT %Q*	: BOOL; // Y7.10	term 7.6		// pushes forward clamp
 	bExtendWireClamp				AT %Q*	: BOOL; // Y7.11	term 7.7
-	bRetractWireHolderTransverse1	AT %Q*	: BOOL; // Y7.7		term 7.8
-	bExtendWireHolderTransverse1	AT %Q*	: BOOL; // Y7.8		term 7.9
+	bRetractWireHolderTransverse2	AT %Q*	: BOOL; // Y7.7		term 7.8
+	bExtendWireHolderTransverse2	AT %Q*	: BOOL; // Y7.8		term 7.9
 	bWirePusherForward				AT %Q*	: BOOL; // Y7.9		term 7.10		// bent thingy pushing the wire at the top
 	bReleaseWireClamp				AT %Q*	: BOOL; // Y6.15	term 7.11		// clamps wire
 	bEngageWireClamp				AT %Q*	: BOOL; // Y6.16	term 7.12
 	bUnlockCoilHolder				AT %Q*	: BOOL; // Y7.12	term 7.13
 	bUnlockToolHolder				AT %Q*	: BOOL; // Y7.13	term 7.14
-	bRetractWireHolderTransverse2	AT %Q*	: BOOL; // Y7.14	term 7.15
-	bExtendWireHolderTransverse2	AT %Q*	: BOOL; // Y7.15	term 7.16
+	bRetractWireHolderTransverse1	AT %Q*	: BOOL; // Y7.14	term 7.15
+	bExtendWireHolderTransverse1	AT %Q*	: BOOL; // Y7.15	term 7.16
 	//--------------------------------
 	// TERM 8 : EL2809 Digital Out
 	//--------------------------------

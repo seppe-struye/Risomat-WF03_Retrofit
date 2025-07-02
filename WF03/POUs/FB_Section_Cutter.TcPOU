@@ -3,24 +3,151 @@
   <POU Name="FB_Section_Cutter" Id="{048b7ae8-7578-4c9e-94ba-9d05fdb204f8}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Section_Cutter IMPLEMENTS  I_Section
 VAR_INPUT
+	bEnable				: BOOL;
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	fbModule4posArm		: FB_Module_4posArm;
-	fbWireCutter		: FB_Component_SingleValve;
+	Components				: ARRAY [0..12] OF I_Component;	
+
+	fbModule4posArm			: FB_Module_4posArm;
+	fbWireCutter			: FB_Component_SingleValve;
 	
+	fbWirePusher			: FB_Component_SingleValve;
+	fbWirePusherExtended	: FB_Component_ReedSwitch;	//
+	fbWirePusherRetracted	: FB_Component_ReedSwitch;	//
+	
+	fbShortTransverse		: FB_Component_DualValve;
+	fbShortTransExtended	: FB_Component_ReedSwitch;	//
+	fbShortTransRetracted	: FB_Component_ReedSwitch;	//
+	
+	fbLongTransverse		: FB_Component_DualValve;
+	fbLongTransExtended		: FB_Component_ReedSwitch;	//
+	fbLongTransRetracted	: FB_Component_ReedSwitch;	//
+	
+	fbWireClamp				: FB_Component_DualValve;
+	fbWireClampRetracted	: FB_Component_ReedSwitch;	//
+	
+	fbWireClampActuator		: FB_Component_DualValve;
+	idx: INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[IF bEnable THEN
+	fbModule4posArm(bEnable := TRUE);
+	fbWireCutter(sName := 'wire cutter', bEnable := TRUE, bOutput := GVL.bCutWire);
+	
+	fbWirePusher(sName := 'wire cutter', bEnable := TRUE, bOutput := GVL.bWirePusherForward);
+	fbWirePusherExtended(bRawSignal  := GVL.bWirePusherEngaged,		tDebounce := T#0MS, tTimeout := T#0MS, sName := 'wire pusher extended reed', bEnable := TRUE);
+	fbWirePusherRetracted(bRawSignal := GVL.bWirePusherDisengaged, 	tDebounce := T#0MS, tTimeout := T#0MS, sName := 'wire pusher retracted reed',bEnable := TRUE);
+		
+	fbShortTransverse(sName := 'short transverse', bEnable := TRUE, bOutputA := GVL.bExtendWireHolderTransverse2, bOutputB := GVL.bRetractWireHolderTransverse2);
+	fbShortTransExtended(bRawSignal  := GVL.bWireClampTransverse1Extended, tDebounce := T#0MS, tTimeout := T#0MS, sName := 'short trans extended reed', bEnable := TRUE);
+	fbShortTransRetracted(bRawSignal := GVL.bWireClampTransverse1Retracted,tDebounce := T#0MS, tTimeout := T#0MS, sName := 'short trans retracted reed',bEnable := TRUE);	
+	
+	fbLongTransverse(sName := 'long transverse', bEnable := TRUE, bOutputA := GVL.bExtendWireHolderTransverse1, bOutputB := GVL.bRetractWireHolderTransverse1);
+	fbLongTransExtended(bRawSignal  := GVL.bWireClampTransverse2Extended, tDebounce := T#0MS, tTimeout := T#0MS, sName := 'short trans extended reed', bEnable := TRUE);
+	fbLongTransRetracted(bRawSignal := GVL.bWireClampTransverse2Retracted,tDebounce := T#0MS, tTimeout := T#0MS, sName := 'short trans retracted reed',bEnable := TRUE);
+		
+	fbWireClamp(sName := 'wire clamp', bEnable := TRUE, bOutputA := GVL.bEngageWireClamp, bOutputB := GVL.bReleaseWireClamp);
+	fbWireClampRetracted(bRawSignal := GVL.bWireClampRetracted,tDebounce := T#0MS, tTimeout := T#0MS, sName := 'wire clamp retracted',bEnable := TRUE);
+	
+	fbWireClampActuator(sName := 'wire clamp actuator', bEnable := TRUE, bOutputA := GVL.bExtendWireClamp, bOutputB := GVL.bRetractWireClamp);
+		
+	Components[0]		:= fbWireCutter;
+	Components[1]		:= fbWirePusher;
+	Components[2]		:= fbWirePusherExtended;
+	Components[3]		:= fbWirePusherRetracted;
+	Components[4]		:= fbShortTransverse;
+	Components[5]		:= fbShortTransExtended;
+	Components[6]		:= fbShortTransRetracted;
+	Components[7]		:= fbLongTransverse;
+	Components[8]		:= fbLongTransExtended;
+	Components[9]		:= fbLongTransRetracted;
+	Components[10]		:= fbWireClamp;
+	Components[11]		:= fbWireClampRetracted;
+	Components[12]		:= fbWireClampActuator;
+	
+	fbModule4posArm.M_Start();
+	FOR idx := 0 TO 12 DO
+    	Components[idx].M_Start();
+	END_FOR;
+END_IF]]></ST>
     </Implementation>
+    <Method Name="M_GotoPos1" Id="{13d3fecf-8640-4402-9cd9-88343630206b}">
+      <Declaration><![CDATA[METHOD M_GotoPos1 : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable THEN
+	fbWirePusher.M_Retract();
+	fbWireClamp.M_Extend();
+	fbWireClampActuator.M_Extend();
+	fbShortTransverse.M_Extend();
+	fbLongTransverse.M_Retract();
+	
+	IF 	fbModule4posArm.M_Goto(2) 				 
+		AND NOT fbWireClampRetracted.bSensorActive 
+		AND fbShortTransExtended.bSensorActive
+		AND fbLongTransRetracted.bSensorActive
+		AND fbWirePusherRetracted.bSensorActive THEN
+		
+		fbWireClamp.M_Hold();
+		fbWireClampActuator.M_Hold();
+		fbShortTransverse.M_Hold();
+		fbLongTransverse.M_Hold();
+		M_GotoPos1 := TRUE;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Halt" Id="{f78b4a38-00ef-4672-b78c-9ceab0768fae}">
       <Declaration><![CDATA[{warning 'add method implementation '}
 METHOD M_Halt : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Seq_1" Id="{2670b1ac-6eb8-4452-b70e-425c65c9ab55}">
+      <Declaration><![CDATA[METHOD M_Seq_1 : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF fbLongTransExtended.bSensorActive THEN
+	fbLongTransverse.M_Hold();
+	
+	IF fbWireClampRetracted.bSensorActive THEN
+		fbWireClampActuator.M_Hold();		
+		fbWireClamp.M_Hold();
+		fbWirePusher.M_Extend();
+		IF fbModule4posArm.M_Goto(1) THEN
+			M_Seq_1 := TRUE;
+		END_IF
+	ELSE
+		fbWireClampActuator.M_Retract();
+		fbWireClamp.M_Retract();
+	END_IF
+ELSE
+	fbLongTransverse.M_Extend();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Seq_2" Id="{baf45e96-81c1-4138-9b09-716a058d32f1}">
+      <Declaration><![CDATA[METHOD M_Seq_2 : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF fbLongTransRetracted.bSensorActive THEN
+	fbLongTransverse.M_Hold();
+	fbWirePusher.M_Retract();
+	M_Seq_2 := TRUE;
+ELSE
+	fbLongTransverse.M_Retract();
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Start" Id="{61a31985-be50-47c0-a74d-d1980bffbd3c}">
@@ -41,9 +168,76 @@ METHOD M_Stop : BOOL
     </Method>
     <LineIds Name="FB_Section_Cutter">
       <LineId Id="9" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="172" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="176" Count="1" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="179" Count="1" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="185" Count="1" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="82" Count="1" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_Cutter.M_GotoPos1">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="3" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="FB_Section_Cutter.M_Halt">
       <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_Cutter.M_Seq_1">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="13" Count="2" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_Cutter.M_Seq_2">
+      <LineId Id="6" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Section_Cutter.M_Start">
       <LineId Id="4" Count="0" />
