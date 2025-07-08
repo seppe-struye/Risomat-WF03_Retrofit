@@ -9,8 +9,6 @@ END_VAR
 VAR_IN_OUT
 	bToolRotationBtnLight	: BOOL;
 END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
 	Components			: ARRAY [0..5] OF I_Component;
 	
@@ -110,7 +108,7 @@ VAR
 	eState: INT;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF bEnable AND fbACmotor.eState <> E_ComponentState.BUSY THEN 
+        <ST><![CDATA[IF bEnable AND fbACmotor.eState <> E_State.BUSY THEN 
 		fbToolHolderLock.M_Retract();
 END_IF;]]></ST>
       </Implementation>
@@ -155,7 +153,7 @@ END_VAR]]></Declaration>
 	
 	IF tTrigger2.Q THEN											// when last index bit has triggered, turn of motor
 		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
-		IF fbACmotor.eState <> E_ComponentState.BUSY THEN		// if motor is off, lock plate and signal operation done
+		IF fbACmotor.eState <> E_State.BUSY THEN		// if motor is off, lock plate and signal operation done
 			M_lock();
 			M_Switch := TRUE;
 		END_IF;
@@ -173,7 +171,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF bEnable AND fbACmotor.eState <> E_ComponentState.BUSY THEN 
+        <ST><![CDATA[IF bEnable AND fbACmotor.eState <> E_State.BUSY THEN 
 		fbToolHolderLock.M_Extend();
 END_IF;]]></ST>
       </Implementation>

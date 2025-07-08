@@ -15,7 +15,7 @@ END_VAR
 VAR_OUTPUT
 	bSensorActive	: BOOL;
 	bTimeout		: BOOL;
-	eState			: E_ComponentState;
+	eState			: E_State;
 	sStatusText 	: STRING[100];
 END_VAR
 
@@ -33,34 +33,34 @@ tTimeoutTimer.PT	:= tTimeout;
 
 IF bEnable THEN
 	CASE eState OF
-		E_ComponentState.READY: 	IF bRawSignal <> bLastStableSignal THEN
+		E_State.READY: 	IF bRawSignal <> bLastStableSignal THEN
 										bPendingSignal := bRawSignal;
-										eState := E_ComponentState.BUSY;
+										eState := E_State.BUSY;
 									ELSE
 										tTimeoutTimer(IN := FALSE);
 										tDebounceTimer(IN := FALSE);
 									END_IF
 									sStatusText := 'sensor active';
 		
-		E_ComponentState.BUSY:		tDebounceTimer(IN := TRUE);
+		E_State.BUSY:		tDebounceTimer(IN := TRUE);
 									IF bRawSignal <> bPendingSignal THEN			// if signal bounces go back to ready state	
-										eState := E_ComponentState.DONE;
+										eState := E_State.DONE;
 									END_IF
 			
 									IF tDebounceTimer.Q THEN						// if signal stays stable for debounce duration -> trigger timeout
-										eState := E_ComponentState.TIMEOUT;
+										eState := E_State.TIMEOUT;
 									END_IF
 									sStatusText := 'Debouncing sensor';
 									
-		E_ComponentState.TIMEOUT:	tTimeoutTimer(IN := TRUE);
+		E_State.TIMEOUT:	tTimeoutTimer(IN := TRUE);
 									bLastStableSignal := bPendingSignal;			// output stable signal
 									bSensorActive := bLastStableSignal;
 									IF tTimeoutTimer.Q THEN
-										eState := E_ComponentState.DONE;
+										eState := E_State.DONE;
 									END_IF
 									sStatusText := 'sensor timeout';
 			
-		E_ComponentState.DONE:		tTimeoutTimer(IN := FALSE);
+		E_State.DONE:		tTimeoutTimer(IN := FALSE);
 									tDebounceTimer(IN := FALSE);
 	END_CASE
 END_IF
@@ -74,7 +74,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[tDebounceTimer(IN := FALSE);
-eState := E_ComponentState.HALTED;]]></ST>
+eState := E_State.HALTED;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Start" Id="{3ee6110b-c203-4bb9-9caa-b0b18392f854}">
@@ -83,8 +83,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState <> E_ComponentState.BUSY AND eState <> E_ComponentState.TIMEOUT THEN
-	eState := E_ComponentState.READY;
+        <ST><![CDATA[IF eState <> E_State.BUSY AND eState <> E_State.TIMEOUT THEN
+	eState := E_State.READY;
 END_IF;
 	]]></ST>
       </Implementation>
@@ -95,8 +95,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState <> E_ComponentState.BUSY AND eState <> E_ComponentState.TIMEOUT  THEN
-	eState := E_ComponentState.DONE;
+        <ST><![CDATA[IF eState <> E_State.BUSY AND eState <> E_State.TIMEOUT  THEN
+	eState := E_State.DONE;
 END_IF]]></ST>
       </Implementation>
     </Method>

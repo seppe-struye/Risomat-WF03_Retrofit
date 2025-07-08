@@ -3,7 +3,14 @@
   <POU Name="MAIN" Id="{6907ca3e-912a-490f-aa07-3ae958d9385e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	bToolRotation	: BOOL;
+	fbToolStation	: FB_Section_ToolStation;
+	bGoto			: BOOL;
+	nTarget			: INT := 1;
+	bSwitch			: BOOL;
+	bUP				: BOOL;
+	bDown			: BOOL;		
+
+
 	// testing
 	fbSens		: FB_Component_InductiveSensor;
 	bSignal		: BOOL;
@@ -14,12 +21,7 @@ VAR
 	eDirection	: E_RotationDirection := E_RotationDirection.CW;
 	nCount 		: INT;
 	
-	
-	fbCoilHolder	: FB_Module_CoilHolder;
-	bGoto			: BOOL;
-	nTarget			: INT := 1;
-	fbToolHolder	: FB_Module_ToolHolder;
-	bSwitch			: BOOL;
+
 	
 	fb4posArm		: FB_Module_4posArm;
 	bHome			: BOOL;
@@ -29,24 +31,20 @@ VAR
 	Seq_1: BOOL;
 	Seq_2: BOOL;
 	
-	fbDoor			: FB_Module_ToolHolderDoor;
-	bUP: BOOL;
-	bDown: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbToolHolder(
-			bEnable := TRUE, 
-			bToolRotationBtn := GVL.bToolingRotationBtn, 
-			bToolRotationBtnLight := GVL.bToolingRotationBtnLight);
-			
+      <ST><![CDATA[fbToolStation(bEnable := TRUE);
 
-fbDoor(bEnable := TRUE);
-IF bUP THEN
-	bUP := NOT fbDoor.M_Up();
+IF bGoto THEN
+	bGoto := NOT fbToolStation.M_GoTo(nTargetIndex := nTarget);
+END_IF
+
+IF bUp THEN
+	bUp := NOT fbToolStation.M_CloseDoor();
 END_IF
 
 IF bDown THEN
-	bDown := NOT fbDoor.M_Down();
+	bDown := NOT fbToolStation.M_OpenDoor();
 END_IF
 
 // inductive sensor demo
@@ -135,7 +133,7 @@ IF bGoto THEN
 	bGoto := NOT fb4posArm.M_GoTo(nTargetIndex := nTarget);
 END_IF
 *)
-
+(*
 // cutter demo
 fbCutter(bEnable := TRUE);
 IF bHome THEN
@@ -152,18 +150,19 @@ END_IF
 IF Seq_2 THEN
 	Seq_2 := NOT fbCutter.M_Seq_2();
 END_IF
-
+*)
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="277" Count="0" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="279" Count="0" />
-      <LineId Id="281" Count="2" />
-      <LineId Id="278" Count="0" />
-      <LineId Id="288" Count="2" />
-      <LineId Id="293" Count="2" />
       <LineId Id="292" Count="0" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="316" Count="1" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="324" Count="1" />
+      <LineId Id="327" Count="2" />
+      <LineId Id="326" Count="0" />
       <LineId Id="287" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="2" Count="0" />

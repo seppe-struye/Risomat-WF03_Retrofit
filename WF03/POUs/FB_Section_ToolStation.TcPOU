@@ -8,6 +8,7 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	bTriggerToolRotation	: BOOL;
 	Modules				: ARRAY [0..2] OF I_Module;	
 
 	fbCoilHolder		: FB_Module_CoilHolder;
@@ -23,12 +24,22 @@ END_VAR
 	fbToolHolderDoor(bEnable 		:= TRUE);
 	fbToolHolder(
 			bEnable 				:= TRUE, 
-			bToolRotationBtn 		:= GVL.bToolingRotationBtn, 
+			bToolRotationBtn 		:= bTriggerToolRotation, 
 			bToolRotationBtnLight 	:= GVL.bToolingRotationBtnLight);
+	
+	Modules[0]	:= fbCoilHolder;
+	Modules[1]	:= fbToolHolderDoor;
+	Modules[2]	:= fbToolHolder;
 	
 	FOR idx := 0 TO 2 DO
     	Modules[idx].M_Start();
 	END_FOR;
+	
+	IF GVL.bToolingRotationBtn AND fbToolHolderDoor.bDoorUp THEN
+		bTriggerToolRotation := TRUE;
+	ELSE
+		bTriggerToolRotation := FALSE;
+	END_IF
 END_IF]]></ST>
     </Implementation>
     <Method Name="M_CloseDoor" Id="{14bc3192-cba0-4753-b003-278ffd1c5135}">
@@ -37,16 +48,23 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF bEnable THEN
+	M_CloseDoor := fbToolHolderDoor.M_Up();
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Goto" Id="{238912f1-2465-4448-9839-b6a3da1e07f6}">
       <Declaration><![CDATA[METHOD M_Goto : BOOL
 VAR_INPUT
+	nTargetIndex: INT;
 END_VAR
-]]></Declaration>
+
+VAR
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF bEnable THEN
+	M_Goto := fbCoilHolder.M_GoTo(nTargetIndex := nTargetIndex);
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Halt" Id="{2bdb3e6e-c1a7-478d-95b0-75d93fba08af}">
@@ -63,7 +81,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF bEnable THEN
+	M_OpenDoor := fbToolHolderDoor.M_Down();
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Start" Id="{cabe4c21-79e3-46ea-ba76-d03cb2c651dd}">
@@ -82,15 +102,6 @@ METHOD M_Stop : BOOL
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Switch" Id="{b4fbbe5b-d3c4-4170-bf2f-c4983124d9e2}">
-      <Declaration><![CDATA[METHOD M_Switch : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
     <LineIds Name="FB_Section_ToolStation">
       <LineId Id="9" Count="0" />
       <LineId Id="17" Count="0" />
@@ -98,20 +109,27 @@ END_VAR
       <LineId Id="21" Count="2" />
       <LineId Id="19" Count="0" />
       <LineId Id="24" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="30" Count="0" />
       <LineId Id="28" Count="1" />
       <LineId Id="20" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="41" Count="0" />
       <LineId Id="18" Count="0" />
     </LineIds>
     <LineIds Name="FB_Section_ToolStation.M_CloseDoor">
-      <LineId Id="5" Count="0" />
+      <LineId Id="5" Count="2" />
     </LineIds>
     <LineIds Name="FB_Section_ToolStation.M_Goto">
-      <LineId Id="5" Count="0" />
+      <LineId Id="5" Count="2" />
     </LineIds>
     <LineIds Name="FB_Section_ToolStation.M_Halt">
       <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_Section_ToolStation.M_OpenDoor">
+      <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Section_ToolStation.M_Start">
@@ -119,9 +137,6 @@ END_VAR
     </LineIds>
     <LineIds Name="FB_Section_ToolStation.M_Stop">
       <LineId Id="4" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Section_ToolStation.M_Switch">
-      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -6,6 +6,7 @@ VAR_INPUT
 	bEnable					: BOOL;
 END_VAR
 VAR_OUTPUT
+	bDoorUp				: BOOL;
 END_VAR
 VAR
 	Components			: ARRAY [0..2] OF I_Component;
@@ -45,6 +46,8 @@ END_VAR
 	FOR idx := 0 TO 2 DO
     	Components[idx].M_Start();
 	END_FOR;
+	
+	bDoorUp := fbDoorUp.bSensorActive;
 END_IF]]></ST>
     </Implementation>
     <Method Name="M_Down" Id="{b9e2c4a7-e1f6-4008-995a-5790ed9e33e3}">
@@ -115,6 +118,7 @@ END_IF]]></ST>
       <LineId Id="36" Count="4" />
       <LineId Id="42" Count="1" />
       <LineId Id="41" Count="0" />
+      <LineId Id="48" Count="1" />
       <LineId Id="18" Count="0" />
     </LineIds>
     <LineIds Name="FB_Module_ToolHolderDoor.M_Down">

@@ -15,7 +15,7 @@ END_VAR
 
 VAR_OUTPUT
 	// interface vars
-	eState			: E_ComponentState;
+	eState			: E_State;
 	iErrorCode		: INT;
 	sStatusText 	: STRING[50];
 END_VAR
@@ -29,7 +29,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF bEnable AND eState = E_ComponentState.READY THEN
+        <ST><![CDATA[IF bEnable AND eState = E_State.READY THEN
 	bOutput := TRUE;	
 END_IF;]]></ST>
       </Implementation>
@@ -39,7 +39,7 @@ END_IF;]]></ST>
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[bOutput := FALSE;
-eState := E_ComponentState.HALTED;]]></ST>
+eState := E_State.HALTED;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Retract" Id="{32527918-9b92-4347-97af-cfb47d794b1c}">
@@ -48,7 +48,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF bEnable AND eState = E_ComponentState.READY THEN
+        <ST><![CDATA[IF bEnable AND eState = E_State.READY THEN
 	bOutput := FALSE;
 END_IF;]]></ST>
       </Implementation>
@@ -58,8 +58,8 @@ END_IF;]]></ST>
 METHOD M_Start : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState <> E_ComponentState.BUSY THEN
-	eState := E_ComponentState.READY;
+        <ST><![CDATA[IF eState <> E_State.BUSY THEN
+	eState := E_State.READY;
 END_IF;]]></ST>
       </Implementation>
     </Method>
@@ -68,8 +68,8 @@ END_IF;]]></ST>
 METHOD M_Stop : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState <> E_ComponentState.BUSY THEN
-	eState := E_ComponentState.DONE;
+        <ST><![CDATA[IF eState <> E_State.BUSY THEN
+	eState := E_State.DONE;
 END_IF]]></ST>
       </Implementation>
     </Method>
