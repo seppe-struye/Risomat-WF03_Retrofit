@@ -117,6 +117,19 @@ VAR_GLOBAL
 	bCutWire						AT %Q*	: BOOL; // Y8.1		term 7.1
 	// term 8.2-9 --> unused
 	// term 8.16-16 --> free
+	
+	//--------------------------------
+	// TERM 8 : EL4032 Analog Out
+	//--------------------------------
+	aOutServo1						AT %Q*	: INT;	// term 18.1
+	aOutServo2						AT %Q*	: INT;	// term 18.1
+	
+	bSetCounterDoneServo2			AT %I*	: BOOL;
+	dCountServo2					AT %I*	: DINT;
+	
+	dSetCounterServo2				AT %Q*	: BOOL;
+	dSetCounterValueServo2			AT %Q*	: DINT;
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

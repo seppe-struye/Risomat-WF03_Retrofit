@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Module_ToolHolderDoor" Id="{0d495e39-7cce-4183-99e5-9ac20d38389e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolderDoor IMPLEMENTS I_Module
+VAR_INPUT
+	bEnable					: BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Components			: ARRAY [0..2] OF I_Component;
+	
+	fbPiston			: FB_Component_DualValve;
+	fbDoorUp			: FB_Component_InductiveSensor;
+	fbDoorDown			: FB_Component_ReedSwitch;
+	idx					: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bEnable THEN
+	fbPiston(
+		sName 		:= 'door piston',
+		bEnable		:= TRUE,
+		bOutputA	:= GVL.bCloseToolCarrierDoor,
+		bOutputB	:= GVL.bOpenToolCarrierDoor);
+	
+	fbDoorUp(
+		bRawSignal	:= GVL.bDoorToolHolderLock,
+		tDebounce	:= T#0MS,
+		tTimeout	:= T#0MS,
+		sName		:= 'door up',
+		bEnable		:= TRUE);
+		
+	fbDoorDown(
+		bRawSignal	:= GVL.bDoorToolHolderDown,
+		tDebounce	:= T#0MS,
+		tTimeout	:= T#0MS,
+		sName		:= 'door down',
+		bEnable		:= TRUE);
+		
+	Components[0]	:= fbPiston;
+	Components[1]	:= fbDoorUp;
+	Components[2]	:= fbDoorDown;
+	
+	FOR idx := 0 TO 2 DO
+    	Components[idx].M_Start();
+	END_FOR;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="M_Down" Id="{b9e2c4a7-e1f6-4008-995a-5790ed9e33e3}">
+      <Declaration><![CDATA[METHOD M_Down : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable THEN
+	IF fbDoorDown.bSensorActive THEN
+		fbPiston.M_Hold();
+		M_Down := TRUE;
+	ELSE
+		fbPiston.M_Retract();
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{0b603238-625f-4883-b741-b13099fd28a6}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Start" Id="{027b75b5-29ad-4339-8c09-b924ca0fe761}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Start : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{0c838a79-9df5-4a28-a13e-62b86fd1408b}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Stop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Up" Id="{390c175e-3aea-46f3-91f9-12aac5ce4f18}">
+      <Declaration><![CDATA[METHOD M_Up : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable THEN
+	IF fbDoorUp.bSensorActive THEN
+		fbPiston.M_Hold();
+		M_Up := TRUE;
+	ELSE
+		fbPiston.M_Extend();
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Module_ToolHolderDoor">
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="9" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="33" Count="2" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="36" Count="4" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Down">
+      <LineId Id="6" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Halt">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Start">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Stop">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Up">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

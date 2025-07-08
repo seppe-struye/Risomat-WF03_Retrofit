@@ -3,7 +3,11 @@
   <POU Name="FB_Module_ToolHolder" Id="{b8caeb05-c46f-4fb5-a22c-c7afa5dce2ec}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolder IMPLEMENTS I_Module
 VAR_INPUT
-	bEnable				: BOOL;
+	bEnable					: BOOL;
+	bToolRotationBtn		: BOOL;
+END_VAR
+VAR_IN_OUT
+	bToolRotationBtnLight	: BOOL;
 END_VAR
 VAR_OUTPUT
 END_VAR
@@ -20,6 +24,7 @@ VAR
 	fbIndexBit2			: FB_Component_InductiveSensor;
 	idx					: INT;
 	bDir				: BOOL; // placeholder because this motor is single direction
+	bToolRotating		: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -74,6 +79,17 @@ END_VAR
 	FOR idx := 0 TO 5 DO
     	Components[idx].M_Start();
 	END_FOR;
+	
+	IF bToolRotationBtn THEN
+		bToolRotating := TRUE;
+	END_IF
+	
+	IF bToolRotating THEN
+		bToolRotationBtnLight := TRUE;
+		bToolRotating := NOT M_Switch();
+	ELSE
+		bToolRotationBtnLight := FALSE;
+	END_IF
 END_IF]]></ST>
     </Implementation>
     <Method Name="M_Halt" Id="{f4fd5710-ad40-4a73-9d1f-e22168ac17cc}">
@@ -176,6 +192,13 @@ END_IF;]]></ST>
       <LineId Id="83" Count="0" />
       <LineId Id="85" Count="1" />
       <LineId Id="84" Count="0" />
+      <LineId Id="108" Count="3" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="117" Count="0" />
       <LineId Id="23" Count="0" />
     </LineIds>
     <LineIds Name="FB_Module_ToolHolder.M_Halt">

@@ -64,7 +64,13 @@
     <Compile Include="POUs\FB_Module_ToolHolder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_Module_ToolHolderDoor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FB_Section_Cutter.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FB_Section_ToolStation.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\I_Component.TcIO">

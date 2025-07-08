@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Section_ToolStation" Id="{511696e8-12f8-47da-a29f-70728d219f59}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Section_ToolStation IMPLEMENTS I_Section
+VAR_INPUT
+	bEnable		: BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Modules				: ARRAY [0..2] OF I_Module;	
+
+	fbCoilHolder		: FB_Module_CoilHolder;
+	fbToolHolderDoor	: FB_Module_ToolHolderDoor;
+	fbToolHolder		: FB_Module_ToolHolder;
+	
+	idx					: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bEnable THEN
+	fbCoilHolder(bEnable 			:= TRUE);
+	fbToolHolderDoor(bEnable 		:= TRUE);
+	fbToolHolder(
+			bEnable 				:= TRUE, 
+			bToolRotationBtn 		:= GVL.bToolingRotationBtn, 
+			bToolRotationBtnLight 	:= GVL.bToolingRotationBtnLight);
+	
+	FOR idx := 0 TO 2 DO
+    	Modules[idx].M_Start();
+	END_FOR;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="M_CloseDoor" Id="{14bc3192-cba0-4753-b003-278ffd1c5135}">
+      <Declaration><![CDATA[METHOD M_CloseDoor : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Goto" Id="{238912f1-2465-4448-9839-b6a3da1e07f6}">
+      <Declaration><![CDATA[METHOD M_Goto : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{2bdb3e6e-c1a7-478d-95b0-75d93fba08af}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_OpenDoor" Id="{a0c1f1ff-ab52-4f0d-a35e-19942b7a5b42}">
+      <Declaration><![CDATA[METHOD M_OpenDoor : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Start" Id="{cabe4c21-79e3-46ea-ba76-d03cb2c651dd}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Start : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{575e3d9e-84f8-438a-a92f-e2a00552d590}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Stop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Switch" Id="{b4fbbe5b-d3c4-4170-bf2f-c4983124d9e2}">
+      <Declaration><![CDATA[METHOD M_Switch : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Section_ToolStation">
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_ToolStation.M_CloseDoor">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_ToolStation.M_Goto">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_ToolStation.M_Halt">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_ToolStation.M_OpenDoor">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_ToolStation.M_Start">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_ToolStation.M_Stop">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Section_ToolStation.M_Switch">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
