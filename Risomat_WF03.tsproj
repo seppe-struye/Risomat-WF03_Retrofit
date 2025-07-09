@@ -2,7 +2,7 @@
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.66">
 	<DataTypes>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000B}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..10] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000B}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..10] OF BIT</Name>
 			<BitSize>11</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -11,7 +11,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
 			<BitSize>1</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -20,7 +20,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000002}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000002}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BIT</Name>
 			<BitSize>2</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -29,7 +29,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000009}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..8] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000009}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..8] OF BIT</Name>
 			<BitSize>9</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -38,7 +38,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000F}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..14] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000F}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..14] OF BIT</Name>
 			<BitSize>15</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -47,7 +47,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000003}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..2] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000003}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..2] OF BIT</Name>
 			<BitSize>3</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -56,7 +56,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
 			<BitSize>4</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -65,7 +65,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
 			<BitSize>5</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -74,7 +74,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
 			<BitSize>7</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -83,7 +83,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000C}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..11] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000C}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..11] OF BIT</Name>
 			<BitSize>12</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -102,18 +102,39 @@
 	<Project ProjectGUID="{380762D7-A62E-4D39-9F30-6F84D9D62887}" TargetNetId="5.155.196.195.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
 			<Tasks>
-				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+				<Task Id="1" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
+				</Task>
+				<Task Id="3" Priority="1" CycleTime="20000" AmsPort="351" AdtTasks="true">
+					<Name>RevolutionCounter</Name>
 				</Task>
 			</Tasks>
 		</System>
 		<Plc>
 			<Project GUID="{A4152FC6-D2EC-43E0-9651-E43C12E257C3}" Name="WF03" PrjFilePath="WF03\WF03.plcproj" TmcFilePath="WF03\WF03.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{C5168DF8-F089-3EE3-4367-57923DB3AE65}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{57A61356-DF58-0986-3056-D2862F96BE5E}">
 					<Name>WF03 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
+						<Name>RevolutionCounter Inputs</Name>
+						<Var>
+							<Name>GVL.bCoilRotate</Name>
+							<Comment><![CDATA[			term 5.16			// rename]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.dCountServo2</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
+							<Type>DINT</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
 						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL.bSetCounterDoneServo1</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 						<Var>
 							<Name>GVL.bWirePusherDisengaged</Name>
 							<Comment><![CDATA[//////////////////////////////////////////////////////////////////////////////////////////
@@ -336,21 +357,23 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.bCoilRotate</Name>
-							<Comment><![CDATA[			term 5.16			// rename]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL.bSetCounterDoneServo2</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.dCountServo2</Name>
+							<Name>GVL.dCountServo1</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
 							<Type>DINT</Type>
 						</Var>
 					</Vars>
-					<Vars VarGrpType="2" AreaNo="1">
+					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
 						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>GVL.bResetServosErrors</Name>
+							<Comment><![CDATA[			term 6.8]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 						<Var>
 							<Name>GVL.bLenze1JogBit1</Name>
 							<Comment><![CDATA[//////////////////////////////////////////////////////////////////////////////////////////
@@ -385,11 +408,6 @@
 						<Var>
 							<Name>GVL.bLenze2njectionBrake</Name>
 							<Comment><![CDATA[			term 6.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL.bServosDigitalIn1</Name>
-							<Comment><![CDATA[			term 6.8]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -509,20 +527,32 @@
 						</Var>
 						<Var>
 							<Name>GVL.aOutServo1</Name>
-							<Comment><![CDATA[ term 18.1]]></Comment>
+							<Comment><![CDATA[ term 20]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL.aOutServo2</Name>
-							<Comment><![CDATA[ term 18.1]]></Comment>
+							<Comment><![CDATA[ term 20]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL.dSetCounterServo2</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL.dSetCounterValueServo2</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL.dSetCounterServo1</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.dSetCounterValueServo1</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
 							<Type>DINT</Type>
 						</Var>
 					</Vars>
@@ -544,15 +574,25 @@
 					<Contexts>
 						<Context>
 							<Id>0</Id>
-							<Name>PlcTask</Name>
+							<Name>RevolutionCounter</Name>
 							<ManualConfig>
 								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>1</Priority>
+							<CycleTime>2000000</CycleTime>
+						</Context>
+						<Context>
+							<Id>1</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010010</OTCID>
 							</ManualConfig>
 							<Priority>20</Priority>
 							<CycleTime>10000000</CycleTime>
 						</Context>
 					</Contexts>
 					<TaskPouOids>
+						<TaskPouOid Prio="1" OTCID="#x08502002"/>
 						<TaskPouOid Prio="20" OTCID="#x08502001"/>
 					</TaskPouOids>
 				</Instance>
@@ -588,6 +628,9 @@
 				</AddressInfo>
 				<Image Id="1" AddrType="9" ImageType="3">
 					<Name>Image</Name>
+				</Image>
+				<Image Id="3" AddrType="10" ImageType="3">
+					<Name>Image-2</Name>
 				</Image>
 				<Box Id="1" BoxType="9099">
 					<Name>Term 1 (EK1200)</Name>
@@ -1245,8 +1288,8 @@
 						<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x13f83052" RevisionNo="#x00110000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL5112 2Ch. Inc. Encoder 5V (2xAB or 1xABC RS422,TTL)" Desc="EL5112" PortABoxInfo="#x01000014">
 							<SyncMan>001080002600010001000000800000018000001026010000</SyncMan>
 							<SyncMan>001180002200010002000000800000018000001122010000</SyncMan>
-							<SyncMan>001206002400010003000000000000000600001224010000</SyncMan>
-							<SyncMan>001310002000010004000000000000001000001320010000</SyncMan>
+							<SyncMan>00120c002400010003000000000000000600001224010000</SyncMan>
+							<SyncMan>001318002000010004000000000000001000001320010000</SyncMan>
 							<Fmmu>0000000000000000001200020100000001000000000000000000000000000000</Fmmu>
 							<Fmmu>0000000000000000001300010100000002000000000000000000000000000000</Fmmu>
 							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
@@ -1255,7 +1298,7 @@
 							<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000ffff00070100000000000000000000000000000000000000000000000000000000000000</DcMode>
 							<DcMode>4443494e00000000000000000000000044432d53796e6368726f6e2028696e7075742062617365642900000000000000000000000000000000000000ffff00070100000000000000000001000000000000000000000000000000000000000000</DcMode>
 							<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
-							<Pdo Name="ENC Status Channel 1" Index="#x1a00" Flags="#x0010" SyncMan="3">
+							<Pdo Name="ENC Status Channel 1" Index="#x1a00" Flags="#x0010">
 								<ExcludePdo>#x1a01</ExcludePdo>
 								<ExcludePdo>#x1a02</ExcludePdo>
 								<ExcludePdo>#x1a03</ExcludePdo>
@@ -1278,7 +1321,7 @@
 								<Entry Name="Status__Counter overflow" Index="#x6000" Sub="#x05" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Status of input status" Index="#x6000" Sub="#x06">
+								<Entry Name="Status__Status of input status" Index="#x6000" Sub="#x06" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__Open circuit" Index="#x6000" Sub="#x07">
@@ -1417,7 +1460,7 @@
 									<Type>UINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="ENC Status Channel 1" Index="#x1a02" Flags="#x0010">
+							<Pdo Name="ENC Status Channel 1" Index="#x1a02" Flags="#x0010" SyncMan="3">
 								<ExcludePdo>#x1a00</ExcludePdo>
 								<ExcludePdo>#x1a01</ExcludePdo>
 								<ExcludePdo>#x1a03</ExcludePdo>
@@ -1836,7 +1879,7 @@
 									<Type>UDINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="ENC Status Channel 2" Index="#x1a11" Flags="#x0010">
+							<Pdo Name="ENC Status Channel 2" Index="#x1a11" Flags="#x0010" SyncMan="3">
 								<ExcludePdo>#x1a0f</ExcludePdo>
 								<ExcludePdo>#x1a10</ExcludePdo>
 								<ExcludePdo>#x1a12</ExcludePdo>
@@ -1850,7 +1893,7 @@
 								<Entry Name="Status__Latch extern valid" Index="#x6010" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Set counter done" Index="#x6010" Sub="#x03">
+								<Entry Name="Status__Set counter done" Index="#x6010" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__Counter underflow" Index="#x6010" Sub="#x04">
@@ -2088,7 +2131,7 @@
 									<Type>UINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="ENC Control Channel 1" Index="#x1600" InOut="1" Flags="#x0010" SyncMan="2">
+							<Pdo Name="ENC Control Channel 1" Index="#x1600" InOut="1" Flags="#x0010">
 								<ExcludePdo>#x1601</ExcludePdo>
 								<ExcludePdo>#x1602</ExcludePdo>
 								<ExcludePdo>#x1603</ExcludePdo>
@@ -2184,7 +2227,7 @@
 									<Type>UINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="ENC Control Channel 1" Index="#x1602" InOut="1" Flags="#x0010">
+							<Pdo Name="ENC Control Channel 1" Index="#x1602" InOut="1" Flags="#x0010" SyncMan="2">
 								<ExcludePdo>#x1600</ExcludePdo>
 								<ExcludePdo>#x1601</ExcludePdo>
 								<ExcludePdo>#x1603</ExcludePdo>
@@ -2370,7 +2413,7 @@
 									<Type>UINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="ENC Control Channel 2" Index="#x160a" InOut="1" Flags="#x0010">
+							<Pdo Name="ENC Control Channel 2" Index="#x160a" InOut="1" Flags="#x0010" SyncMan="2">
 								<ExcludePdo>#x1608</ExcludePdo>
 								<ExcludePdo>#x1609</ExcludePdo>
 								<ExcludePdo>#x160b</ExcludePdo>
@@ -2384,7 +2427,7 @@
 								<Entry Name="Control__Enable latch extern on positive edge" Index="#x7010" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Control__Set counter" Index="#x7010" Sub="#x03">
+								<Entry Name="Control__Set counter" Index="#x7010" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Control__Enable latch extern on negative edge" Index="#x7010" Sub="#x04">
@@ -2517,7 +2560,9 @@
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0120-500831000403}" Id="#x02030030"/>
+		<MappingInfo Identifier="{00000000-2002-0850-0020-500810000403}" Id="#x02030010"/>
+		<MappingInfo Identifier="{08502001-0010-0304-0020-500810000403}" Id="#x02030020" Watchdog="00000000000000000000000000000000"/>
 		<OwnerA Name="TIPC^WF03^WF03 Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL1809)">
 				<Link VarA="PlcTask Inputs^GVL.bDoorToolHolderDown" VarB="Channel 4^Input"/>
@@ -2535,10 +2580,14 @@
 				<Link VarA="PlcTask Outputs^GVL.aOutServo2" VarB="AO Outputs Channel 2^Analog output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 21 (EL5112)">
+				<Link VarA="PlcTask Inputs^GVL.bSetCounterDoneServo1" VarB="ENC Status Channel 2^Status^Set counter done"/>
 				<Link VarA="PlcTask Inputs^GVL.bSetCounterDoneServo2" VarB="ENC Status Channel 1^Status^Set counter done"/>
-				<Link VarA="PlcTask Inputs^GVL.dCountServo2" VarB="ENC Status Channel 1^Counter value"/>
+				<Link VarA="PlcTask Inputs^GVL.dCountServo1" VarB="ENC Status Channel 2^Counter value"/>
+				<Link VarA="PlcTask Outputs^GVL.dSetCounterServo1" VarB="ENC Control Channel 2^Control^Set counter"/>
 				<Link VarA="PlcTask Outputs^GVL.dSetCounterServo2" VarB="ENC Control Channel 1^Control^Set counter"/>
+				<Link VarA="PlcTask Outputs^GVL.dSetCounterValueServo1" VarB="ENC Control Channel 2^Set counter value"/>
 				<Link VarA="PlcTask Outputs^GVL.dSetCounterValueServo2" VarB="ENC Control Channel 1^Set counter value"/>
+				<Link VarA="RevolutionCounter Inputs^GVL.dCountServo2" VarB="ENC Status Channel 1^Counter value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1809)">
 				<Link VarA="PlcTask Inputs^GVL.bCoilHolderIndexBit1" VarB="Channel 1^Input"/>
@@ -2568,7 +2617,6 @@
 				<Link VarA="PlcTask Inputs^GVL.bWire4NotAvailable" VarB="Channel 8^Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL1809)">
-				<Link VarA="PlcTask Inputs^GVL.bCoilRotate" VarB="Channel 16^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bCoilTranslate" VarB="Channel 15^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bControlOnBtn" VarB="Channel 5^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bFeedBackSafetyRelay" VarB="Channel 6^Input"/>
@@ -2581,6 +2629,7 @@
 				<Link VarA="PlcTask Inputs^GVL.bStartPosBtn" VarB="Channel 3^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bStopBtn" VarB="Channel 1^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bToolingRotationBtn" VarB="Channel 4^Input"/>
+				<Link VarA="RevolutionCounter Inputs^GVL.bCoilRotate" VarB="Channel 16^Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 6 (EL2809)">
 				<Link VarA="PlcTask Outputs^GVL.b603Enable" VarB="Channel 9^Output"/>
@@ -2595,7 +2644,7 @@
 				<Link VarA="PlcTask Outputs^GVL.bLenze2njectionBrake" VarB="Channel 7^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bOpenToolCarrierDoor" VarB="Channel 14^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bPushCoil" VarB="Channel 16^Output"/>
-				<Link VarA="PlcTask Outputs^GVL.bServosDigitalIn1" VarB="Channel 8^Output"/>
+				<Link VarA="PlcTask Outputs^GVL.bResetServosErrors" VarB="Channel 8^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bStartBtnLight" VarB="Channel 11^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bStartPosBtnLight" VarB="Channel 12^Output"/>
 				<Link VarA="PlcTask Outputs^GVL.bToolingRotationBtnLight" VarB="Channel 13^Output"/>

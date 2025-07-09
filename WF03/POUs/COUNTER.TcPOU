@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="COUNTER" Id="{e1e64f7d-cad1-4631-962a-e1effe0044d0}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM COUNTER
+VAR
+	tSensorTrig		: F_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tSensorTrig(CLK := GVL.bCoilRotate);
+IF tSensorTrig.Q THEN
+	GVL.uRevCount1 := GVL.uRevCount1 + 1;
+END_IF
+
+IF GVL.bResetRevCount THEN
+	GVL.bResetRevCount  := FALSE;
+	GVL.uRevCount1		:= 0;
+END_IF
+
+GVL.uRevCount2 := REAL_TO_DINT(DINT_TO_REAL(GVL.dCountServo2) / 9216);]]></ST>
+    </Implementation>
+    <LineIds Name="COUNTER">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

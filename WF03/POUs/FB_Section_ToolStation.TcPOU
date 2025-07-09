@@ -3,19 +3,19 @@
   <POU Name="FB_Section_ToolStation" Id="{511696e8-12f8-47da-a29f-70728d219f59}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Section_ToolStation IMPLEMENTS I_Section
 VAR_INPUT
-	bEnable		: BOOL;
+	bEnable					: BOOL;
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
 	bTriggerToolRotation	: BOOL;
-	Modules				: ARRAY [0..2] OF I_Module;	
+	Modules					: ARRAY [0..2] OF I_Module;	
 
-	fbCoilHolder		: FB_Module_CoilHolder;
-	fbToolHolderDoor	: FB_Module_ToolHolderDoor;
-	fbToolHolder		: FB_Module_ToolHolder;
+	fbCoilHolder			: FB_Module_CoilHolder;
+	fbToolHolderDoor		: FB_Module_ToolHolderDoor;
+	fbToolHolder			: FB_Module_ToolHolder;
 	
-	idx					: INT;
+	idx						: INT;
 END_VAR
 ]]></Declaration>
     <Implementation>

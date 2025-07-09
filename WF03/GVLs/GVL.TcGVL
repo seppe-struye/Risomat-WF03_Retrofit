@@ -3,6 +3,10 @@
   <GVL Name="GVL" Id="{124d719c-af1b-4432-bc8a-4c1a357fa674}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
+	uRevCount1		: INT;
+	uRevCount2		: DINT;
+	bResetRevCount	: BOOL;
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // 									DIGITAL INPUTS								   		   //
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,8 +63,8 @@ VAR_GLOBAL
 	bToolingRotationBtn				AT %I*	: BOOL;	//			term 5.4
 	bControlOnBtn					AT %I*	: BOOL;	//			term 5.5
 	bFeedBackSafetyRelay			AT %I*	: BOOL; //			term 5.6
-	// term 5.7 check why connected to GND											// !!
-	// term 5.8	check what contactor K1.1 does and if also checks other stuff		// !!
+	// term 5.7 check why connected to GND											// TODO!!
+	// term 5.8	check what contactor K1.1 does and if also checks other stuff		// TODO!!
 	bSafetyContactBreakers			AT %I*	: BOOL;	//			term 5.9
 	// term 5.10 --> unused
 	bReadyToOperate603				AT %I*	: BOOL;	//			term 5.11			// rename
@@ -83,7 +87,7 @@ VAR_GLOBAL
 	bLenze2JogBit1					AT %Q*	: BOOL;	//			term 6.5
 	bLenze2JogBit2					AT %Q*	: BOOL;	//			term 6.6
 	bLenze2njectionBrake			AT %Q*	: BOOL; //			term 6.7
-	bServosDigitalIn1				AT %Q*	: BOOL; //			term 6.8
+	bResetServosErrors				AT %Q*	: BOOL; //			term 6.8
 	b603Enable						AT %Q*	: BOOL;	//			term 6.9
 	b614Enable						AT %Q*	: BOOL;	//			term 6.10
 	bStartBtnLight					AT %Q*	: BOOL; //			term 6.11
@@ -121,14 +125,18 @@ VAR_GLOBAL
 	//--------------------------------
 	// TERM 8 : EL4032 Analog Out
 	//--------------------------------
-	aOutServo1						AT %Q*	: INT;	// term 18.1
-	aOutServo2						AT %Q*	: INT;	// term 18.1
+	aOutServo1						AT %Q*	: INT;	// term 20
+	aOutServo2						AT %Q*	: INT;	// term 20
 	
-	bSetCounterDoneServo2			AT %I*	: BOOL;
-	dCountServo2					AT %I*	: DINT;
+	bSetCounterDoneServo1			AT %I*	: BOOL;	// term 21
+	dCountServo1					AT %I*	: DINT;	// term 21
+	bSetCounterDoneServo2			AT %I*	: BOOL;	// term 21
+	dCountServo2					AT %I*	: DINT;	// term 21
 	
-	dSetCounterServo2				AT %Q*	: BOOL;
-	dSetCounterValueServo2			AT %Q*	: DINT;
+	dSetCounterServo1				AT %Q*	: BOOL;	// term 21
+	dSetCounterValueServo1			AT %Q*	: DINT;	// term 21
+	dSetCounterServo2				AT %Q*	: BOOL;	// term 21
+	dSetCounterValueServo2			AT %Q*	: DINT;	// term 21
 	
 END_VAR]]></Declaration>
   </GVL>

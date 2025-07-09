@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <Task Name="RevolutionCounter" Id="{4d9a7de7-7bce-4f11-a3a2-a4d79efa0e95}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>2000</CycleTime>
+    <Priority>1</Priority>
+    <PouCall>
+      <Name>COUNTER</Name>
+    </PouCall>
+    <TaskFBGuid>{97143735-da4e-4c33-b66e-69b48ac249d6}</TaskFBGuid>
+    <Fb_init>{202b35dc-0672-43af-928a-def29101c485}</Fb_init>
+    <Fb_exit>{2d349b86-80e1-4e07-8e50-37016170b741}</Fb_exit>
+    <CycleUpdate>{c55d283f-4a89-4152-a7ae-28e07d2fbb45}</CycleUpdate>
+    <PostCycleUpdate>{7a23f8b5-d375-4a41-a1b3-9c17a19bb47c}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>
