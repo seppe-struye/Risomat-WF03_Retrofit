@@ -91,9 +91,6 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\TEST_Components\InductiveSensor.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="RevolutionCounter.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -102,7 +99,6 @@
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\FB_Components" />
-    <Folder Include="POUs\TEST_Components" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>

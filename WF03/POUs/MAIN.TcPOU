@@ -18,7 +18,9 @@ VAR
 	bSignal		: BOOL;
 	fbPiston	: FB_Component_SingleValve;
 	fbACmotor	: FB_Component_ACmotor;
-	tTimer		: TON;
+	tTimer1		: TON;
+	tTimer2		: TON;
+	tTimer3		: TON;
 	bState		: BOOL;
 	eDirection	: E_RotationDirection := E_RotationDirection.CW;
 	nCount 		: INT;
@@ -31,11 +33,20 @@ VAR
 	Seq_1: BOOL;
 	Seq_2: BOOL;
 	
+	rampup		: BOOL;
+	run			: BOOL;
+	rampdown	: BOOL;
+	elapsedSeconds : REAL;
+	backwards	: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbToolStation(bEnable := TRUE);
+      <ST><![CDATA[tTimer1(IN := rampup, PT := T#10S);
+tTimer2(IN := run, PT := T#10S);
+tTimer3(IN := rampdown, PT := T#10S);
 
-(*IF bGoto THEN
+(*fbToolStation(bEnable := TRUE);
+
+IF bGoto THEN
 	bGoto := NOT fbToolStation.M_GoTo(nTargetIndex := nTarget);
 END_IF
 
@@ -60,7 +71,8 @@ fbServo(
 	dSetCounterValue	:= GVL.dSetCounterValueServo2,
 	bEnableDrive 		:= GVL.b614Enable, 
 	uAnalogOut 			:= GVL.aOutServo2);
-	
+
+(*	
 fbCoilPusher(bEnable := TRUE);
 IF bHome THEN
 	bHome := NOT fbCoilPusher.M_Home();
@@ -68,7 +80,7 @@ END_IF
 
 IF bGoto THEN
 	bGoto := NOT fbCoilPusher.M_Extend(1);
-END_IF
+END_IF*)
 
 // inductive sensor demo
 (* fbSens(
@@ -156,6 +168,7 @@ IF bGoto THEN
 	bGoto := NOT fb4posArm.M_GoTo(nTargetIndex := nTarget);
 END_IF
 *)
+
 (*
 // cutter demo
 fbCutter(bEnable := TRUE);
@@ -177,6 +190,10 @@ END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="492" Count="0" />
+      <LineId Id="505" Count="0" />
+      <LineId Id="510" Count="0" />
+      <LineId Id="493" Count="0" />
       <LineId Id="292" Count="0" />
       <LineId Id="315" Count="0" />
       <LineId Id="314" Count="0" />
@@ -194,6 +211,7 @@ END_IF
       <LineId Id="372" Count="0" />
       <LineId Id="371" Count="0" />
       <LineId Id="369" Count="1" />
+      <LineId Id="521" Count="0" />
       <LineId Id="407" Count="1" />
       <LineId Id="451" Count="2" />
       <LineId Id="456" Count="0" />
@@ -258,6 +276,7 @@ END_IF
       <LineId Id="155" Count="0" />
       <LineId Id="151" Count="2" />
       <LineId Id="149" Count="0" />
+      <LineId Id="489" Count="0" />
       <LineId Id="182" Count="0" />
       <LineId Id="181" Count="0" />
       <LineId Id="183" Count="0" />

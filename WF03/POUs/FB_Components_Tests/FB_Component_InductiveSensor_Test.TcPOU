@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Component_InductiveSensor_Test" Id="{54a89a6a-35d4-4462-9810-666a8b15c961}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Component_InductiveSensor_Test EXTENDS TcUnit.FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[AssertEquals(Expected := 1,
+             Actual := 1,
+             Message := 'The calculation is not correct');
+TEST_FINISHED();]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Component_InductiveSensor_Test">
+      <LineId Id="10" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
