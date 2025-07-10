@@ -5,7 +5,6 @@
 {attribute 'strict'}
 TYPE E_State :
 (
-	STANDBY	:= 0,
 	READY	:= 1,
 	BUSY	:= 2,
 	DONE 	:= 3,
@@ -18,11 +17,6 @@ END_TYPE
       <Data>
         <o xml:space="preserve" t="TextListEnumerationTextListObject">
           <l n="TextList" t="ArrayList" cet="TextListRow">
-            <o>
-              <v n="TextID">"STANDBY"</v>
-              <v n="TextDefault">"0"</v>
-              <l n="LanguageTexts" t="ArrayList" />
-            </o>
             <o>
               <v n="TextID">"READY"</v>
               <v n="TextDefault">"1"</v>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="InductiveSensor" Id="{6d1e6f37-d7e9-4248-922e-a0fd41b35608}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM InductiveSensor
+VAR
+	fbSensor	: FB_Component_InductiveSensor;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbSensor(	sName		:= 'Inductive Sensor Test',
+			bEnable		:= TRUE,
+			bRawSignal	:= GVL.bWire1NotAvailable,
+			tDebounce	:= T#0MS,
+			tTimeOut	:= T#0MS);]]></ST>
+    </Implementation>
+    <LineIds Name="InductiveSensor">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="10" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

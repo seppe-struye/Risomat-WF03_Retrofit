@@ -4,12 +4,12 @@
     <Declaration><![CDATA[// function block for inductive sensor with the option of debouncing + rising and falling edge detection.
 FUNCTION_BLOCK FB_Component_InductiveSensor IMPLEMENTS  I_Component
 VAR_INPUT
+	sName			: STRING[50];
+	bEnable     	: BOOL;
+
 	bRawSignal		: BOOL;				// Raw input sensor
 	tDebounce		: TIME := T#0MS;	// Debounce time
 	tTimeout		: TIME := T#0MS;
-	
-	sName			: STRING[20];
-	bEnable     	: BOOL;
 END_VAR
 
 VAR_OUTPUT
@@ -34,39 +34,43 @@ tTimeoutTimer.PT	:= tTimeout;
 
 IF bEnable THEN
 	CASE eState OF
-		E_State.READY: 	IF bRawSignal <> bLastStableSignal THEN
-										bPendingSignal := bRawSignal;
-										eState := E_State.BUSY;
-									ELSE
-										tTimeoutTimer(IN := FALSE);
-										tDebounceTimer(IN := FALSE);
-									END_IF
-									sStatusText := 'sensor active';
+		E_State.READY: 		IF bRawSignal <> bLastStableSignal THEN
+								bPendingSignal := bRawSignal;
+								eState := E_State.BUSY;
+							ELSE
+								tTimeoutTimer(IN := FALSE);
+								tDebounceTimer(IN := FALSE);
+							END_IF
+								sStatusText := 'sensor active';
 		
 		E_State.BUSY:		tDebounceTimer(IN := TRUE);
-									IF bRawSignal <> bPendingSignal THEN			// if signal bounces go back to ready state	
-										eState := E_State.DONE;
-									END_IF
+							IF bRawSignal <> bPendingSignal THEN
+									eState := E_State.DONE;
+							END_IF
 			
-									IF tDebounceTimer.Q THEN						// if signal stays stable for debounce duration -> trigger timeout
-										eState := E_State.TIMEOUT;
-									END_IF
-									sStatusText := 'Debouncing sensor';
+							IF tDebounceTimer.Q THEN
+								eState := E_State.TIMEOUT;
+							END_IF
+							sStatusText := 'Debouncing sensor';
 									
-		E_State.TIMEOUT:	tTimeoutTimer(IN := TRUE);
+		E_State.TIMEOUT:	sStatusText := 'sensor timeout';
+							tTimeoutTimer(IN := TRUE);
+							
+							bRisingEdge  := NOT bLastStableSignal AND bPendingSignal;
+	 						bFallingEdge := bLastStableSignal AND NOT bPendingSignal;
 									
-									bRisingEdge  := NOT bLastStableSignal AND bPendingSignal;
-	 								bFallingEdge := bLastStableSignal AND NOT bPendingSignal;
-											
-									bLastStableSignal := bPendingSignal;			// output stable signal
-									bSensorActive	  := bLastStableSignal;
-									IF tTimeoutTimer.Q THEN
-										eState := E_State.DONE;
-									END_IF
-									sStatusText := 'sensor timeout';
+							bLastStableSignal := bPendingSignal;
+							bSensorActive	  := bLastStableSignal;
+							
+							IF tTimeoutTimer.Q THEN
+								eState  := E_State.DONE;
+							END_IF
 			
-		E_State.DONE:		tTimeoutTimer(IN := FALSE);
-									tDebounceTimer(IN := FALSE);
+		E_State.DONE:		sStatusText := 'Sensor Done';
+							tTimeoutTimer(IN 	:= FALSE);
+							tDebounceTimer(IN 	:= FALSE);
+							
+		E_State.HALTED:		sStatusText := 'Sensor Halted';
 	END_CASE
 END_IF
 
@@ -130,16 +134,19 @@ END_IF]]></ST>
       <LineId Id="421" Count="0" />
       <LineId Id="415" Count="0" />
       <LineId Id="371" Count="0" />
+      <LineId Id="484" Count="0" />
       <LineId Id="448" Count="0" />
       <LineId Id="450" Count="1" />
       <LineId Id="449" Count="0" />
       <LineId Id="383" Count="0" />
       <LineId Id="405" Count="0" />
+      <LineId Id="483" Count="0" />
       <LineId Id="409" Count="2" />
-      <LineId Id="423" Count="0" />
       <LineId Id="406" Count="0" />
       <LineId Id="375" Count="0" />
+      <LineId Id="485" Count="0" />
       <LineId Id="408" Count="0" />
+      <LineId Id="481" Count="1" />
       <LineId Id="355" Count="0" />
       <LineId Id="335" Count="0" />
       <LineId Id="297" Count="0" />

@@ -12,7 +12,7 @@ VAR_INPUT
 	rGearRatio			: REAL;
 END_VAR
 VAR_IN_OUT
-	
+	dCountServo			: DINT;
 	bSetCounter			: BOOL;
 	dSetCounterValue	: DINT;
 	bEnableDrive		: BOOL;
@@ -46,12 +46,103 @@ ELSE
 	uCurrRPM	 := 0;
 END_IF]]></ST>
     </Implementation>
+    <Method Name="M_DisableDrive" Id="{f51bf86d-0402-403e-8a0c-45fed335136b}">
+      <Declaration><![CDATA[METHOD M_DisableDrive : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable THEN
+	bEnableDrive := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_EnableDrive" Id="{82943f83-1e41-4fd6-aed4-15854e08dbd8}">
+      <Declaration><![CDATA[METHOD M_EnableDrive : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable THEN
+	bEnableDrive := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Goto" Id="{4c4adbbd-0e60-44f9-9fbe-e623d9c279b1}">
+      <Declaration><![CDATA[METHOD M_Goto : BOOL
+VAR_INPUT
+	dTarget			: DINT;
+	uSpeed			: INT;
+	uMargin			: INT;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable THEN
+	// safety
+	IF uSpeed > 5 THEN
+		RETURN;
+	END_IF
+	
+	IF dTarget > dCountServo THEN
+		M_EnableDrive();
+		IF ABS(dTarget - dCountServo) > uMargin THEN
+			M_SetSpeed(uSpeed);
+		ELSE
+			M_SetSpeed(0.5);
+		END_IF
+	ELSIF  dTarget < dCountServo THEN
+		M_EnableDrive();
+		IF ABS(dCountServo - dTarget)  > uMargin THEN
+			M_SetSpeed(-uSpeed);
+		ELSE
+			M_SetSpeed(-0.5);
+		END_IF
+	ELSE
+		M_EnableDrive();
+		M_SetSpeed(0);
+		M_Goto := TRUE;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Halt" Id="{e670ceb9-7bbb-4f32-865f-4279a3ed37e2}">
       <Declaration><![CDATA[{warning 'add method implementation '}
 METHOD M_Halt : BOOL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetCounter" Id="{d180a0b0-acf8-4b9f-a644-cec31478d0f1}">
+      <Declaration><![CDATA[METHOD M_SetCounter : BOOL
+VAR_INPUT
+	dCount : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable THEN
+	IF bSetCounterDone THEN
+		bSetCounter			:= FALSE;
+		M_SetCounter 		:= TRUE;
+	ELSE
+		dSetCounterValue 	:= dCount;
+		bSetCounter			:= TRUE;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetSpeed" Id="{a443da00-90c5-4b7b-a810-b43464e0f2f3}">
+      <Declaration><![CDATA[METHOD M_SetSpeed : BOOL
+VAR_INPUT
+	uSpeed	: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bEnable THEN
+	uAnalogOut := LIMIT(-32767, REAL_TO_INT(uSpeed * 327.67), 32767);
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Start" Id="{5850c2fb-1fd2-46fc-baa0-6de215783738}">
@@ -81,8 +172,49 @@ METHOD M_Stop : BOOL
       <LineId Id="52" Count="3" />
       <LineId Id="50" Count="0" />
     </LineIds>
+    <LineIds Name="FB_Component_ServoMotor.M_DisableDrive">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ServoMotor.M_EnableDrive">
+      <LineId Id="5" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_Component_ServoMotor.M_Goto">
+      <LineId Id="5" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="36" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Component_ServoMotor.M_Halt">
       <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ServoMotor.M_SetCounter">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="2" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ServoMotor.M_SetSpeed">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
     </LineIds>
     <LineIds Name="FB_Component_ServoMotor.M_Start">
       <LineId Id="4" Count="0" />

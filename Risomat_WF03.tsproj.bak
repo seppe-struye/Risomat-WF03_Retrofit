@@ -112,7 +112,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A4152FC6-D2EC-43E0-9651-E43C12E257C3}" Name="WF03" PrjFilePath="WF03\WF03.plcproj" TmcFilePath="WF03\WF03.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{F446A32E-A459-D810-686E-BD0A5CD30FF1}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{57A61356-DF58-0986-3056-D2862F96BE5E}">
 					<Name>WF03 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">

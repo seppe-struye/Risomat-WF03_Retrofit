@@ -112,7 +112,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A4152FC6-D2EC-43E0-9651-E43C12E257C3}" Name="WF03" PrjFilePath="WF03\WF03.plcproj" TmcFilePath="WF03\WF03.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{57A61356-DF58-0986-3056-D2862F96BE5E}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{212A52E0-2137-F7CB-38B0-DABF0FC6140C}">
 					<Name>WF03 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -130,11 +130,6 @@
 					</Vars>
 					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>GVL.bSetCounterDoneServo1</Name>
-							<Comment><![CDATA[ term 21]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>GVL.bWirePusherDisengaged</Name>
 							<Comment><![CDATA[//////////////////////////////////////////////////////////////////////////////////////////
@@ -357,7 +352,7 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.bSetCounterDoneServo2</Name>
+							<Name>GVL.bSetCounterDoneServo1</Name>
 							<Comment><![CDATA[ term 21]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -366,14 +361,14 @@
 							<Comment><![CDATA[ term 21]]></Comment>
 							<Type>DINT</Type>
 						</Var>
+						<Var>
+							<Name>GVL.bSetCounterDoneServo2</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
 						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>GVL.bResetServosErrors</Name>
-							<Comment><![CDATA[			term 6.8]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>GVL.bLenze1JogBit1</Name>
 							<Comment><![CDATA[//////////////////////////////////////////////////////////////////////////////////////////
@@ -408,6 +403,11 @@
 						<Var>
 							<Name>GVL.bLenze2njectionBrake</Name>
 							<Comment><![CDATA[			term 6.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.bResetServosErrors</Name>
+							<Comment><![CDATA[			term 6.8]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -536,22 +536,22 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL.dSetCounterServo2</Name>
-							<Comment><![CDATA[ term 21]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL.dSetCounterValueServo2</Name>
-							<Comment><![CDATA[ term 21]]></Comment>
-							<Type>DINT</Type>
-						</Var>
-						<Var>
 							<Name>GVL.dSetCounterServo1</Name>
 							<Comment><![CDATA[ term 21]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL.dSetCounterServo2</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL.dSetCounterValueServo1</Name>
+							<Comment><![CDATA[ term 21]]></Comment>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL.dSetCounterValueServo2</Name>
 							<Comment><![CDATA[ term 21]]></Comment>
 							<Type>DINT</Type>
 						</Var>
@@ -1471,10 +1471,10 @@
 								<Entry Name="Status__">
 									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
 								</Entry>
-								<Entry Name="Status__Latch extern valid" Index="#x6000" Sub="#x02">
+								<Entry Name="Status__Latch extern valid" Index="#x6000" Sub="#x02" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Set counter done" Index="#x6000" Sub="#x03">
+								<Entry Name="Status__Set counter done" Index="#x6000" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__Counter underflow" Index="#x6000" Sub="#x04">
@@ -1486,7 +1486,7 @@
 								<Entry Name="Status__">
 									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
 								</Entry>
-								<Entry Name="Status__Open circuit" Index="#x6000" Sub="#x07">
+								<Entry Name="Status__Open circuit" Index="#x6000" Sub="#x07" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__">
@@ -1501,7 +1501,7 @@
 								<Entry Name="Status__">
 									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
 								</Entry>
-								<Entry Name="Status__Status of input gate" Index="#x6000" Sub="#x0c">
+								<Entry Name="Status__Status of input gate" Index="#x6000" Sub="#x0c" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__Diag" Index="#x6002" Sub="#x0d">
@@ -1510,7 +1510,7 @@
 								<Entry Name="Status__TxPDO State" Index="#x6002" Sub="#x0e">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Input cycle counter" Index="#x6002" Sub="#x0f">
+								<Entry Name="Status__Input cycle counter" Index="#x6002" Sub="#x0f" Flags="#x00008020">
 									<Type>BIT2</Type>
 								</Entry>
 								<Entry Name="Status__Software gate valid" Index="#x6002" Sub="#x11">
@@ -1525,7 +1525,7 @@
 								<Entry Name="Status__">
 									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
 								</Entry>
-								<Entry Name="Status__Counter value out of range" Index="#x6002" Sub="#x15">
+								<Entry Name="Status__Counter value out of range" Index="#x6002" Sub="#x15" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__">

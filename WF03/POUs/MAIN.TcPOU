@@ -10,6 +10,7 @@ VAR
 	bUP				: BOOL;
 	bDown			: BOOL;		
 
+	fbCoilPusher	: FB_Module_CoilPusher;
 	// testing
 	fbServo		: FB_Component_ServoMotor;
 	
@@ -34,7 +35,7 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[fbToolStation(bEnable := TRUE);
 
-IF bGoto THEN
+(*IF bGoto THEN
 	bGoto := NOT fbToolStation.M_GoTo(nTargetIndex := nTarget);
 END_IF
 
@@ -44,7 +45,7 @@ END_IF
 
 IF bDown THEN
 	bDown := NOT fbToolStation.M_OpenDoor();
-END_IF
+END_IF*)
 
 
 fbServo(
@@ -54,22 +55,20 @@ fbServo(
 	uMaxRPM 			:= 3000,
 	bSetCounterDone		:= GVL.bSetCounterDoneServo2,
 	rGearRatio			:= 2.25,
+	dCountServo			:= GVL.dCountServo2,
 	bSetCounter			:= GVL.dSetCounterServo2,
 	dSetCounterValue	:= GVL.dSetCounterValueServo2,
 	bEnableDrive 		:= GVL.b614Enable, 
 	uAnalogOut 			:= GVL.aOutServo2);
 	
-fbServo(
-	bEnable 			:= TRUE, 
-	bHomingSensor 		:= GVL.bCoilTranslate, 
-	bHomingSpeed 		:= 0, 
-	uMaxRPM 			:= 3000,
-	bSetCounterDone		:= GVL.bSetCounterDoneServo1,
-	rGearRatio			:= 1,
-	bSetCounter			:= GVL.dSetCounterServo1,
-	dSetCounterValue	:= GVL.dSetCounterValueServo1,
-	bEnableDrive 		:= GVL.b603Enable, 
-	uAnalogOut 			:= GVL.aOutServo1);
+fbCoilPusher(bEnable := TRUE);
+IF bHome THEN
+	bHome := NOT fbCoilPusher.M_Home();
+END_IF
+
+IF bGoto THEN
+	bGoto := NOT fbCoilPusher.M_Extend(1);
+END_IF
 
 // inductive sensor demo
 (* fbSens(
@@ -191,12 +190,15 @@ END_IF
       <LineId Id="363" Count="0" />
       <LineId Id="366" Count="2" />
       <LineId Id="373" Count="2" />
+      <LineId Id="454" Count="0" />
       <LineId Id="372" Count="0" />
       <LineId Id="371" Count="0" />
       <LineId Id="369" Count="1" />
-      <LineId Id="407" Count="0" />
-      <LineId Id="409" Count="9" />
-      <LineId Id="408" Count="0" />
+      <LineId Id="407" Count="1" />
+      <LineId Id="451" Count="2" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="455" Count="0" />
+      <LineId Id="457" Count="1" />
       <LineId Id="287" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="2" Count="0" />
