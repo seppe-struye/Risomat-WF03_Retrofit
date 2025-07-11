@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Component_DualValve" Id="{04d6caaa-12ea-4ca7-b40e-e6e2c47167ec}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Component_DualValve IMPLEMENTS I_Component
+VAR_INPUT
+	sName			: STRING[50];
+	tTimeout		: TIME := T#0S;
+END_VAR
+
+VAR_IN_OUT
+	bOutputA		: BOOL;
+	bOutputB		: BOOL;
+END_VAR
+
+VAR_OUTPUT
+	bEnabled     	: BOOL;
+	eState			: E_State;
+	sStatusText 	: STRING[100];
+END_VAR
+
+VAR
+	eLastState		: E_State;
+END_VAR
+
+VAR CONSTANT
+	DISABLED		: E_State := E_State.DISABLED;
+	READY			: E_State := E_State.READY;
+	BUSY			: E_State := E_State.BUSY;
+	DONE			: E_State := E_State.DONE;
+	HALTED			: E_State := E_State.HALTED;
+	TIMEOUT			: E_State := E_State.TIMEOUT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eState OF
+	DISABLED: 	sStatusText := '';
+	READY: 		sStatusText := '';
+	BUSY: 		sStatusText := '';
+	TIMEOUT:	sStatusText := '';
+	DONE:		sStatusText := '';
+	HALTED:		sStatusText := '';
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_Disable" Id="{857ba533-460d-49df-a434-29ec9866f2c4}">
+      <Declaration><![CDATA[METHOD M_Disable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+	bEnabled	:= FALSE;
+	eState		:= DISABLED;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{5572c232-6e47-4666-97bc-7f38e6278500}">
+      <Declaration><![CDATA[METHOD M_Enable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	eState 		:= READY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{1ef68817-4258-41df-bb9a-e1887637bbb5}">
+      <Declaration><![CDATA[METHOD M_Halt : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bOutputA	:= FALSE;
+bOutputB	:= FALSE;
+eLastState 	:= eState;
+eState 		:= HALTED;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Reset" Id="{1ce6f44c-2ddc-4921-b544-bc588c6a8184}">
+      <Declaration><![CDATA[METHOD M_Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// has no use here]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Resume" Id="{9c7a6fbd-0999-4d44-a452-a166548a9afa}">
+      <Declaration><![CDATA[METHOD M_Resume : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eState OF
+	HALTED	: eState := eLastState;
+	DONE	: eState := READY;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{49386caf-422f-4ba8-a140-e94b68e1642d}">
+      <Declaration><![CDATA[METHOD M_Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState <> BUSY OR eState <> HALTED OR eState <> TIMEOUT THEN
+	eState := DONE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Component_DualValve">
+      <LineId Id="54" Count="6" />
+      <LineId Id="34" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Disable">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Enable">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Halt">
+      <LineId Id="10" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Reset">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Resume">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Stop">
+      <LineId Id="5" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

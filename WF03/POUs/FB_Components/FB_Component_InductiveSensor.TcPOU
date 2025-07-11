@@ -5,10 +5,8 @@
 FUNCTION_BLOCK FB_Component_InductiveSensor IMPLEMENTS  I_Component
 VAR_INPUT
 	sName			: STRING[50];
-	bEnable     	: BOOL;
-
-	bRawSignal		: BOOL;				// Raw input sensor
-	tDebounce		: TIME := T#0MS;	// Debounce time
+	bRawSignal		: BOOL;				
+	tDebounce		: TIME := T#0MS;
 	tTimeout		: TIME := T#0MS;
 END_VAR
 
@@ -17,156 +15,210 @@ VAR_OUTPUT
 	bTimeout		: BOOL;
 	bRisingEdge		: BOOL;
 	bFallingEdge	: BOOL;
-	eState			: E_State;
+	
+	bEnabled		: BOOL;
+	eState			: E_State := E_State.DISABLED;
 	sStatusText 	: STRING[100];
 END_VAR
 
 VAR
-	tDebounceTimer	: TON;
-	tTimeoutTimer	: TON;
+	tDebounceTimer		: TON;
+	tTimeoutTimer		: TON;
 	
 	bLastStableSignal	: BOOL := bRawSignal;
 	bPendingSignal		: BOOL;
+	
+	eLastState			: E_State;
+END_VAR
+
+VAR CONSTANT
+	DISABLED	: E_State := E_State.DISABLED;
+	READY		: E_State := E_State.READY;
+	BUSY		: E_State := E_State.BUSY;
+	DONE		: E_State := E_State.DONE;
+	HALTED		: E_State := E_State.HALTED;
+	TIMEOUT		: E_State := E_State.TIMEOUT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[tDebounceTimer.PT 	:= tDebounce;
 tTimeoutTimer.PT	:= tTimeout;
 
-IF bEnable THEN
-	CASE eState OF
-		E_State.READY: 		IF bRawSignal <> bLastStableSignal THEN
-								bPendingSignal := bRawSignal;
-								eState := E_State.BUSY;
-							ELSE
-								tTimeoutTimer(IN := FALSE);
-								tDebounceTimer(IN := FALSE);
-							END_IF
-								sStatusText := 'sensor active';
-		
-		E_State.BUSY:		tDebounceTimer(IN := TRUE);
-							IF bRawSignal <> bPendingSignal THEN
-									eState := E_State.DONE;
-							END_IF
-			
-							IF tDebounceTimer.Q THEN
-								eState := E_State.TIMEOUT;
-							END_IF
-							sStatusText := 'Debouncing sensor';
-									
-		E_State.TIMEOUT:	sStatusText := 'sensor timeout';
-							tTimeoutTimer(IN := TRUE);
-							
-							bRisingEdge  := NOT bLastStableSignal AND bPendingSignal;
-	 						bFallingEdge := bLastStableSignal AND NOT bPendingSignal;
-									
-							bLastStableSignal := bPendingSignal;
-							bSensorActive	  := bLastStableSignal;
-							
-							IF tTimeoutTimer.Q THEN
-								eState  := E_State.DONE;
-							END_IF
-			
-		E_State.DONE:		sStatusText := 'Sensor Done';
-							tTimeoutTimer(IN 	:= FALSE);
-							tDebounceTimer(IN 	:= FALSE);
-							
-		E_State.HALTED:		sStatusText := 'Sensor Halted';
-	END_CASE
-END_IF
+CASE eState OF
+	DISABLED:	sStatusText := 'Sensor disabled';
+				
+	READY:		sStatusText := 'Sensor idle, waiting for read';
+				IF bRawSignal <> bLastStableSignal THEN
+					bPendingSignal := bRawSignal;
+					eState := E_State.BUSY;
+				ELSE
+					tTimeoutTimer(IN := FALSE);
+					tDebounceTimer(IN := FALSE);
+				END_IF
+				
+	BUSY:		sStatusText := 'Sensor is debouncing';
+				tDebounceTimer(IN := TRUE);
+				IF bRawSignal <> bPendingSignal THEN
+					eState := E_State.DONE;
+				END_IF
 
-]]></ST>
+				IF tDebounceTimer.Q THEN
+					eState := E_State.TIMEOUT;
+				END_IF
+	TIMEOUT:	sStatusText := 'Sensor timeout';
+				tTimeoutTimer(IN := TRUE);
+				
+				bRisingEdge  := NOT bLastStableSignal AND bPendingSignal;
+				bFallingEdge := bLastStableSignal AND NOT bPendingSignal;
+					
+				bLastStableSignal := bPendingSignal;
+				bSensorActive	  := bLastStableSignal;
+				
+				IF tTimeoutTimer.Q THEN
+					eState := E_State.DONE;
+				END_IF
+				
+	DONE:		sStatusText := 'Sensor done';
+				tTimeoutTimer(IN 	:= FALSE);
+				tDebounceTimer(IN 	:= FALSE);
+				M_Resume();
+				
+	HALTED:		sStatusText := 'Sensor halted';
+								
+END_CASE]]></ST>
     </Implementation>
-    <Method Name="M_Halt" Id="{f3238e3e-c657-463e-ba29-1e530a523711}">
+    <Method Name="M_Disable" Id="{c63d28ed-a295-4337-9a03-13b07a2f2492}">
+      <Declaration><![CDATA[METHOD M_Disable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+	bEnabled	:= FALSE;
+	eState		:= DISABLED;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{cedd2e6b-96fc-4761-923a-ddae71ad8603}">
+      <Declaration><![CDATA[METHOD M_Enable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	eState 		:= READY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{413c5d75-a87a-432b-97f9-5db05c61e144}">
       <Declaration><![CDATA[METHOD M_Halt : BOOL
+VAR_INPUT
+END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[tDebounceTimer(IN := FALSE);
-eState := E_State.HALTED;]]></ST>
+eLastState 	:= eState;
+eState 		:= HALTED;
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_ResetEdge" Id="{c361819e-d8ca-4034-91ec-d2f2b326dd4e}">
+    <Method Name="M_Reset" Id="{5e2aa06a-0050-4a22-b06e-8ef7da3ad7c9}">
+      <Declaration><![CDATA[METHOD M_Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// has no use here]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ResetEdge" Id="{adb0927e-0098-44f2-b9c5-8acbdc5bd39a}">
       <Declaration><![CDATA[METHOD M_ResetEdge : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[bRisingEdge 	:= FALSE;
+        <ST><![CDATA[bRisingEdge		:= FALSE;
 bFallingEdge	:= FALSE;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Start" Id="{332d80dd-0194-4918-b2f7-7e712950268d}">
-      <Declaration><![CDATA[METHOD M_Start : BOOL
+    <Method Name="M_Resume" Id="{f6429723-ef6d-4e50-8586-f013a7c16fec}">
+      <Declaration><![CDATA[METHOD M_Resume : BOOL
+VAR_INPUT
+END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState <> E_State.BUSY AND eState <> E_State.TIMEOUT THEN
-	eState := E_State.READY;
-END_IF;
-	]]></ST>
+        <ST><![CDATA[CASE eState OF
+	HALTED	: eState := eLastState;
+	DONE	: eState := READY;
+END_CASE]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Stop" Id="{1e590e11-4492-46f6-8aed-701c371c3bb9}">
+    <Method Name="M_Stop" Id="{5ebd1781-52b6-44af-aba8-ac5c79da26b3}">
       <Declaration><![CDATA[METHOD M_Stop : BOOL
+VAR_INPUT
+END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState <> E_State.BUSY AND eState <> E_State.TIMEOUT  THEN
-	eState := E_State.DONE;
+        <ST><![CDATA[IF eState <> BUSY OR eState <> HALTED OR eState <> TIMEOUT THEN
+	eState := DONE;
 END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Component_InductiveSensor">
-      <LineId Id="391" Count="0" />
-      <LineId Id="393" Count="0" />
-      <LineId Id="392" Count="0" />
-      <LineId Id="298" Count="0" />
-      <LineId Id="353" Count="1" />
-      <LineId Id="388" Count="0" />
-      <LineId Id="418" Count="2" />
-      <LineId Id="390" Count="0" />
-      <LineId Id="389" Count="0" />
-      <LineId Id="422" Count="0" />
-      <LineId Id="387" Count="0" />
-      <LineId Id="360" Count="0" />
-      <LineId Id="398" Count="0" />
-      <LineId Id="402" Count="0" />
-      <LineId Id="401" Count="0" />
-      <LineId Id="399" Count="0" />
-      <LineId Id="394" Count="2" />
-      <LineId Id="421" Count="0" />
-      <LineId Id="415" Count="0" />
-      <LineId Id="371" Count="0" />
-      <LineId Id="484" Count="0" />
-      <LineId Id="448" Count="0" />
-      <LineId Id="450" Count="1" />
-      <LineId Id="449" Count="0" />
-      <LineId Id="383" Count="0" />
-      <LineId Id="405" Count="0" />
-      <LineId Id="483" Count="0" />
-      <LineId Id="409" Count="2" />
-      <LineId Id="406" Count="0" />
-      <LineId Id="375" Count="0" />
-      <LineId Id="485" Count="0" />
-      <LineId Id="408" Count="0" />
-      <LineId Id="481" Count="1" />
-      <LineId Id="355" Count="0" />
-      <LineId Id="335" Count="0" />
-      <LineId Id="297" Count="0" />
+      <LineId Id="616" Count="0" />
+      <LineId Id="614" Count="1" />
       <LineId Id="282" Count="0" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="573" Count="0" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="579" Count="5" />
+      <LineId Id="574" Count="0" />
+      <LineId Id="585" Count="0" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="587" Count="6" />
+      <LineId Id="586" Count="0" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="595" Count="9" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="605" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="608" Count="0" />
+      <LineId Id="606" Count="0" />
+      <LineId Id="613" Count="0" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="577" Count="0" />
+      <LineId Id="567" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_InductiveSensor.M_Disable">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_InductiveSensor.M_Enable">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="1" />
     </LineIds>
     <LineIds Name="FB_Component_InductiveSensor.M_Halt">
+      <LineId Id="5" Count="0" />
       <LineId Id="9" Count="0" />
-      <LineId Id="4" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_InductiveSensor.M_Reset">
+      <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_InductiveSensor.M_ResetEdge">
       <LineId Id="5" Count="1" />
     </LineIds>
-    <LineIds Name="FB_Component_InductiveSensor.M_Start">
-      <LineId Id="6" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="7" Count="1" />
+    <LineIds Name="FB_Component_InductiveSensor.M_Resume">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_InductiveSensor.M_Stop">
-      <LineId Id="4" Count="0" />
-      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="2" />
     </LineIds>
   </POU>
 </TcPlcObject>

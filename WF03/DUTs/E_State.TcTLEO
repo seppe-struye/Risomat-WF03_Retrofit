@@ -5,11 +5,12 @@
 {attribute 'strict'}
 TYPE E_State :
 (
-	READY	:= 1,
-	BUSY	:= 2,
-	DONE 	:= 3,
-	HALTED	:= 4,
-	TIMEOUT := 5
+	DISABLED	:= 0,
+	READY		:= 1,
+	BUSY		:= 2,
+	DONE 		:= 3,
+	HALTED		:= 4,
+	TIMEOUT 	:= 5
 );
 END_TYPE
 ]]></Declaration>
@@ -17,6 +18,11 @@ END_TYPE
       <Data>
         <o xml:space="preserve" t="TextListEnumerationTextListObject">
           <l n="TextList" t="ArrayList" cet="TextListRow">
+            <o>
+              <v n="TextID">"DISABLED"</v>
+              <v n="TextDefault">"0"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
             <o>
               <v n="TextID">"READY"</v>
               <v n="TextDefault">"1"</v>

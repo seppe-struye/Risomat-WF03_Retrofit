@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Component_ACmotor" Id="{4bee0a47-7e8d-4a20-bf36-74643afc4427}" SpecialFunc="None">
+    <Declaration><![CDATA[// Function block for AC motors controlled with the LENZE d-31855 frequency inverter
+FUNCTION_BLOCK FB_Component_ACmotor IMPLEMENTS I_Component
+VAR_INPUT
+	sName			: STRING[50];
+	tTimeout		: TIME := T#0MS;
+END_VAR
+
+VAR_OUTPUT
+	eJogFreq		: E_LenzeJogFreq := E_LenzeJogFreq.FOFF;
+	
+	bEnabled     	: BOOL;
+	eState			: E_State := E_State.DISABLED;
+	sStatusText 	: STRING[100];
+END_VAR
+
+VAR_IN_OUT
+	bDeviceActive	: BOOL;	
+	bE1jog1			: BOOL;					// jog func b1
+	bE2jog2			: BOOL;					// jog func b2
+	bE3DCbrake		: BOOL;					// DC injection brake
+	eE4Direction	: BOOL;					// motor direction
+END_VAR
+
+VAR
+	eLastState		: E_State;
+	tTimeoutTimer	: TON;
+END_VAR
+
+
+VAR CONSTANT
+	DISABLED		: E_State := E_State.DISABLED;
+	READY			: E_State := E_State.READY;
+	BUSY			: E_State := E_State.BUSY;
+	DONE			: E_State := E_State.DONE;
+	HALTED			: E_State := E_State.HALTED;
+	TIMEOUT			: E_State := E_State.TIMEOUT;
+	
+	FOFF	: E_LenzeJogFreq := E_LenzeJogFreq.FOFF;
+	F1		: E_LenzeJogFreq := E_LenzeJogFreq.F1;
+	F2		: E_LenzeJogFreq := E_LenzeJogFreq.F2;
+	F3		: E_LenzeJogFreq := E_LenzeJogFreq.F3;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tTimeoutTimer(PT := tTimeout);
+
+CASE eState OF
+	DISABLED:	sStatusText := '';
+	
+	READY:	 	sStatusText := 'Motor not moving, waiting for instruction';
+				IF eJogFreq <> FOFF THEN
+					eState := BUSY;
+				END_IF
+				
+	BUSY: 		IF NOT bDeviceActive THEN
+					sStatusText := 'frequency inverter not active';
+				ELSE
+					CASE eJogFreq OF
+						FOFF: 	eState		:= E_State.TIMEOUT;		
+						F1: 	sStatusText := CONCAT('motor running ', CONCAT(SEL(eE4Direction = TRUE, 'CCW','CW'), ' at freq 1'));		
+						F2: 	sStatusText := CONCAT('motor running ', CONCAT(SEL(eE4Direction = TRUE, 'CCW','CW'), ' at freq 2'));				
+						F3: 	sStatusText := CONCAT('motor running ', CONCAT(SEL(eE4Direction = TRUE, 'CCW','CW'), ' at freq 3')); 	
+					END_CASE
+				END_IF
+	
+	TIMEOUT: 	sStatusText := 'motor timeout';
+				tTimeoutTimer(IN := TRUE);
+				
+				IF tTimeoutTimer.Q THEN
+					eState := E_State.DONE;
+				END_IF
+				
+	DONE: 		sStatusText := 'motor instruction done';
+				bE1jog1 	:= FALSE;
+				bE2jog2 	:= FALSE;
+				M_Resume();
+	
+	HALTED: 	sStatusText := 'motor halted';
+				bE1jog1		:= FALSE;
+				bE2jog2		:= FALSE;
+
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_Disable" Id="{71c72c1b-90db-4155-81a4-5bff4fcce209}">
+      <Declaration><![CDATA[METHOD M_Disable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+	bEnabled	:= FALSE;
+	eState		:= DISABLED;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{c92aa9f1-9d9c-44c7-a5b6-0e765f9c3f9f}">
+      <Declaration><![CDATA[METHOD M_Enable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	eState 		:= READY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{53708385-0949-4c5c-b3ef-98a2fb526cc6}">
+      <Declaration><![CDATA[METHOD M_Halt : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eLastState 	:= eState;
+eState 		:= HALTED;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Reset" Id="{5a44a633-eb63-43a4-a451-a200476d7f2f}">
+      <Declaration><![CDATA[METHOD M_Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// has no use here]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Resume" Id="{66616ade-f252-442d-bf57-ed976b2ae351}">
+      <Declaration><![CDATA[METHOD M_Resume : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eState OF
+	HALTED	: eState := eLastState;
+	DONE	: eState := READY;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetDir" Id="{d6a197ac-aaf3-4f2e-919c-b2334f169d78}">
+      <Declaration><![CDATA[METHOD M_SetDir : BOOL
+VAR_INPUT
+	Direction: E_RotationDirection;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eE4Direction := TO_BOOL(Direction);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetFreq" Id="{387ee47f-c4da-4cf1-a6b6-e28ea3f37257}">
+      <Declaration><![CDATA[METHOD M_SetFreq : BOOL
+VAR_INPUT
+	Frequency: E_LenzeJogFreq;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eJogFreq := Frequency;
+
+IF bDeviceActive THEN
+	CASE eJogFreq OF
+		FOFF: 	bE1jog1 	:= FALSE;
+				bE2jog2 	:= FALSE;
+				
+		F1: 	bE1jog1 	:= TRUE;
+				bE2jog2 	:= FALSE;
+				
+		F2: 	bE1jog1 	:= TRUE;
+				bE2jog2 	:= TRUE;
+
+		F3: 	bE1jog1 	:= FALSE;
+				bE2jog2 	:= TRUE;
+	END_CASE
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{88cf4fbd-bea8-4d67-8643-88a00f690975}">
+      <Declaration><![CDATA[METHOD M_Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState <> BUSY OR eState <> HALTED OR eState <> TIMEOUT THEN
+	eState := DONE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Component_ACmotor">
+      <LineId Id="211" Count="1" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="259" Count="2" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="278" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="287" Count="2" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="292" Count="1" />
+      <LineId Id="291" Count="0" />
+      <LineId Id="296" Count="2" />
+      <LineId Id="301" Count="1" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="51" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_Disable">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_Enable">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_Halt">
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_Reset">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_Resume">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_SetDir">
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_SetFreq">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="15" Count="2" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_ACmotor.M_Stop">
+      <LineId Id="5" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

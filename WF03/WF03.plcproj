@@ -37,6 +37,12 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_Components\FB_Component_ACmotor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FB_Components\FB_Component_DualValve.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FB_Components\FB_Component_InductiveSensor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -44,12 +50,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\COUNTER.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_Component_ACmotor.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_Component_DualValve.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_Component_ServoMotor.TcPOU">

@@ -5,7 +5,7 @@
 {attribute 'strict'}
 TYPE E_LenzeJogFreq :
 (
-	F0FF 	:= 0,
+	FOFF 	:= 0,
 	F1		:= 1,
 	F2		:= 2,
 	F3		:= 3
@@ -17,7 +17,7 @@ END_TYPE
         <o xml:space="preserve" t="TextListEnumerationTextListObject">
           <l n="TextList" t="ArrayList" cet="TextListRow">
             <o>
-              <v n="TextID">"F0FF"</v>
+              <v n="TextID">"FOFF"</v>
               <v n="TextDefault">"0"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
