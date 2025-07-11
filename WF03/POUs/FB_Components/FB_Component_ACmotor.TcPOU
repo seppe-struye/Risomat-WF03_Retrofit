@@ -75,6 +75,7 @@ CASE eState OF
 	DONE: 		sStatusText := 'motor instruction done';
 				bE1jog1 	:= FALSE;
 				bE2jog2 	:= FALSE;
+				tTimeoutTimer(IN := FALSE);
 				M_Resume();
 	
 	HALTED: 	sStatusText := 'motor halted';
@@ -210,6 +211,7 @@ END_IF]]></ST>
       <LineId Id="290" Count="0" />
       <LineId Id="292" Count="1" />
       <LineId Id="291" Count="0" />
+      <LineId Id="303" Count="0" />
       <LineId Id="296" Count="2" />
       <LineId Id="301" Count="1" />
       <LineId Id="299" Count="0" />

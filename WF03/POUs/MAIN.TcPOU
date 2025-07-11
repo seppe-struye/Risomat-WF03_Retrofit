@@ -3,13 +3,37 @@
   <POU Name="MAIN" Id="{6907ca3e-912a-490f-aa07-3ae958d9385e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-
+	fbPiston	: FB_Component_DualValveGuarded;
+	func		: INT;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[fbPiston(	sName			:= '',
+			tTimeout		:= T#10S,
+			bOutputA		:= GVL.bExtendWireHolderTransverse1,
+			bOutputB		:= GVL.bRetractWireHolderTransverse1,
+			bSensExtended 	:= GVL.bWireClampTransverse2Extended, 
+			bSensRetracted 	:= GVL.bWireClampTransverse2Retracted);
+			
+fbPiston.M_Enable();
+
+CASE func OF
+	1	: fbPiston.M_Extend();
+	2	: fbPiston.M_Retract();
+ELSE
+	RETURN;
+END_CASE]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="595" Count="0" />
+      <LineId Id="613" Count="2" />
+      <LineId Id="628" Count="1" />
+      <LineId Id="617" Count="1" />
+      <LineId Id="621" Count="0" />
+      <LineId Id="620" Count="0" />
+      <LineId Id="622" Count="0" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="626" Count="1" />
+      <LineId Id="623" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

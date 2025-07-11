@@ -19,6 +19,10 @@ VAR_OUTPUT
 END_VAR
 
 VAR
+	bStartTimeout	: BOOL;
+	tTimeoutTimer	: TON;
+	bLastOutputA	: BOOL;
+	bLastOutputB	: BOOL;
 	eLastState		: E_State;
 END_VAR
 
@@ -32,13 +36,24 @@ VAR CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[CASE eState OF
-	DISABLED: 	sStatusText := '';
-	READY: 		sStatusText := '';
+      <ST><![CDATA[tTimeoutTimer(PT := tTimeout);
+
+CASE eState OF
+	DISABLED: 	sStatusText := 'piston disabled';
+	READY: 		sStatusText := 'piston ready to operate';
 	BUSY: 		sStatusText := '';
-	TIMEOUT:	sStatusText := '';
-	DONE:		sStatusText := '';
-	HALTED:		sStatusText := '';
+	
+	TIMEOUT:	sStatusText := 'piston in timeout';
+				tTimeoutTimer(IN := TRUE);
+				
+				IF tTimeoutTimer.Q THEN
+					eState := E_State.DONE;
+				END_IF
+				
+	DONE:		sStatusText := 'piston done';
+				tTimeoutTimer(IN := FALSE);
+				M_Resume();
+	HALTED:		sStatusText := 'piston halted';
 END_CASE]]></ST>
     </Implementation>
     <Method Name="M_Disable" Id="{857ba533-460d-49df-a434-29ec9866f2c4}">
@@ -65,17 +80,44 @@ END_VAR
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_Extend" Id="{652675af-aaae-439e-b0a9-8329efd7407d}">
+      <Declaration><![CDATA[METHOD M_Extend : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
+	bOutputA	:= TRUE;
+	bOutputB	:= FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Halt" Id="{1ef68817-4258-41df-bb9a-e1887637bbb5}">
       <Declaration><![CDATA[METHOD M_Halt : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[bOutputA	:= FALSE;
-bOutputB	:= FALSE;
-eLastState 	:= eState;
-eState 		:= HALTED;
+        <ST><![CDATA[bOutputA		:= FALSE;
+bOutputB		:= FALSE;
+bLastOutputA	:= bOutputA;
+bLastOutputB	:= bOutputB;
+eLastState 		:= eState;
+eState 			:= HALTED;
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Hold" Id="{e1e0c979-5fbf-42d6-a4c4-75167087b8ec}">
+      <Declaration><![CDATA[METHOD M_Hold : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
+	bOutputA	:= FALSE;
+	bOutputB	:= FALSE;
+	eState 		:= TIMEOUT;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Reset" Id="{1ce6f44c-2ddc-4921-b544-bc588c6a8184}">
@@ -94,9 +136,24 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[CASE eState OF
-	HALTED	: eState := eLastState;
-	DONE	: eState := READY;
+	HALTED	: 	bOutputA	:= bLastOutputA;
+				bOutputB	:= bLastOutputB;
+				eState 		:= eLastState;
+				
+	DONE	: 	eState 		:= READY;
 END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Retract" Id="{9551191d-fe4d-4d72-b2a9-7e17fb7d2b9c}">
+      <Declaration><![CDATA[METHOD M_Retract : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
+	bOutputA	:= FALSE;
+	bOutputB	:= TRUE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Stop" Id="{49386caf-422f-4ba8-a140-e94b68e1642d}">
@@ -106,12 +163,25 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF eState <> BUSY OR eState <> HALTED OR eState <> TIMEOUT THEN
-	eState := DONE;
+	bOutputA	:= FALSE;
+	bOutputB	:= FALSE;
+	eState 		:= DONE;
 END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Component_DualValve">
-      <LineId Id="54" Count="6" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="54" Count="3" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="92" Count="3" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="60" Count="0" />
       <LineId Id="34" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Disable">
@@ -124,22 +194,43 @@ END_IF]]></ST>
       <LineId Id="8" Count="0" />
       <LineId Id="6" Count="1" />
     </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Extend">
+      <LineId Id="6" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Halt">
-      <LineId Id="10" Count="1" />
+      <LineId Id="10" Count="3" />
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Hold">
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Reset">
       <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Resume">
       <LineId Id="5" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>
+    <LineIds Name="FB_Component_DualValve.M_Retract">
+      <LineId Id="6" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Stop">
-      <LineId Id="5" Count="2" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
