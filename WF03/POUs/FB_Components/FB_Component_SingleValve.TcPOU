@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Component_SingleValve" Id="{e241cca9-8ad1-4d32-953d-80e7ad832e70}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Component_SingleValve IMPLEMENTS I_Component
+VAR_INPUT
+	sName			: STRING[50];
+	tTimeout		: TIME := T#0S;
+END_VAR
+
+VAR_IN_OUT
+	bOutput			: BOOL;
+END_VAR
+
+VAR_OUTPUT
+	bEnabled     	: BOOL;
+	eState			: E_State;
+	sStatusText 	: STRING[100];
+END_VAR
+
+VAR
+	bStartTimeout	: BOOL;
+	tTimeoutTimer	: TON;
+	eLastState		: E_State;
+END_VAR
+
+VAR CONSTANT
+	DISABLED		: E_State := E_State.DISABLED;
+	READY			: E_State := E_State.READY;
+	BUSY			: E_State := E_State.BUSY;
+	DONE			: E_State := E_State.DONE;
+	HALTED			: E_State := E_State.HALTED;
+	TIMEOUT			: E_State := E_State.TIMEOUT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_Disable" Id="{1878d8e2-077c-448c-beb4-b9a7557014d9}">
+      <Declaration><![CDATA[METHOD M_Disable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+	bEnabled	:= FALSE;
+	eState		:= DISABLED;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{5cc8179e-f2ed-4378-940f-13b994787def}">
+      <Declaration><![CDATA[METHOD M_Enable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	eState 		:= READY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Extend" Id="{452bb337-0657-46a1-ac4a-87cdd35da3f0}">
+      <Declaration><![CDATA[METHOD M_Extend : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
+	bOutput := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{6af66b53-6344-4d83-a0bf-1c140593c718}">
+      <Declaration><![CDATA[METHOD M_Halt : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eLastState 		:= eState;
+eState 			:= HALTED;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Reset" Id="{7ff3c80e-2751-4f36-9a49-853b4e802e98}">
+      <Declaration><![CDATA[METHOD M_Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// has no use here]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Resume" Id="{3c239849-5b94-4c0a-a1a6-a48d6466116b}">
+      <Declaration><![CDATA[METHOD M_Resume : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eState OF
+	HALTED	: eState := eLastState;
+	DONE	: eState := READY;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Retract" Id="{8624003f-ef96-48fe-897d-ce8559b8e08c}">
+      <Declaration><![CDATA[METHOD M_Retract : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
+	bOutput	:= FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{9a7b85bb-3be6-46bc-929c-f2bda9001586}">
+      <Declaration><![CDATA[METHOD M_Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState <> BUSY OR eState <> HALTED OR eState <> TIMEOUT THEN
+	bOutput	:= FALSE;
+	eState 	:= DONE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Component_SingleValve">
+      <LineId Id="64" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_SingleValve.M_Disable">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_SingleValve.M_Enable">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_Component_SingleValve.M_Extend">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_SingleValve.M_Halt">
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_SingleValve.M_Reset">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_SingleValve.M_Resume">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_SingleValve.M_Retract">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_SingleValve.M_Stop">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

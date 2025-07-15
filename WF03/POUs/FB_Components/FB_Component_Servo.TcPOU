@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Component_Servo" Id="{ffbd4ec0-98dd-4a8f-a9df-1ac783cdf63e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Component_Servo IMPLEMENTS I_Component
+VAR_INPUT
+	sName			: STRING[50];			
+	tTimeout		: TIME := T#0MS;
+END_VAR
+
+VAR_IN_OUT
+	aOutServo		: INT;
+END_VAR
+
+VAR_OUTPUT
+	bEnabled		: BOOL;
+	eState			: E_State := E_State.DISABLED;
+	sStatusText 	: STRING[100];
+END_VAR
+
+VAR
+	tTimeoutTimer	: TON;
+	eLastState		: E_State;
+END_VAR
+
+VAR CONSTANT
+	DISABLED	: E_State := E_State.DISABLED;
+	READY		: E_State := E_State.READY;
+	BUSY		: E_State := E_State.BUSY;
+	DONE		: E_State := E_State.DONE;
+	HALTED		: E_State := E_State.HALTED;
+	TIMEOUT		: E_State := E_State.TIMEOUT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_Disable" Id="{1162f5c2-57a8-43b1-b001-97555c860349}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Disable : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{0b6461d7-9c72-4480-b0c7-4f04c006cb47}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Enable : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{4d90e9ea-c4c4-4688-bc3f-883478b503e7}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Reset" Id="{65588943-8c9f-4d08-9d58-f2d9bbca6093}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Reset : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Resume" Id="{0ef55e00-fae7-4950-b428-9b3b80a98729}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Resume : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{4937a094-2c8a-434b-9e0b-55e8bd81c853}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Stop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Component_Servo">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Servo.M_Disable">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Servo.M_Enable">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Servo.M_Halt">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Servo.M_Reset">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Servo.M_Resume">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Component_Servo.M_Stop">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

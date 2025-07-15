@@ -98,10 +98,10 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[bOutputA		:= FALSE;
-bOutputB		:= FALSE;
-bLastOutputA	:= bOutputA;
+        <ST><![CDATA[bLastOutputA	:= bOutputA;
 bLastOutputB	:= bOutputB;
+bOutputA		:= FALSE;
+bOutputB		:= FALSE;
 eLastState 		:= eState;
 eState 			:= HALTED;
 ]]></ST>
@@ -199,7 +199,9 @@ END_IF]]></ST>
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Halt">
-      <LineId Id="10" Count="3" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="6" Count="0" />
