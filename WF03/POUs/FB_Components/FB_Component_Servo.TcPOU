@@ -37,6 +37,7 @@ VAR
 	uInitialRPM			: INT;
 	uTargetRPM			: INT;
 	uCurrRPM			: INT;
+	uSetRPM				: INT;
 	uRPMlimit			: INT := 0;
 	uAcceleration		: INT := 0;		// RPM/s
 	bDirection			: BOOL;			// FALSE = CW, TRUE = CCW
@@ -74,7 +75,7 @@ CASE eState OF
 						IF bEnableDrive AND NOT bRTO THEN
 							M_Reset();
 						END_IF
-						tAccelerationTimer(IN := FALSE);
+						//tAccelerationTimer(IN := FALSE);
 					HOMING:
 						eServoState := HOMING; // placeholder
 					HOMED:
@@ -84,16 +85,18 @@ CASE eState OF
 						IF uCurrRPM = uTargetRPM THEN
 							eServoState := HOLD;
 						ELSE
-							uCurrRPM := M_CalculateRPM(uTargetRPM := uTargetRPM, uInitialRPM := uInitialRPM, rElapsedTime := tAccelerationTimer.ET);
+							uSetRPM 	:= M_CalculateRPM(uTargetRPM := uTargetRPM, uInitialRPM := uInitialRPM, rElapsedTime := tAccelerationTimer.ET);
+							uAnalogOut 	:= REAL_TO_INT(((uSetRPM * rGearRatio) / uMaxRPMservo) * 32767);
 						END_IF
 					HOLD:
-						eServoState := HOLD; // placeholder
+						eServoState := HOLD;
 					RAMPDOWN:
 						tAccelerationTimer(IN := TRUE);
 						IF uCurrRPM = uTargetRPM THEN
 							eServoState := HOLD;
 						ELSE
-							uCurrRPM := M_CalculateRPM(uTargetRPM := uTargetRPM, uInitialRPM := uInitialRPM, rElapsedTime := tAccelerationTimer.ET);
+							uSetRPM 	:= M_CalculateRPM(uTargetRPM := uTargetRPM, uInitialRPM := uInitialRPM, rElapsedTime := tAccelerationTimer.ET);
+							uAnalogOut 	:= REAL_TO_INT(((uSetRPM * rGearRatio) / uMaxRPMservo) * 32767);
 						END_IF
 					FAULT:
 						eServoState := FAULT;
@@ -119,7 +122,7 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[uRPMdiff := REAL_TO_INT((TIME_TO_REAL(rElapsedTime) / 100) * uAcceleration);
+        <ST><![CDATA[uRPMdiff := REAL_TO_INT((TIME_TO_REAL(rElapsedTime) / 1000) * uAcceleration);
 
 CASE eServoState OF
 	RAMPUP:
@@ -136,7 +139,11 @@ END_CASE
 METHOD M_Disable : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+	bEnabled	:= FALSE;
+	bEnableDrive:= FALSE;
+	eState		:= DISABLED;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Enable" Id="{0b6461d7-9c72-4480-b0c7-4f04c006cb47}">
@@ -144,7 +151,11 @@ METHOD M_Disable : BOOL
 METHOD M_Enable : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	bEnableDrive:= TRUE;
+	eState 		:= READY;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Halt" Id="{4d90e9ea-c4c4-4688-bc3f-883478b503e7}">
@@ -152,7 +163,12 @@ METHOD M_Enable : BOOL
 METHOD M_Halt : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[eLastState 	:= eState;
+eState 		:= HALTED;
+
+uAnalogOut	:= 0;
+eServoState := FAULT;
+tAccelerationTimer(IN := FALSE);]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Reset" Id="{65588943-8c9f-4d08-9d58-f2d9bbca6093}">
@@ -185,11 +201,14 @@ END_VAR
       <Declaration><![CDATA[METHOD M_SetRPMlimit : BOOL
 VAR_INPUT
 	RPM 				: INT;
+END_VAR
+
+VAR
 	uMaxRPMafterGears	: INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[uMaxRPMafterGears 	:= REAL_TO_INT(INT_TO_REAL(uMaxRPMservo / rGearRatio));
+        <ST><![CDATA[uMaxRPMafterGears 	:= REAL_TO_INT(INT_TO_REAL(uMaxRPMservo) / rGearRatio);
 uRPMlimit 			:= SEL(RPM >= uMaxRPMafterGears, RPM, uMaxRPMafterGears);]]></ST>
       </Implementation>
     </Method>
@@ -202,15 +221,18 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
 	tAccelerationTimer(IN := FALSE);	// reset the timer
+	uTargetRPM 	:= SEL(RPM >= uRPMlimit, RPM, uRPMlimit);
+	uInitialRPM	:= uCurrRPM;
+	
 	IF uTargetRPM > uCurrRPM THEN
+		eState 		:= BUSY;
 		eServoState := RAMPUP;
 	ELSIF uTargetRPM < uCurrRPM THEN
+		eState 		:= BUSY;
 		eServoState := RAMPDOWN;
 	ELSE
 		eServoState := HOLD;
 	END_IF
-	uInitialRPM	:= uCurrRPM;
-	uTargetRPM 	:= SEL(RPM >= uRPMlimit, RPM, uRPMlimit);
 END_IF;]]></ST>
       </Implementation>
     </Method>
@@ -219,7 +241,10 @@ END_IF;]]></ST>
 METHOD M_Stop : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF eState <> BUSY OR eState <> HALTED OR eState <> TIMEOUT THEN
+	// reset all values to 0
+	eState := DONE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Component_Servo">
@@ -237,11 +262,13 @@ METHOD M_Stop : BOOL
       <LineId Id="104" Count="0" />
       <LineId Id="123" Count="2" />
       <LineId Id="127" Count="1" />
+      <LineId Id="141" Count="0" />
       <LineId Id="126" Count="0" />
       <LineId Id="105" Count="0" />
       <LineId Id="130" Count="0" />
       <LineId Id="106" Count="0" />
       <LineId Id="132" Count="4" />
+      <LineId Id="142" Count="0" />
       <LineId Id="131" Count="0" />
       <LineId Id="107" Count="0" />
       <LineId Id="137" Count="0" />
@@ -263,13 +290,23 @@ METHOD M_Stop : BOOL
       <LineId Id="15" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_Servo.M_Disable">
+      <LineId Id="7" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
       <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_Servo.M_Enable">
+      <LineId Id="7" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
       <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_Servo.M_Halt">
+      <LineId Id="7" Count="0" />
       <LineId Id="4" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="11" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_Servo.M_Reset">
       <LineId Id="4" Count="0" />
@@ -286,15 +323,20 @@ METHOD M_Stop : BOOL
     </LineIds>
     <LineIds Name="FB_Component_Servo.M_SetTargetRPM">
       <LineId Id="7" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="9" Count="1" />
-      <LineId Id="12" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="13" Count="2" />
       <LineId Id="11" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="5" Count="0" />
       <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_Servo.M_Stop">
+      <LineId Id="7" Count="2" />
       <LineId Id="4" Count="0" />
     </LineIds>
   </POU>
