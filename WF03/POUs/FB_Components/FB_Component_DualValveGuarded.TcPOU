@@ -5,11 +5,11 @@
 VAR_INPUT
 	sName			: STRING[50];
 	tTimeout		: TIME := T#0S;
-	bSensExtended	: BOOL;
-	bSensRetracted	: BOOL;
 END_VAR
 
 VAR_IN_OUT
+	bSensExtended	: BOOL;
+	bSensRetracted	: BOOL;
 	bOutputA		: BOOL;
 	bOutputB		: BOOL;
 END_VAR

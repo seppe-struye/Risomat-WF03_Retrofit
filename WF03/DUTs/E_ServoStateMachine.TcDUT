@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="E_ServoStateMachine" Id="{93d63c2e-23b5-46b1-b984-71c17c4b0e70}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ServoStateMachine :
+(
+	IDLE			:= 0,
+	HOMING          := 1,
+	HOMED           := 2,
+	RAMPUP          := 3,
+	HOLD            := 4,
+	RAMPDOWN        := 5,
+	FAULT			:= 6
+);
+END_TYPE
+
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

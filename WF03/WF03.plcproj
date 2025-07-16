@@ -18,6 +18,9 @@
     <LibraryReferences>{e0ee5530-6c22-4b55-a1f7-98c60b8ba613}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DUTs\E_ServoStateMachine.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\E_State.TcTLEO">
       <SubType>Code</SubType>
     </Compile>
