@@ -15,7 +15,8 @@ END_VAR
 
 VAR_OUTPUT
 	bEnabled     	: BOOL;
-	eState			: E_State;
+	eState			: E_State := E_State.DISABLED;
+	eNextState		: E_State := E_State.DISABLED;
 	sStatusText 	: STRING[100];
 	
 	bIsExtended		: BOOL;
@@ -59,6 +60,8 @@ Components[2] := fbReedRetracted;
 bIsExtended		:= fbReedExtended.bSensorActive;
 bIsRetracted	:= fbReedRetracted.bSensorActive;
 
+eState := eNextState;
+
 CASE eState OF
 	DISABLED: 	sStatusText := 'piston disabled';
 	READY: 		sStatusText :=  CONCAT(CONCAT(SEL(bIsExtended = TRUE, '', 'piston extended and '),SEL(bIsRetracted = TRUE, '', 'piston retracted and ')), 'ready to operate');
@@ -66,7 +69,7 @@ CASE eState OF
 	BUSY: 		IF bExtending THEN
 					sStatusText := 'piston extending';
 					IF fbReedExtended.bSensorActive THEN
-						eState := TIMEOUT;
+						eNextState := TIMEOUT;
 					ELSE
 						fbPiston.M_Extend();
 					END_IF
@@ -74,7 +77,7 @@ CASE eState OF
 				IF bRetracting THEN
 					sStatusText := 'piston retracting';
 					IF fbReedRetracted.bSensorActive THEN
-						eState := TIMEOUT;
+						eNextState := TIMEOUT;
 					ELSE
 						fbPiston.M_Retract();
 					END_IF
@@ -86,12 +89,9 @@ CASE eState OF
 				tTimeoutTimer(IN := TRUE);
 				
 				IF tTimeoutTimer.Q THEN
-					eState := E_State.DONE;
+					tTimeoutTimer(IN := FALSE);
+					eNextState := READY;
 				END_IF
-				
-	DONE:		sStatusText := 'piston done';
-				tTimeoutTimer(IN := FALSE);
-				M_Resume();
 				
 	HALTED:		sStatusText := 'piston halted';
 END_CASE]]></ST>
@@ -103,9 +103,9 @@ VAR
 	idx	: INT := 0;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+        <ST><![CDATA[IF eState = READY THEN
 	bEnabled	:= FALSE;
-	eState		:= DISABLED;
+	eNextState	:= DISABLED;
 	
 	FOR idx := 0 TO 2 DO
     	Components[idx].M_Disable();
@@ -123,7 +123,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF eState = DISABLED THEN
 	bEnabled	:= TRUE;
-	eState 		:= READY;
+	eNextState	:= READY;
 	
 	FOR idx := 0 TO 2 DO
     	Components[idx].M_Enable();
@@ -139,25 +139,25 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF eState = READY AND NOT fbReedExtended.bSensorActive THEN
 	bExtending 	:= TRUE;
-	eState 		:= BUSY;
+	eNextState	:= BUSY;
 END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Halt" Id="{11a97c53-cc9e-4a78-a566-da9303d32528}">
       <Declaration><![CDATA[{warning 'add method implementation '}
 METHOD M_Halt : BOOL
-]]></Declaration>
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[eLastState 		:= eState;
-eState 			:= HALTED;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="M_Reset" Id="{f461352e-bff4-4aff-aeeb-e74365824669}">
-      <Declaration><![CDATA[{warning 'add method implementation '}
-METHOD M_Reset : BOOL
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF eState <> HALTED AND eState <> DISABLED THEN
+	eLastState 		:= eState;
+	eNextState		:= HALTED;
+	FOR idx := 0 TO 2 DO
+		Components[idx].M_Halt();
+	END_FOR;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Resume" Id="{7dae0265-d6b8-4712-ba2c-690c76d5615a}">
@@ -168,14 +168,12 @@ VAR
 	idx: INT;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CASE eState OF
-	DISABLED:	eState 		:= eLastState;
-				FOR idx := 0 TO 2 DO
-					Components[idx].M_Resume();
-				END_FOR;
-				
-	DONE:		eState := READY;
-END_CASE]]></ST>
+        <ST><![CDATA[IF eState = HALTED THEN
+	eNextState := eLastState;
+	FOR idx := 0 TO 2 DO
+		Components[idx].M_Resume();
+	END_FOR;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Retract" Id="{e8c004e6-1cb6-4652-a159-4035bb0a34cc}">
@@ -186,31 +184,20 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF eState = READY AND NOT fbReedRetracted.bSensorActive  THEN
 	bRetracting	:= TRUE;
-	eState 		:= BUSY;
-END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="M_Stop" Id="{7a43f663-881f-42b2-a615-1ca06524386a}">
-      <Declaration><![CDATA[{warning 'add method implementation '}
-METHOD M_Stop : BOOL
-
-VAR
-	idx: INT := 0;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF eState = READY OR eState = DONE THEN
-	eState := DONE;
-	
-	FOR idx := 0 TO 2 DO
-    	Components[idx].M_Stop();
-	END_FOR;
+	eNextState	:= BUSY;
 END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Component_SingleValveGuarded">
-      <LineId Id="56" Count="19" />
+      <LineId Id="56" Count="11" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="68" Count="7" />
       <LineId Id="77" Count="7" />
-      <LineId Id="86" Count="19" />
+      <LineId Id="86" Count="11" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="104" Count="1" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_SingleValveGuarded.M_Disable">
@@ -232,31 +219,21 @@ END_IF]]></ST>
       <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_SingleValveGuarded.M_Halt">
+      <LineId Id="15" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="4" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Component_SingleValveGuarded.M_Reset">
-      <LineId Id="4" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_SingleValveGuarded.M_Resume">
-      <LineId Id="14" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="20" Count="1" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="22" Count="0" />
       <LineId Id="17" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="29" Count="1" />
     </LineIds>
     <LineIds Name="FB_Component_SingleValveGuarded.M_Retract">
       <LineId Id="6" Count="2" />
       <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Component_SingleValveGuarded.M_Stop">
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="10" Count="1" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="4" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

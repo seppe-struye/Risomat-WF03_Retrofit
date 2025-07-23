@@ -14,7 +14,8 @@ END_VAR
 
 VAR_OUTPUT
 	bEnabled     	: BOOL;
-	eState			: E_State;
+	eState			: E_State := E_State.DISABLED;
+	eNextState		: E_State := E_State.DISABLED;
 	sStatusText 	: STRING[100];
 END_VAR
 
@@ -38,6 +39,8 @@ END_VAR
     <Implementation>
       <ST><![CDATA[tTimeoutTimer(PT := tTimeout);
 
+eState := eNextState;
+
 CASE eState OF
 	DISABLED: 	sStatusText := 'piston disabled';
 	READY: 		sStatusText := 'piston ready to operate';
@@ -47,12 +50,10 @@ CASE eState OF
 				tTimeoutTimer(IN := TRUE);
 				
 				IF tTimeoutTimer.Q THEN
-					eState := E_State.DONE;
+					tTimeoutTimer(IN := FALSE);
+					eNextState := READY;
 				END_IF
-				
-	DONE:		sStatusText := 'piston done';
-				tTimeoutTimer(IN := FALSE);
-				M_Resume();
+
 	HALTED:		sStatusText := 'piston halted';
 END_CASE]]></ST>
     </Implementation>
@@ -62,9 +63,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+        <ST><![CDATA[IF eState = READY THEN
+	bOutputA	:= FALSE;
+	bOutputB	:= FALSE;
+
 	bEnabled	:= FALSE;
-	eState		:= DISABLED;
+	eNextState	:= DISABLED;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -76,7 +80,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF eState = DISABLED THEN
 	bEnabled	:= TRUE;
-	eState 		:= READY;
+	eNextState	:= READY;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -98,13 +102,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[bLastOutputA	:= bOutputA;
-bLastOutputB	:= bOutputB;
-bOutputA		:= FALSE;
-bOutputB		:= FALSE;
-eLastState 		:= eState;
-eState 			:= HALTED;
-]]></ST>
+        <ST><![CDATA[IF eState <> HALTED AND eState <> DISABLED THEN
+	bLastOutputA	:= bOutputA;
+	bLastOutputB	:= bOutputB;
+	M_Hold();
+	eLastState 		:= eState;
+	eNextState		:= HALTED;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Hold" Id="{e1e0c979-5fbf-42d6-a4c4-75167087b8ec}">
@@ -116,17 +120,8 @@ END_VAR
         <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
 	bOutputA	:= FALSE;
 	bOutputB	:= FALSE;
-	eState 		:= TIMEOUT;
+	eNextState	:= TIMEOUT;
 END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="M_Reset" Id="{1ce6f44c-2ddc-4921-b544-bc588c6a8184}">
-      <Declaration><![CDATA[METHOD M_Reset : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// has no use here]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Resume" Id="{9c7a6fbd-0999-4d44-a452-a166548a9afa}">
@@ -135,13 +130,11 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CASE eState OF
-	HALTED	: 	bOutputA	:= bLastOutputA;
-				bOutputB	:= bLastOutputB;
-				eState 		:= eLastState;
-				
-	DONE	: 	eState 		:= READY;
-END_CASE]]></ST>
+        <ST><![CDATA[IF eState = HALTED THEN
+	bOutputA	:= bLastOutputA;
+	bOutputB	:= bLastOutputB;
+	eNextState	:= eLastState;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Retract" Id="{9551191d-fe4d-4d72-b2a9-7e17fb7d2b9c}">
@@ -156,36 +149,27 @@ END_VAR
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Stop" Id="{49386caf-422f-4ba8-a140-e94b68e1642d}">
-      <Declaration><![CDATA[METHOD M_Stop : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF eState <> BUSY OR eState <> HALTED OR eState <> TIMEOUT THEN
-	bOutputA	:= FALSE;
-	bOutputB	:= FALSE;
-	eState 		:= DONE;
-END_IF]]></ST>
-      </Implementation>
-    </Method>
     <LineIds Name="FB_Component_DualValve">
       <LineId Id="86" Count="0" />
+      <LineId Id="137" Count="0" />
       <LineId Id="88" Count="0" />
+      <LineId Id="136" Count="0" />
       <LineId Id="54" Count="3" />
       <LineId Id="97" Count="0" />
       <LineId Id="58" Count="0" />
-      <LineId Id="92" Count="3" />
+      <LineId Id="92" Count="2" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="95" Count="0" />
       <LineId Id="91" Count="0" />
-      <LineId Id="96" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="99" Count="0" />
       <LineId Id="98" Count="0" />
       <LineId Id="60" Count="0" />
       <LineId Id="34" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Disable">
       <LineId Id="5" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>
@@ -199,9 +183,9 @@ END_IF]]></ST>
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Halt">
+      <LineId Id="22" Count="0" />
       <LineId Id="12" Count="1" />
       <LineId Id="18" Count="0" />
-      <LineId Id="17" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="6" Count="0" />
@@ -213,26 +197,15 @@ END_IF]]></ST>
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Component_DualValve.M_Reset">
-      <LineId Id="7" Count="0" />
-    </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Resume">
-      <LineId Id="5" Count="1" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="9" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="1" />
       <LineId Id="12" Count="0" />
-      <LineId Id="8" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_DualValve.M_Retract">
       <LineId Id="6" Count="2" />
       <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Component_DualValve.M_Stop">
-      <LineId Id="5" Count="1" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="7" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

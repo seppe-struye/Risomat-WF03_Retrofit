@@ -18,6 +18,7 @@ VAR_OUTPUT
 	
 	bEnabled		: BOOL;
 	eState			: E_State := E_State.DISABLED;
+	eNextState		: E_State := E_State.DISABLED;
 	sStatusText 	: STRING[100];
 END_VAR
 
@@ -43,13 +44,15 @@ END_VAR]]></Declaration>
       <ST><![CDATA[tDebounceTimer.PT 	:= tDebounce;
 tTimeoutTimer.PT	:= tTimeout;
 
+eState := eNextState;
+
 CASE eState OF
 	DISABLED:	sStatusText := 'Sensor disabled';
 				
 	READY:		sStatusText := 'Sensor idle, waiting for read';
 				IF bRawSignal <> bLastStableSignal THEN
-					bPendingSignal := bRawSignal;
-					eState := E_State.BUSY;
+					bPendingSignal 	:= bRawSignal;
+					eNextState 		:= BUSY;
 				ELSE
 					tTimeoutTimer(IN := FALSE);
 					tDebounceTimer(IN := FALSE);
@@ -58,11 +61,11 @@ CASE eState OF
 	BUSY:		sStatusText := 'Sensor is debouncing';
 				tDebounceTimer(IN := TRUE);
 				IF bRawSignal <> bPendingSignal THEN
-					eState := E_State.DONE;
+					eNextState := READY;
 				END_IF
 
 				IF tDebounceTimer.Q THEN
-					eState := E_State.TIMEOUT;
+					eNextState := TIMEOUT;
 				END_IF
 	TIMEOUT:	sStatusText := 'Sensor timeout';
 				tTimeoutTimer(IN := TRUE);
@@ -74,31 +77,28 @@ CASE eState OF
 				bSensorActive	  := bLastStableSignal;
 				
 				IF tTimeoutTimer.Q THEN
-					eState := E_State.DONE;
+					tTimeoutTimer(IN 	:= FALSE);
+					tDebounceTimer(IN 	:= FALSE);
+					eNextState := READY;
 				END_IF
-				
-	DONE:		sStatusText := 'Sensor done';
-				tTimeoutTimer(IN 	:= FALSE);
-				tDebounceTimer(IN 	:= FALSE);
-				M_Resume();
 				
 	HALTED:		sStatusText := 'Sensor halted';
 								
 END_CASE]]></ST>
     </Implementation>
-    <Method Name="M_Disable" Id="{ce483f63-421e-4cc7-a338-79c7ce19b42a}">
+    <Method Name="M_Disable" Id="{d6cf68d8-9f60-47bb-b089-45b48928a5e8}">
       <Declaration><![CDATA[METHOD M_Disable : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+        <ST><![CDATA[IF eState = READY THEN
 	bEnabled	:= FALSE;
-	eState		:= DISABLED;
+	eNextState	:= DISABLED;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Enable" Id="{17f5323c-6fea-416a-aa12-78ddce846612}">
+    <Method Name="M_Enable" Id="{524e1653-f530-422d-a41f-0647408228a0}">
       <Declaration><![CDATA[METHOD M_Enable : BOOL
 VAR_INPUT
 END_VAR
@@ -106,11 +106,11 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF eState = DISABLED THEN
 	bEnabled	:= TRUE;
-	eState 		:= READY;
+	eNextState	:= READY;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Halt" Id="{ea3eae80-b36e-45f4-85eb-513a6fe9b3c5}">
+    <Method Name="M_Halt" Id="{494a6087-5991-4256-8612-5cea40339b16}">
       <Declaration><![CDATA[METHOD M_Halt : BOOL
 VAR_INPUT
 END_VAR
@@ -118,20 +118,11 @@ END_VAR
       <Implementation>
         <ST><![CDATA[tDebounceTimer(IN := FALSE);
 eLastState 	:= eState;
-eState 		:= HALTED;
+eNextState	:= HALTED;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Reset" Id="{f0d056c8-f013-4165-a479-c059e9533dc2}">
-      <Declaration><![CDATA[METHOD M_Reset : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// has no use here]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="M_ResetEdge" Id="{d4c89250-40c1-4045-b7ff-1a3dc1b91235}">
+    <Method Name="M_ResetEdge" Id="{d930d200-1a55-4552-950b-8948510c31ac}">
       <Declaration><![CDATA[METHOD M_ResetEdge : BOOL
 VAR_INPUT
 END_VAR
@@ -141,31 +132,19 @@ END_VAR
 bFallingEdge	:= FALSE;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Resume" Id="{607169f2-38a4-462f-9420-45b057b60281}">
+    <Method Name="M_Resume" Id="{7531130b-fdb5-4514-869d-2c1295eddb8f}">
       <Declaration><![CDATA[METHOD M_Resume : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CASE eState OF
-	HALTED	: eState := eLastState;
-	DONE	: eState := READY;
-END_CASE]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="M_Stop" Id="{2eb0aca3-4e3c-42cc-8719-ec51b58ff659}">
-      <Declaration><![CDATA[METHOD M_Stop : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF eState <> BUSY OR eState <> HALTED OR eState <> TIMEOUT THEN
-	eState := DONE;
+        <ST><![CDATA[IF eState = HALTED THEN
+	eNextState := eLastState;
 END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Component_ReedSwitch">
-      <LineId Id="276" Count="43" />
+      <LineId Id="357" Count="42" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_Component_ReedSwitch.M_Disable">
@@ -184,19 +163,12 @@ END_IF]]></ST>
       <LineId Id="8" Count="0" />
       <LineId Id="6" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Component_ReedSwitch.M_Reset">
-      <LineId Id="7" Count="0" />
-    </LineIds>
     <LineIds Name="FB_Component_ReedSwitch.M_ResetEdge">
       <LineId Id="5" Count="1" />
     </LineIds>
     <LineIds Name="FB_Component_ReedSwitch.M_Resume">
-      <LineId Id="5" Count="1" />
-      <LineId Id="8" Count="0" />
       <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Component_ReedSwitch.M_Stop">
-      <LineId Id="5" Count="2" />
+      <LineId Id="12" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

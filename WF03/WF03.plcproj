@@ -70,6 +70,9 @@
     <Compile Include="POUs\FB_Component_ServoMotor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_Modules\FB_Module_Winder.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FB_Module_4posArm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -111,6 +114,7 @@
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\FB_Components" />
+    <Folder Include="POUs\FB_Modules" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>

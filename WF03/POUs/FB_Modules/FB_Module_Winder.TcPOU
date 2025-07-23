@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Module_Winder" Id="{d17abb6b-31a8-4810-b9da-6863089e5874}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_Winder IMPLEMENTS I_Module
+VAR_INPUT
+	sName			: STRING[50];
+	tTimeout		: TIME := T#0S;
+END_VAR
+
+VAR_OUTPUT
+	bEnabled     	: BOOL;
+	eState			: E_State;
+	sStatusText 	: STRING[100];
+END_VAR
+
+VAR
+	fbServo		: FB_Component_Servo;
+	fbSens		: FB_Component_InductiveSensor;
+	
+	Components	: ARRAY [0..4] OF I_Component;
+	eLastState	: E_State;
+	
+	uTargetRev	: INT;
+	uTargetRPM	: INT;
+END_VAR
+
+VAR CONSTANT
+	DISABLED		: E_State := E_State.DISABLED;
+	READY			: E_State := E_State.READY;
+	BUSY			: E_State := E_State.BUSY;
+	DONE			: E_State := E_State.DONE;
+	HALTED			: E_State := E_State.HALTED;
+	TIMEOUT			: E_State := E_State.TIMEOUT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbServo(	sName 			:= 'servo for winder',
+			tTimeout 		:= T#0S,
+			uMaxRPMservo 	:= 3000,
+			rGearRatio 		:= 2.25,
+			bRTO 			:= GVL.bReadyToOperate614,
+			bEnableDrive 	:= GVL.b614Enable,
+			bResetDrive 	:= GVL.bResetServosErrors,
+			uAnalogOut 		:= GVL.aOutServo2);
+			
+fbServo.M_SetAcceleration(uRPMperSec := 50);
+fbServo.M_SetRPMlimit(RPM := 700);
+			
+fbSens(		sName			:= 'homing sensor winder',
+			bRawSignal		:= GVL.bCoilRotate,
+			tDebounce		:= T#0MS,
+			tTimeout		:= T#0MS);
+			
+Components[0] := fbServo;
+Components[1] := fbSens;
+
+CASE eState OF
+	DISABLED: 	sStatusText := '';
+	READY:		sStatusText := '';
+	BUSY:		sStatusText := '';
+	TIMEOUT:	sStatusText := '';
+	DONE:		sStatusText := '';
+	HALTED:		sStatusText := '';
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_Disable" Id="{8933055d-a2cb-4fc1-aa01-77a5b80b6a6c}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Disable : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DONE OR eState = READY THEN
+	bEnabled	:= FALSE;
+	eState		:= DISABLED;
+	
+	FOR idx := 0 TO 1 DO
+    	Components[idx].M_Disable();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{6082cc02-2bb0-4e8a-810a-6521851f11e6}">
+      <Declaration><![CDATA[METHOD M_Enable : BOOL
+
+VAR
+	idx: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	eState 		:= READY;
+	
+	FOR idx := 0 TO 1 DO
+    	Components[idx].M_Enable();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{68ddbe78-e46b-4df5-acc1-13724ed772af}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eLastState 	:= eState;
+eState 		:= HALTED;
+
+FOR idx := 0 TO 1 DO
+	Components[idx].M_Halt();
+END_FOR;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Reset" Id="{4362b92c-e7f4-4590-90b8-65f31ac4a08e}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Reset : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Resume" Id="{06feb935-5165-45dd-884e-69426e2b81e0}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Resume : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR idx := 0 TO 2 DO
+	Components[idx].M_Resume();
+END_FOR;
+
+CASE eState OF
+	HALTED:		eState := eLastState;
+	DONE:		eState := READY;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Stop" Id="{18779a0f-36ff-42b1-b53a-5a3a571405f8}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Stop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Module_Winder">
+      <LineId Id="69" Count="0" />
+      <LineId Id="72" Count="6" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="79" Count="4" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="34" Count="2" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_Winder.M_Disable">
+      <LineId Id="5" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_Winder.M_Enable">
+      <LineId Id="5" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_Winder.M_Halt">
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_Winder.M_Reset">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_Winder.M_Resume">
+      <LineId Id="5" Count="1" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_Winder.M_Stop">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

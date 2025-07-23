@@ -25,20 +25,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="M_Reset" Id="{c113e5d9-f362-445c-b853-e7cacb7a7bec}">
-      <Declaration><![CDATA[METHOD M_Reset : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="M_Resume" Id="{f90a8a0b-dedc-4c7f-9fac-f4ef5a2a59aa}">
       <Declaration><![CDATA[METHOD M_Resume : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
-    <Method Name="M_Stop" Id="{4d9a5b11-9982-4955-97b8-a30e468e1c2f}">
-      <Declaration><![CDATA[METHOD M_Stop : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>

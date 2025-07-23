@@ -3,19 +3,31 @@
   <Itf Name="I_Module" Id="{94b91e81-af3e-49aa-a70a-2d93c908d3be}">
     <Declaration><![CDATA[INTERFACE I_Module
 ]]></Declaration>
-    <Method Name="M_Halt" Id="{664b8d50-4f11-45d6-8eab-1ee9624f4058}">
+    <Method Name="M_Disable" Id="{9d455aea-d16c-4993-aef2-edfd309c85e1}">
+      <Declaration><![CDATA[METHOD M_Disable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="M_Enable" Id="{60aed00a-9f4b-4bfc-974e-e2b799e644ad}">
+      <Declaration><![CDATA[METHOD M_Enable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="M_Halt" Id="{af289081-b4ef-4dbb-aaea-9315bbf0707b}">
       <Declaration><![CDATA[METHOD M_Halt : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="M_Start" Id="{2b9e4ebd-a92a-445a-8e12-55986d7babb9}">
-      <Declaration><![CDATA[METHOD M_Start : BOOL
+    <Method Name="M_Resume" Id="{c0b076b5-62b3-45d6-bdcb-99123d4836a0}">
+      <Declaration><![CDATA[METHOD M_Resume : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="M_Stop" Id="{2f2f21ce-729e-4f35-a88a-281b3ff78fd1}">
+    <Method Name="M_Stop" Id="{354a673f-7438-44a9-aec4-4b3aef05a311}">
       <Declaration><![CDATA[METHOD M_Stop : BOOL
 VAR_INPUT
 END_VAR

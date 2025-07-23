@@ -7,9 +7,41 @@ VAR
 	func		: INT;
 	target		: INT := 50;
 	set			: BOOL;
+	hal			: BOOL;
+	res			: BOOL;
+	
+	fbPiston	: FB_Component_DualValveGuarded;
+	bEn: BOOL;
+	
+	tTimer		: TON;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbServo(
+      <ST><![CDATA[fbPiston(sName := '',
+	tTimeout := T#5S,
+	bSensExtended := GVL.bWireClampTransverse2Extended,
+	bSensRetracted := GVL.bWireClampTransverse2Retracted,
+	bOutputA := GVL.bExtendWireHolderTransverse1,
+	bOutputB := GVL.bRetractWireHolderTransverse1);
+
+IF bEn AND NOT fbPiston.bEnabled THEN
+	fbPiston.M_Enable();
+	bEn := FALSE;
+END_IF 
+
+IF set THEN
+	CASE func OF
+		1: fbPiston.M_Extend();
+		2: fbPiston.M_Retract();
+		4: fbPiston.M_Halt();
+		5: fbPiston.M_Resume();
+		6: fbPiston.M_Disable();
+	END_CASE
+	set := FALSE;
+END_IF
+
+
+
+(*fbServo(
 	sName 			:= '',
 	tTimeout 		:= T#0MS,
 	uMaxRPMservo 	:= 3000,
@@ -21,24 +53,52 @@ END_VAR]]></Declaration>
 
 IF NOT fbServo.bEnabled THEN
 	fbServo.M_Enable();
-	
 END_IF
 
 IF set THEN
 	fbServo.M_SetAcceleration(uRPMperSec := 50);
-	fbServo.M_SetRPMlimit(RPM := 300);
+	fbServo.M_SetRPMlimit(RPM := 700);
 	fbServo.M_SetTargetRPM(target);
 	set := FALSE;
 END_IF
+
+IF NOT GVL.bFeedBackSafetyRelay THEN
+	IF NOT (fbServo.eState = E_State.HALTED) THEN
+		fbServo.M_Halt();
+		hal := FALSE;
+	END_IF
+	
+END_IF
+
+IF res THEN
+	fbServo.M_Resume();
+	res := FALSE;
+END_IF*)
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="717" Count="0" />
+      <LineId Id="743" Count="0" />
+      <LineId Id="761" Count="1" />
+      <LineId Id="744" Count="1" />
+      <LineId Id="697" Count="1" />
+      <LineId Id="747" Count="1" />
+      <LineId Id="746" Count="0" />
+      <LineId Id="759" Count="0" />
+      <LineId Id="750" Count="0" />
+      <LineId Id="749" Count="0" />
+      <LineId Id="751" Count="0" />
+      <LineId Id="753" Count="0" />
+      <LineId Id="755" Count="2" />
+      <LineId Id="752" Count="0" />
+      <LineId Id="760" Count="0" />
+      <LineId Id="758" Count="0" />
+      <LineId Id="699" Count="2" />
       <LineId Id="623" Count="0" />
       <LineId Id="634" Count="7" />
       <LineId Id="654" Count="0" />
       <LineId Id="644" Count="0" />
       <LineId Id="657" Count="0" />
-      <LineId Id="664" Count="0" />
       <LineId Id="656" Count="0" />
       <LineId Id="666" Count="0" />
       <LineId Id="659" Count="0" />
@@ -46,6 +106,19 @@ END_IF
       <LineId Id="667" Count="0" />
       <LineId Id="673" Count="0" />
       <LineId Id="668" Count="0" />
+      <LineId Id="683" Count="0" />
+      <LineId Id="682" Count="0" />
+      <LineId Id="684" Count="0" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="695" Count="0" />
+      <LineId Id="693" Count="0" />
+      <LineId Id="690" Count="0" />
+      <LineId Id="685" Count="0" />
+      <LineId Id="687" Count="0" />
+      <LineId Id="686" Count="0" />
+      <LineId Id="688" Count="0" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="689" Count="0" />
       <LineId Id="658" Count="0" />
     </LineIds>
   </POU>
