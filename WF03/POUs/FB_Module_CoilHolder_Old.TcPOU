@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
-  <POU Name="FB_Module_CoilHolder" Id="{40d3fec2-1e88-465a-be78-81dbe38d536d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_CoilHolder IMPLEMENTS I_Module
+  <POU Name="FB_Module_CoilHolder_Old" Id="{40d3fec2-1e88-465a-be78-81dbe38d536d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_CoilHolder_Old IMPLEMENTS I_Module
 VAR_INPUT
 	bEnable			: BOOL;
 END_VAR
@@ -287,7 +287,7 @@ END_VAR
         <ST><![CDATA[fbCoilLock.M_Extend();]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_Module_CoilHolder">
+    <LineIds Name="FB_Module_CoilHolder_Old">
       <LineId Id="9" Count="0" />
       <LineId Id="50" Count="0" />
       <LineId Id="52" Count="1" />
@@ -330,7 +330,7 @@ END_VAR
       <LineId Id="27" Count="0" />
       <LineId Id="133" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_CoilHolder.M_GoTo">
+    <LineIds Name="FB_Module_CoilHolder_Old.M_GoTo">
       <LineId Id="57" Count="0" />
       <LineId Id="77" Count="0" />
       <LineId Id="31" Count="0" />
@@ -363,10 +363,10 @@ END_VAR
       <LineId Id="12" Count="0" />
       <LineId Id="11" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_CoilHolder.M_Lock">
+    <LineIds Name="FB_Module_CoilHolder_Old.M_Lock">
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_CoilHolder.M_Unlock">
+    <LineIds Name="FB_Module_CoilHolder_Old.M_Unlock">
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

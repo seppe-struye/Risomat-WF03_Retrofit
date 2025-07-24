@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
-  <POU Name="FB_Module_4posArm" Id="{6e54f69a-70c3-4a40-bea0-3fce0ccc7cde}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_4posArm IMPLEMENTS  I_Module
+  <POU Name="FB_Module_4posArm_Old" Id="{6e54f69a-70c3-4a40-bea0-3fce0ccc7cde}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_4posArm_Old IMPLEMENTS  I_Module
 VAR_INPUT
 	bEnable			: BOOL;
 END_VAR
@@ -133,7 +133,7 @@ METHOD M_Stop : BOOL
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_Module_4posArm">
+    <LineIds Name="FB_Module_4posArm_Old">
       <LineId Id="9" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="20" Count="10" />
@@ -155,7 +155,7 @@ METHOD M_Stop : BOOL
       <LineId Id="77" Count="0" />
       <LineId Id="19" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Goto">
+    <LineIds Name="FB_Module_4posArm_Old.M_Goto">
       <LineId Id="5" Count="0" />
       <LineId Id="14" Count="0" />
       <LineId Id="9" Count="0" />
@@ -165,18 +165,18 @@ METHOD M_Stop : BOOL
       <LineId Id="12" Count="0" />
       <LineId Id="8" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Halt">
+    <LineIds Name="FB_Module_4posArm_Old.M_Halt">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Home">
+    <LineIds Name="FB_Module_4posArm_Old.M_Home">
       <LineId Id="5" Count="1" />
       <LineId Id="8" Count="2" />
       <LineId Id="7" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Start">
+    <LineIds Name="FB_Module_4posArm_Old.M_Start">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Stop">
+    <LineIds Name="FB_Module_4posArm_Old.M_Stop">
       <LineId Id="4" Count="0" />
     </LineIds>
   </POU>

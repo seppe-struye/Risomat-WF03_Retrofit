@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Module_4posArm" Id="{1f7187d1-db42-49a5-aba0-40c5809f75ca}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_4posArm IMPLEMENTS I_Module
+VAR_INPUT
+	sName			: STRING[50];
+	tTimeout		: TIME := T#0S;
+END_VAR
+
+VAR_IN_OUT
+END_VAR
+
+VAR_OUTPUT
+	bEnabled     	: BOOL;
+	eState			: E_State := E_State.DISABLED;
+	eNextState		: E_State := E_State.DISABLED;
+	nCurrentIndex	: INT;
+	sStatusText 	: STRING[100];
+END_VAR
+
+VAR
+	eLastState		: E_State;
+	tTimeoutTimer	: TON;
+	Components		: ARRAY [0..4] OF I_Component;	
+	
+	fbPiston		: FB_Component_DualValve;
+	fbIndex1		: FB_Component_ReedSwitch;
+	fbIndex2		: FB_Component_ReedSwitch;
+	fbIndex3		: FB_Component_ReedSwitch;
+	fbIndex4		: FB_Component_ReedSwitch;
+	
+	nTargetIndex	: INT;
+END_VAR
+
+VAR CONSTANT
+	DISABLED		: E_State := E_State.DISABLED;
+	READY			: E_State := E_State.READY;
+	BUSY			: E_State := E_State.BUSY;
+	HALTED			: E_State := E_State.HALTED;
+	TIMEOUT			: E_State := E_State.TIMEOUT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tTimeoutTimer(PT := tTimeout);
+
+fbPiston(sName := 'piston for 4 pos arm', bOutputA := GVL.bExtendWireHolder, bOutputB := GVL.bRetractWireHolder);
+fbIndex1(sName := '4pos arm index bit 1', bRawSignal := GVL.bWireHolderPos1);
+fbIndex2(sName := '4pos arm index bit 2', bRawSignal := GVL.bWireHolderPos2);
+fbIndex3(sName := '4pos arm index bit 3', bRawSignal := GVL.bWireHolderPos3);
+fbIndex4(sName := '4pos arm index bit 4', bRawSignal := GVL.bWireHolderPos4);
+
+Components[0] := fbPiston;
+Components[1] := fbIndex1;
+Components[2] := fbIndex2;
+Components[3] := fbIndex3;
+Components[4] := fbIndex4;
+
+IF fbIndex1.bSensorActive THEN
+	nCurrentIndex := 1;
+ELSIF fbIndex2.bSensorActive THEN
+	nCurrentIndex := 2;
+ELSIF fbIndex3.bSensorActive THEN
+	nCurrentIndex := 3;
+ELSIF fbIndex4.bSensorActive THEN
+	nCurrentIndex := 4;
+ELSE
+	nCurrentIndex := 0;
+END_IF
+
+eState := eNextState;
+
+// TEST IF WHEN HALTED INBETWEEN INDEXES IF IT FIXES ITSELF. IT SHOULD
+
+CASE eState OF
+	DISABLED: 	sStatusText := '4 pos arm disabled';
+	READY: 		sStatusText := CONCAT('4 pos arm is ready to operate and at index: ', INT_TO_STRING(nCurrentIndex));
+	
+	BUSY: 		IF nTargetIndex > nCurrentIndex THEN
+					fbPiston.M_Extend();
+					sStatusText := '4 pos arm is extending';
+				ELSIF	nTargetIndex < nCurrentIndex THEN
+					fbPiston.M_Retract();
+					sStatusText := '4 pos arm is retracting';
+				ELSE
+					fbPiston.M_Hold();
+					eNextState := TIMEOUT;
+				END_IF
+				
+	TIMEOUT:	sStatusText := '4 pos arm is in timeout';
+				tTimeoutTimer(IN := TRUE);
+				
+				IF tTimeoutTimer.Q THEN
+					tTimeoutTimer(IN := FALSE);
+					eNextState := READY;
+				END_IF
+				
+	HALTED:		sStatusText := '4 pos arm is halted';
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_Disable" Id="{7a36f3e0-8039-487d-8c76-0745080d18bf}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Disable : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY THEN
+	bEnabled	:= FALSE;
+	eNextState	:= DISABLED;
+	
+	FOR idx := 0 TO 4 DO
+    	Components[idx].M_Disable();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{ff2a3450-b774-4cd5-81bd-fef47a76db85}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Enable : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	eNextState	:= READY;
+	
+	FOR idx := 0 TO 4 DO
+    	Components[idx].M_Enable();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{432b8e32-bac0-45a2-ab91-6c38cbb44dca}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState <> HALTED AND eState <> DISABLED THEN
+	eLastState 		:= eState;
+	eNextState		:= HALTED;
+	FOR idx := 0 TO 4 DO
+		Components[idx].M_Halt();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Resume" Id="{193547a4-2baf-43ca-932b-a1fb8cedbe07}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Resume : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = HALTED THEN
+	eNextState := eLastState;
+	FOR idx := 0 TO 4 DO
+		Components[idx].M_Resume();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetTargetIndex" Id="{3a857418-dbec-49b5-969b-04c166ea6799}">
+      <Declaration><![CDATA[METHOD M_SetTargetIndex : BOOL
+VAR_INPUT
+	index : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
+	nTargetIndex 	:= index;
+	eNextState 		:= BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Module_4posArm">
+      <LineId Id="48" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="59" Count="2" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="66" Count="3" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="9" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="100" Count="4" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Disable">
+      <LineId Id="5" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Enable">
+      <LineId Id="5" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Halt">
+      <LineId Id="5" Count="5" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_Resume">
+      <LineId Id="5" Count="4" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_4posArm.M_SetTargetIndex">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

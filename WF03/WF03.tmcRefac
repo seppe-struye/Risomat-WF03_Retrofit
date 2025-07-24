@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="6e54f69a-70c3-4a40-bea0-3fce0ccc7cde">FB_MODULE_4POSARM</Type>
+      <From>FB_Module_4posArm</From>
+      <To>FB_Module_4posArm_Old</To>
+    </RenamedType>
+    <RenamedType>
+      <Type guid="40d3fec2-1e88-465a-be78-81dbe38d536d">FB_MODULE_COILHOLDER</Type>
+      <From>FB_Module_CoilHolder</From>
+      <To>FB_Module_CoilHolder_Old</To>
+    </RenamedType>
+  </Renames>
+</Refactors>

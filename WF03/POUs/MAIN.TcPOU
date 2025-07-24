@@ -10,7 +10,7 @@ VAR
 	hal			: BOOL;
 	res			: BOOL;
 	
-	fbPiston	: FB_Component_DualValveGuarded;
+	fbPiston	: FB_Component_SingleValveGuarded;
 	bEn: BOOL;
 	
 	tTimer		: TON;
@@ -18,10 +18,9 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[fbPiston(sName := '',
 	tTimeout := T#5S,
-	bSensExtended := GVL.bWireClampTransverse2Extended,
-	bSensRetracted := GVL.bWireClampTransverse2Retracted,
-	bOutputA := GVL.bExtendWireHolderTransverse1,
-	bOutputB := GVL.bRetractWireHolderTransverse1);
+	bSensExtended := GVL.bWirePusherEngaged,
+	bSensRetracted := GVL.bWirePusherDisengaged,
+	bOutput := GVL.bWirePusherForward);
 
 IF bEn AND NOT fbPiston.bEnabled THEN
 	fbPiston.M_Enable();
@@ -80,7 +79,7 @@ END_IF*)
       <LineId Id="717" Count="0" />
       <LineId Id="743" Count="0" />
       <LineId Id="761" Count="1" />
-      <LineId Id="744" Count="1" />
+      <LineId Id="744" Count="0" />
       <LineId Id="697" Count="1" />
       <LineId Id="747" Count="1" />
       <LineId Id="746" Count="0" />

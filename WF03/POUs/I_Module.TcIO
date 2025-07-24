@@ -27,11 +27,5 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="M_Stop" Id="{354a673f-7438-44a9-aec4-4b3aef05a311}">
-      <Declaration><![CDATA[METHOD M_Stop : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
   </Itf>
 </TcPlcObject>
