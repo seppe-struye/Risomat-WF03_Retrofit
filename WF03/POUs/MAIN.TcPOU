@@ -5,22 +5,21 @@
 VAR
 	fbServo		: FB_Component_Servo;
 	func		: INT;
-	target		: INT := 50;
+	target		: INT := 1;
 	set			: BOOL;
 	hal			: BOOL;
 	res			: BOOL;
 	
-	fbPiston	: FB_Component_SingleValveGuarded;
+	fbPiston	: FB_Module_ToolHolder;
 	bEn: BOOL;
 	
 	tTimer		: TON;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbPiston(sName := '',
-	tTimeout := T#5S,
-	bSensExtended := GVL.bWirePusherEngaged,
-	bSensRetracted := GVL.bWirePusherDisengaged,
-	bOutput := GVL.bWirePusherForward);
+      <ST><![CDATA[// GVL.bUnlockCoilHolder
+
+fbPiston(sName := '', tTimeout := T#5S);
+tTimer(PT := T#1S);
 
 IF bEn AND NOT fbPiston.bEnabled THEN
 	fbPiston.M_Enable();
@@ -29,15 +28,18 @@ END_IF
 
 IF set THEN
 	CASE func OF
-		1: fbPiston.M_Extend();
-		2: fbPiston.M_Retract();
-		4: fbPiston.M_Halt();
-		5: fbPiston.M_Resume();
-		6: fbPiston.M_Disable();
+			//tTimer(IN := TRUE);
+		2: fbPiston.M_Halt();
+		3: fbPiston.M_Resume();
+		4: fbPiston.M_Disable();
 	END_CASE
 	set := FALSE;
 END_IF
 
+IF tTimer.Q THEN
+	tTimer(IN := FALSE);
+	fbPiston.M_Halt();
+END_IF
 
 
 (*fbServo(
@@ -76,23 +78,26 @@ END_IF*)
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="794" Count="1" />
       <LineId Id="717" Count="0" />
-      <LineId Id="743" Count="0" />
-      <LineId Id="761" Count="1" />
-      <LineId Id="744" Count="0" />
+      <LineId Id="785" Count="0" />
       <LineId Id="697" Count="1" />
       <LineId Id="747" Count="1" />
       <LineId Id="746" Count="0" />
       <LineId Id="759" Count="0" />
       <LineId Id="750" Count="0" />
       <LineId Id="749" Count="0" />
-      <LineId Id="751" Count="0" />
-      <LineId Id="753" Count="0" />
+      <LineId Id="778" Count="0" />
       <LineId Id="755" Count="2" />
       <LineId Id="752" Count="0" />
       <LineId Id="760" Count="0" />
       <LineId Id="758" Count="0" />
-      <LineId Id="699" Count="2" />
+      <LineId Id="780" Count="0" />
+      <LineId Id="782" Count="0" />
+      <LineId Id="699" Count="0" />
+      <LineId Id="784" Count="0" />
+      <LineId Id="783" Count="0" />
+      <LineId Id="700" Count="1" />
       <LineId Id="623" Count="0" />
       <LineId Id="634" Count="7" />
       <LineId Id="654" Count="0" />

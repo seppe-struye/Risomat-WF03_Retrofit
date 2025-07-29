@@ -44,10 +44,38 @@ VAR CONSTANT
 	BUSY			: E_State := E_State.BUSY;
 	HALTED			: E_State := E_State.HALTED;
 	TIMEOUT			: E_State := E_State.TIMEOUT;
+	
+	CW				: E_RotationDirection := E_RotationDirection.CW;
+	CCW				: E_RotationDirection := E_RotationDirection.CCW;
+	
+	FOFF			: E_LenzeJogFreq := E_LenzeJogFreq.FOFF;
+	F1				: E_LenzeJogFreq := E_LenzeJogFreq.F1;
+	F2				: E_LenzeJogFreq := E_LenzeJogFreq.F2;
+	F3				: E_LenzeJogFreq := E_LenzeJogFreq.F3;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[tTimeoutTimer(PT := tTimeout);
+
+fbMotor(		sName := 'motor for coil holder', 
+				bDeviceActive 	:= GVL.bLenze1Relay, 
+				bE1jog1 		:= GVL.bLenze1JogBit1, 
+				bE2jog2 		:= GVL.bLenze1JogBit2, 
+				bE3DCbrake 		:= GVL.bLenze1InjectionBrake, 
+				eE4Direction	:= gvl.bLenze1Direction);
+				
+fbPistonLock(	sName := 'lock for coil holder',
+				bSensExtended := GVL.bCoilHolderUnlocked,
+				bSensRetracted := GVL.bCoilHolderLocked,
+				bOutput := GVL.bUnlockCoilHolder);
+
+fbIndexReadyBit(sName := 'index ready bit for coil holder', bRawSignal := GVL.bCoilHolderIndexReady);
+
+fbIndexBit1(sName := 'index bit 1 for coil holder', bRawSignal := GVL.bCoilHolderIndexBit1);
+fbIndexBit2(sName := 'index bit 2 for coil holder', bRawSignal := GVL.bCoilHolderIndexBit2);
+fbIndexBit3(sName := 'index bit 3 for coil holder', bRawSignal := GVL.bCoilHolderIndexBit3);
+fbIndexBit4(sName := 'index bit 4 for coil holder', bRawSignal := GVL.bCoilHolderIndexBit4);
+fbIndexBit5(sName := 'index bit 5 for coil holder', bRawSignal := GVL.bCoilHolderIndexBit5);
 
 Components[0] := fbMotor;
 Components[1] := fbPistonLock;
@@ -66,45 +94,43 @@ IF fbIndexReadyBit.bSensorActive THEN
 						   		   (TO_UINT(fbIndexBit1.bSensorActive)));
 END_IF
 
-eState := eNextState;
-
 CASE eState OF
 	DISABLED: 	sStatusText := 'Coil holder disabled';
 	READY: 		sStatusText := CONCAT('coil holder is ready to operate and at index: ', INT_TO_STRING(nCurrentIndex));
 	
-	BUSY: 		IF fbPistonLock.bIsRetracted THEN
+	BUSY: 		IF fbPistonLock.bIsExtended THEN
 					IF nTargetIndex = nCurrentIndex THEN
-						fbMotor.M_SetFreq(Frequency := E_LenzeJogFreq.FOFF);
-						fbPistonLock.M_Extend();
+						fbMotor.M_SetFreq(Frequency := FOFF);
+						fbPistonLock.M_Retract();
 						eNextState := TIMEOUT;
 					ELSE
 						cwSteps  := (nTargetIndex - nCurrentIndex + 24) MOD 24;
 						ccwSteps := (nCurrentIndex - nTargetIndex + 24) MOD 24;
 						
 						IF cwSteps <= ccwSteps THEN
-							fbMotor.M_SetDir(Direction := E_RotationDirection.CW);
+							fbMotor.M_SetDir(Direction := CW);
 							shortestDistance := cwSteps;
 						ELSE
-							fbMotor.M_SetDir(Direction := E_RotationDirection.CCW);	
+							fbMotor.M_SetDir(Direction := CCW);	
 							shortestDistance := ccwSteps;
 						END_IF
 						
 						IF nCurrentIndex <> nTargetIndex THEN
 							IF shortestDistance <= 1 THEN
-								fbMotor.M_SetFreq(Frequency := E_LenzeJogFreq.F1);	
+								fbMotor.M_SetFreq(Frequency := F1);	
 							ELSIF shortestDistance <= 2 THEN
-								fbMotor.M_SetFreq(Frequency := E_LenzeJogFreq.F2);
+								fbMotor.M_SetFreq(Frequency := F2);
 							ELSE
-								fbMotor.M_SetFreq(Frequency := E_LenzeJogFreq.F3);
+								fbMotor.M_SetFreq(Frequency := F3);
 							END_IF
 						ELSE
-							fbMotor.M_SetFreq(Frequency := E_LenzeJogFreq.FOFF);
-							fbPistonLock.M_Extend();
+							fbMotor.M_SetFreq(Frequency := FOFF);
+							fbPistonLock.M_Retract();
 							eNextState := TIMEOUT;
 						END_IF
 					END_IF
 				ELSE
-					fbPistonLock.M_Retract();
+					fbPistonLock.M_Extend();
 				END_IF
 	TIMEOUT:	sStatusText := 'Coil holder is in timeout';
 				tTimeoutTimer(IN := TRUE);
@@ -114,7 +140,8 @@ CASE eState OF
 					eNextState := READY;
 				END_IF
 	HALTED:		sStatusText := 'Coil holder halted';
-END_CASE]]></ST>
+END_CASE 
+eState := eNextState;]]></ST>
     </Implementation>
     <Method Name="M_Disable" Id="{31e718ad-ecf7-45b5-a41a-22eaeff727dd}">
       <Declaration><![CDATA[{warning 'add method implementation '}
@@ -200,14 +227,24 @@ END_IF]]></ST>
     </Method>
     <LineIds Name="FB_Module_CoilHolder">
       <LineId Id="57" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="142" Count="2" />
+      <LineId Id="146" Count="1" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="150" Count="2" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="155" Count="4" />
       <LineId Id="59" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="60" Count="5" />
       <LineId Id="67" Count="0" />
       <LineId Id="69" Count="6" />
       <LineId Id="68" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="54" Count="1" />
+      <LineId Id="55" Count="0" />
       <LineId Id="36" Count="2" />
       <LineId Id="79" Count="0" />
       <LineId Id="39" Count="0" />
@@ -235,6 +272,7 @@ END_IF]]></ST>
       <LineId Id="126" Count="5" />
       <LineId Id="40" Count="1" />
       <LineId Id="9" Count="0" />
+      <LineId Id="163" Count="0" />
     </LineIds>
     <LineIds Name="FB_Module_CoilHolder.M_Disable">
       <LineId Id="5" Count="6" />

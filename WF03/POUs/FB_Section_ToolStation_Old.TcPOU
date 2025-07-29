@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
-  <POU Name="FB_Section_ToolStation" Id="{511696e8-12f8-47da-a29f-70728d219f59}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Section_ToolStation IMPLEMENTS I_Section
+  <POU Name="FB_Section_ToolStation_Old" Id="{511696e8-12f8-47da-a29f-70728d219f59}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Section_ToolStation_Old IMPLEMENTS I_Section
 VAR_INPUT
 	bEnable					: BOOL;
 END_VAR
@@ -11,9 +11,9 @@ VAR
 	bTriggerToolRotation	: BOOL;
 	Modules					: ARRAY [0..2] OF I_Module;	
 
-	fbCoilHolder			: FB_Module_CoilHolder;
-	fbToolHolderDoor		: FB_Module_ToolHolderDoor;
-	fbToolHolder			: FB_Module_ToolHolder;
+	fbCoilHolder			: FB_Module_CoilHolder_Old;
+	fbToolHolderDoor		: FB_Module_ToolHolderDoor_Old;
+	fbToolHolder			: FB_Module_ToolHolder_Old;
 	
 	idx						: INT;
 END_VAR
@@ -102,7 +102,7 @@ METHOD M_Stop : BOOL
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_Section_ToolStation">
+    <LineIds Name="FB_Section_ToolStation_Old">
       <LineId Id="9" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="25" Count="0" />
@@ -119,23 +119,23 @@ METHOD M_Stop : BOOL
       <LineId Id="41" Count="0" />
       <LineId Id="18" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Section_ToolStation.M_CloseDoor">
+    <LineIds Name="FB_Section_ToolStation_Old.M_CloseDoor">
       <LineId Id="5" Count="2" />
     </LineIds>
-    <LineIds Name="FB_Section_ToolStation.M_Goto">
+    <LineIds Name="FB_Section_ToolStation_Old.M_Goto">
       <LineId Id="5" Count="2" />
     </LineIds>
-    <LineIds Name="FB_Section_ToolStation.M_Halt">
+    <LineIds Name="FB_Section_ToolStation_Old.M_Halt">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Section_ToolStation.M_OpenDoor">
+    <LineIds Name="FB_Section_ToolStation_Old.M_OpenDoor">
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Section_ToolStation.M_Start">
+    <LineIds Name="FB_Section_ToolStation_Old.M_Start">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Section_ToolStation.M_Stop">
+    <LineIds Name="FB_Section_ToolStation_Old.M_Stop">
       <LineId Id="4" Count="0" />
     </LineIds>
   </POU>

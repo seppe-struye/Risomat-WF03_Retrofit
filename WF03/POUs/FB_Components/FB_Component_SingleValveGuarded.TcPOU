@@ -24,6 +24,7 @@ VAR_OUTPUT
 END_VAR
 
 VAR
+	bTest			: BOOL;
 	bRetracting		: BOOL;
 	bExtending		: BOOL;
 	tTimeoutTimer	: TON;
@@ -192,7 +193,8 @@ END_IF]]></ST>
       <LineId Id="56" Count="11" />
       <LineId Id="151" Count="0" />
       <LineId Id="150" Count="0" />
-      <LineId Id="68" Count="7" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="69" Count="6" />
       <LineId Id="77" Count="7" />
       <LineId Id="86" Count="11" />
       <LineId Id="152" Count="0" />

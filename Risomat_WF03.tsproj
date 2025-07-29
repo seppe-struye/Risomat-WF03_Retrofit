@@ -112,7 +112,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A4152FC6-D2EC-43E0-9651-E43C12E257C3}" Name="WF03" PrjFilePath="WF03\WF03.plcproj" TmcFilePath="WF03\WF03.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{8D52F68B-6E15-FDDC-9813-86E10557F1BE}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WF03\WF03.tmc" TmcHash="{95FA550B-C669-0291-00FF-B6BC418C6DB7}">
 					<Name>WF03 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -227,13 +227,13 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.bToolHolderLocked</Name>
-							<Comment><![CDATA[ S5.11	term 3.11]]></Comment>
+							<Name>GVL.bToolHolderUnlocked</Name>
+							<Comment><![CDATA[ S5.12	term 3.11]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.bToolHolderUnlocked</Name>
-							<Comment><![CDATA[ S5.12	term 3.12]]></Comment>
+							<Name>GVL.bToolHolderLocked</Name>
+							<Comment><![CDATA[ S5.11	term 3.12]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -2600,8 +2600,8 @@
 				<Link VarA="PlcTask Inputs^GVL.bCoilHolderUnlocked" VarB="Channel 7^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bToolHolderIndexBit1" VarB="Channel 9^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bToolHolderIndexBit2" VarB="Channel 10^Input"/>
-				<Link VarA="PlcTask Inputs^GVL.bToolHolderLocked" VarB="Channel 11^Input"/>
-				<Link VarA="PlcTask Inputs^GVL.bToolHolderUnlocked" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^GVL.bToolHolderLocked" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^GVL.bToolHolderUnlocked" VarB="Channel 11^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bWireHolderPos1" VarB="Channel 13^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bWireHolderPos2" VarB="Channel 14^Input"/>
 				<Link VarA="PlcTask Inputs^GVL.bWireHolderPos3" VarB="Channel 15^Input"/>

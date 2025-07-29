@@ -36,8 +36,8 @@ VAR_GLOBAL
 	bCoilHolderLocked				AT %I*	: BOOL; // S5.7		term 3.8
 	bToolHolderIndexBit1			AT %I*	: BOOL; // S5.9		term 3.9
 	bToolHolderIndexBit2			AT %I*	: BOOL; // S5.10	term 3.10
-	bToolHolderLocked   			AT %I*	: BOOL; // S5.11	term 3.11
-	bToolHolderUnlocked				AT %I*	: BOOL; // S5.12	term 3.12
+	bToolHolderUnlocked				AT %I*	: BOOL; // S5.12	term 3.11
+	bToolHolderLocked   			AT %I*	: BOOL; // S5.11	term 3.12
 	bWireHolderPos1					AT %I*	: BOOL; // S5.13	term 3.13
 	bWireHolderPos2					AT %I*	: BOOL; // S5.14	term 3.14
 	bWireHolderPos3					AT %I*	: BOOL; // S5.15	term 3.15

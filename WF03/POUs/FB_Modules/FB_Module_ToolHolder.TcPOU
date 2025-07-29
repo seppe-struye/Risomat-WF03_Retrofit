@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Module_ToolHolder" Id="{6e95d812-a3e5-42d5-a01e-54fa76a7d7b7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolder IMPLEMENTS I_Module
+VAR_INPUT
+	sName					: STRING[50];
+	tTimeout				: TIME := T#0S;
+END_VAR
+
+VAR_IN_OUT
+END_VAR
+
+VAR_OUTPUT
+	bEnabled     	: BOOL;
+	eState			: E_State := E_State.DISABLED;
+	eNextState		: E_State := E_State.DISABLED;
+	sStatusText 	: STRING[100];
+END_VAR
+
+VAR
+	eLastState		: E_State;
+	tTimeoutTimer	: TON;
+	Components		: ARRAY [0..3] OF I_Component;
+	
+	fbACmotor			: FB_Component_ACmotor;
+	fbToolHolderLock	: FB_Component_SingleValveGuarded;
+	fbIndexBit1			: FB_Component_InductiveSensor;
+	fbIndexBit2			: FB_Component_InductiveSensor;
+	
+	bDir				: BOOL;
+	bToolRotating		: BOOL;
+END_VAR
+
+VAR CONSTANT
+	DISABLED		: E_State := E_State.DISABLED;
+	READY			: E_State := E_State.READY;
+	BUSY			: E_State := E_State.BUSY;
+	HALTED			: E_State := E_State.HALTED;
+	TIMEOUT			: E_State := E_State.TIMEOUT;
+	
+	FOFF			: E_LenzeJogFreq := E_LenzeJogFreq.FOFF;
+	F1				: E_LenzeJogFreq := E_LenzeJogFreq.F1;
+	F2				: E_LenzeJogFreq := E_LenzeJogFreq.F2;
+	F3				: E_LenzeJogFreq := E_LenzeJogFreq.F3;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tTimeoutTimer(PT := tTimeout);
+
+fbACmotor(	sName 			:= 'motor for tool rotating table',
+			bDeviceActive 	:= GVL.bLenze2Relay,
+			bE1jog1			:= GVL.bLenze2JogBit1,
+			bE2jog2			:= GVL.bLenze2JogBit2,
+			bE3DCbrake		:= GVL.bLenze2njectionBrake,
+			eE4Direction	:= bDir);
+
+fbToolHolderLock( 	sName			:= 'lock for rotating table',
+					bSensExtended	:= GVL.bToolHolderUnlocked,
+					bSensRetracted  := GVL.bToolHolderLocked,
+					bOutput			:= GVL.bUnlockToolHolder);
+					
+fbIndexBit1( sName := 'index bit 1 rotating table', bRawSignal := GVL.bToolHolderIndexBit1);
+fbIndexBit2( sName := 'index bit 2 rotating table', bRawSignal := GVL.bToolHolderIndexBit2);
+
+Components[0] := fbACmotor;
+Components[1] := fbToolHolderLock;
+Components[2] := fbIndexBit1;
+Components[3] := fbIndexBit2;
+			
+eState := eNextState;
+
+CASE eState OF
+	DISABLED: 	sStatusText := 'Tool rotating table is disabled';
+				GVL.bToolingRotationBtnLight := FALSE;
+	READY: 		sStatusText := 'Tool rotating table is ready to operate';
+				IF GVL.bToolingRotationBtn THEN
+					eNextState := BUSY;
+				END_IF
+				GVL.bToolingRotationBtnLight := FALSE;
+				
+	BUSY: 		IF fbToolHolderLock.bIsExtended THEN
+					fbACmotor.M_SetFreq(Frequency := F2);
+					
+					IF fbIndexBit1.bRisingEdge THEN											// when first index is triggered, switch to lowest speed
+						fbACmotor.M_SetFreq(Frequency := F1);
+					END_IF
+					
+					IF fbIndexBit2.bRisingEdge THEN											// when last index bit has triggered, turn of motor
+						fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.FOFF);
+						IF fbACmotor.eState <> E_State.BUSY THEN		// if motor is off, lock plate and signal operation done
+							fbToolHolderLock.M_Retract();
+							eNextState := TIMEOUT;	
+						END_IF;
+					END_IF
+				ELSE
+					fbToolHolderLock.M_Extend();
+					fbIndexBit1.M_ResetEdge();
+					fbIndexBit2.M_ResetEdge();
+				END_IF
+				GVL.bToolingRotationBtnLight := TRUE;
+				
+	TIMEOUT:	sStatusText := 'Tool rotating table is in timeout';
+				tTimeoutTimer(IN := TRUE);
+				
+				IF tTimeoutTimer.Q THEN
+					tTimeoutTimer(IN := FALSE);
+					eNextState := READY;
+				END_IF
+				GVL.bToolingRotationBtnLight := TRUE;
+				
+	HALTED:		sStatusText := 'Tool rotating table is halted';
+				GVL.bToolingRotationBtnLight := FALSE;
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_Disable" Id="{922b3178-4a81-404d-9211-01baaf5bc599}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Disable : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY THEN
+	bEnabled	:= FALSE;
+	eNextState	:= DISABLED;
+	
+	FOR idx := 0 TO 3 DO
+    	Components[idx].M_Disable();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{1a3cffe7-6fd0-46d7-a7fe-54c9b590e090}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Enable : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	eNextState	:= READY;
+	
+	FOR idx := 0 TO 3 DO
+    	Components[idx].M_Enable();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{8c347103-9150-419a-8dfe-dfee4f78b353}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState <> HALTED AND eState <> DISABLED THEN
+	eLastState 		:= eState;
+	eNextState		:= HALTED;
+	FOR idx := 0 TO 3 DO
+		Components[idx].M_Halt();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Resume" Id="{45d95b9d-c7cc-499d-a6a3-ed112c76138a}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Resume : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = HALTED THEN
+	eNextState := eLastState;
+	FOR idx := 0 TO 3 DO
+		Components[idx].M_Resume();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Module_ToolHolder">
+      <LineId Id="37" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="68" Count="3" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="5" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="82" Count="2" />
+      <LineId Id="38" Count="4" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="109" Count="3" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="105" Count="1" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="137" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="120" Count="4" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Disable">
+      <LineId Id="5" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Enable">
+      <LineId Id="5" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Halt">
+      <LineId Id="5" Count="5" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolder.M_Resume">
+      <LineId Id="5" Count="4" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

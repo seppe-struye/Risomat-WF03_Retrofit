@@ -40,6 +40,18 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\deprecated\FB_Module_4posArm_Old.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\deprecated\FB_Module_CoilHolder_Old.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\deprecated\FB_Module_ToolHolderDoor_Old.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\deprecated\FB_Module_ToolHolder_Old.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FB_Components\FB_Component_ACmotor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -67,31 +79,31 @@
     <Compile Include="POUs\FB_Components\FB_Component_SingleValveGuarded.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_Components\FB_Component_4posArm.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FB_Component_ServoMotor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FB_Modules\FB_Module_CoilHolder.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FB_Modules\FB_Module_ToolHolder.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FB_Modules\FB_Module_ToolHolderDoor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_Modules\FB_Module_Winder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_Module_4posArm.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_Module_CoilHolder.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FB_Module_CoilPusher.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_Module_ToolHolder.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_Module_ToolHolderDoor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_Section_Cutter.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_Section_ToolStation.TcPOU">
+    <Compile Include="POUs\FB_Section_ToolStation_Old.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\I_Component.TcIO">
@@ -115,6 +127,8 @@
     <Folder Include="GVLs" />
     <Folder Include="POUs\FB_Components" />
     <Folder Include="POUs\FB_Modules" />
+    <Folder Include="POUs\deprecated" />
+    <Folder Include="POUs\FB_Sections" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>

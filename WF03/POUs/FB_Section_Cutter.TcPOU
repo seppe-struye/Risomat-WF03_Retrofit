@@ -10,7 +10,7 @@ END_VAR
 VAR
 	Components				: ARRAY [0..12] OF I_Component;	
 
-	fbModule4posArm			: FB_Module_4posArm;
+	fbModule4posArm			: FB_Module_4posArm_Old;
 	fbWireCutter			: FB_Component_SingleValve;
 	
 	fbWirePusher			: FB_Component_SingleValve;

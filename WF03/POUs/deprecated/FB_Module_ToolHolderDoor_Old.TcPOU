@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
-  <POU Name="FB_Module_ToolHolderDoor" Id="{0d495e39-7cce-4183-99e5-9ac20d38389e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolderDoor IMPLEMENTS I_Module
+  <POU Name="FB_Module_ToolHolderDoor_Old" Id="{0d495e39-7cce-4183-99e5-9ac20d38389e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolderDoor_Old IMPLEMENTS I_Module
 VAR_INPUT
 	bEnable					: BOOL;
 END_VAR
@@ -106,7 +106,7 @@ END_VAR
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_Module_ToolHolderDoor">
+    <LineIds Name="FB_Module_ToolHolderDoor_Old">
       <LineId Id="9" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="19" Count="9" />
@@ -121,20 +121,20 @@ END_IF]]></ST>
       <LineId Id="48" Count="1" />
       <LineId Id="18" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolderDoor.M_Down">
+    <LineIds Name="FB_Module_ToolHolderDoor_Old.M_Down">
       <LineId Id="6" Count="6" />
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolderDoor.M_Halt">
+    <LineIds Name="FB_Module_ToolHolderDoor_Old.M_Halt">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolderDoor.M_Start">
+    <LineIds Name="FB_Module_ToolHolderDoor_Old.M_Start">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolderDoor.M_Stop">
+    <LineIds Name="FB_Module_ToolHolderDoor_Old.M_Stop">
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolderDoor.M_Up">
+    <LineIds Name="FB_Module_ToolHolderDoor_Old.M_Up">
       <LineId Id="5" Count="1" />
       <LineId Id="8" Count="0" />
       <LineId Id="13" Count="0" />

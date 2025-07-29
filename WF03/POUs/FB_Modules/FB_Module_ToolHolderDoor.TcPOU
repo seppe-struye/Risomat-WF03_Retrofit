@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Module_ToolHolderDoor" Id="{f6e0d382-5b3d-4622-b685-26d7f0ea4bef}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolderDoor IMPLEMENTS I_Module
+VAR_INPUT
+	sName			: STRING[50];
+	tTimeout		: TIME := T#0S;
+END_VAR
+
+VAR_IN_OUT
+END_VAR
+
+VAR_OUTPUT
+	bEnabled     	: BOOL;
+	eState			: E_State := E_State.DISABLED;
+	eNextState		: E_State := E_State.DISABLED;
+	sStatusText 	: STRING[100];
+	
+	bDoorOpening	: BOOL;
+	bDoorClosing	: BOOL;
+END_VAR
+
+VAR
+	eLastState		: E_State;
+	tTimeoutTimer	: TON;
+	Components		: ARRAY [0..0] OF I_Component;	
+	fbPiston		: FB_Component_DualValveGuarded;
+END_VAR
+
+VAR CONSTANT
+	DISABLED		: E_State := E_State.DISABLED;
+	READY			: E_State := E_State.READY;
+	BUSY			: E_State := E_State.BUSY;
+	HALTED			: E_State := E_State.HALTED;
+	TIMEOUT			: E_State := E_State.TIMEOUT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tTimeoutTimer(PT := tTimeout);
+
+fbPiston(	sName 			:= 'piston for toolholder door', 
+			bSensExtended 	:= GVL.bDoorToolHolderDown, 
+			bSensRetracted 	:= GVL.bDoorToolHolderLock, 
+			bOutputA 		:= GVL.bOpenToolCarrierDoor, 
+			bOutputB 		:= GVL.bCloseToolCarrierDoor); 
+			
+Components[0] := fbPiston;
+
+eState := eNextState;
+
+CASE eState OF
+	DISABLED: 	sStatusText := 'tool holder door is disabled';
+	READY: 		sStatusText := 'tool holder door is ready to operate';
+	BUSY: 		IF bDoorOpening THEN
+					sStatusText := 'door opening';
+					IF fbPiston.bIsExtended THEN
+						bDoorOpening 	:= FALSE;
+						eNextState 		:= TIMEOUT;
+					END_IF
+				ELSIF bDoorClosing THEN
+					sStatusText := 'door closing';
+					IF fbPiston.bIsRetracted THEN
+						bDoorClosing 	:= FALSE;
+						eNextState 		:= TIMEOUT;
+					END_IF
+				END_IF
+				
+	TIMEOUT:	sStatusText := 'Tool holder door is in timeout';
+				tTimeoutTimer(IN := TRUE);
+				
+				IF tTimeoutTimer.Q THEN
+					tTimeoutTimer(IN := FALSE);
+					eNextState := READY;
+				END_IF
+				
+	HALTED:		sStatusText := 'Tool holder door is halted';
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="M_Close" Id="{9e689a25-9200-4c78-98dc-720336982544}">
+      <Declaration><![CDATA[METHOD M_Close : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
+	eNextState 		:= BUSY;
+	bDoorClosing 	:= TRUE;
+	fbPiston.M_Retract();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Disable" Id="{94b3cc84-0f56-40ff-85e0-e7d35b21966a}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Disable : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY THEN
+	bEnabled	:= FALSE;
+	eNextState	:= DISABLED;
+	
+	FOR idx := 0 TO 0 DO
+    	Components[idx].M_Disable();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Enable" Id="{9c1b8958-2725-46b8-9769-57cd4e6b810e}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Enable : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = DISABLED THEN
+	bEnabled	:= TRUE;
+	eNextState	:= READY;
+	
+	FOR idx := 0 TO 0 DO
+    	Components[idx].M_Enable();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Halt" Id="{8e27d0bc-9254-4f5a-b07b-532e2d31a0bc}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Halt : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState <> HALTED AND eState <> DISABLED THEN
+	eLastState 		:= eState;
+	eNextState		:= HALTED;
+	FOR idx := 0 TO 0 DO
+		Components[idx].M_Halt();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Open" Id="{f29e878a-65dd-40bb-b2c6-4ae134b78d2b}">
+      <Declaration><![CDATA[METHOD M_Open : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = READY OR eState = BUSY THEN
+	eNextState 		:= BUSY;
+	bDoorOpening 	:= TRUE;
+	fbPiston.M_Extend();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Resume" Id="{0500d455-1511-46bd-a4db-9fb0599c6e7c}">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD M_Resume : BOOL
+
+VAR
+	idx: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF eState = HALTED THEN
+	eNextState := eLastState;
+	FOR idx := 0 TO 0 DO
+		Components[idx].M_Resume();
+	END_FOR;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Module_ToolHolderDoor">
+      <LineId Id="39" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="51" Count="5" />
+      <LineId Id="40" Count="5" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="61" Count="5" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Close">
+      <LineId Id="6" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Disable">
+      <LineId Id="5" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Enable">
+      <LineId Id="5" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Halt">
+      <LineId Id="5" Count="5" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Open">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Module_ToolHolderDoor.M_Resume">
+      <LineId Id="5" Count="4" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -3,32 +3,26 @@
   <Itf Name="I_Section" Id="{6d8ad716-c3e6-4f30-9312-f6cd6b03bf2c}">
     <Declaration><![CDATA[INTERFACE I_Section
 ]]></Declaration>
-    <Method Name="M_Disable" Id="{1f0ce810-e155-420c-ae0b-9627c63e6107}">
+    <Method Name="M_Disable" Id="{a60ce92c-1e11-4fea-8724-4e44f22174f4}">
       <Declaration><![CDATA[METHOD M_Disable : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="M_Enable" Id="{d03e8f6c-e5b8-4ad2-80dd-f1f1e3a8c7b7}">
+    <Method Name="M_Enable" Id="{1abed79e-d479-495f-9409-593be619701c}">
       <Declaration><![CDATA[METHOD M_Enable : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="M_Halt" Id="{ac535f1c-9809-4265-988f-585b7328cb9c}">
+    <Method Name="M_Halt" Id="{64580a34-9188-48cb-b644-64d01e97dc52}">
       <Declaration><![CDATA[METHOD M_Halt : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="M_Resume" Id="{9d63a066-a5be-4aed-ad59-3f949e46f4ef}">
+    <Method Name="M_Resume" Id="{6cb2453e-ab29-49dd-82d2-e5a13ae711e6}">
       <Declaration><![CDATA[METHOD M_Resume : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
-    <Method Name="M_Stop" Id="{85c5c423-9f45-4acd-bd8e-039994725eb5}">
-      <Declaration><![CDATA[METHOD M_Stop : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>

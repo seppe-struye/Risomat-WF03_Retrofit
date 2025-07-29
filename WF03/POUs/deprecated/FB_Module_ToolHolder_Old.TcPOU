@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
-  <POU Name="FB_Module_ToolHolder" Id="{b8caeb05-c46f-4fb5-a22c-c7afa5dce2ec}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolder IMPLEMENTS I_Module
+  <POU Name="FB_Module_ToolHolder_Old" Id="{b8caeb05-c46f-4fb5-a22c-c7afa5dce2ec}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_ToolHolder_Old IMPLEMENTS I_Module
 VAR_INPUT
 	bEnable					: BOOL;
 	bToolRotationBtn		: BOOL;
@@ -152,7 +152,7 @@ END_VAR]]></Declaration>
 	END_IF
 	
 	IF tTrigger2.Q THEN											// when last index bit has triggered, turn of motor
-		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.F0FF);
+		fbACmotor.M_SetFreq(Frequency := E_LenzeJogFreq.FOFF);
 		IF fbACmotor.eState <> E_State.BUSY THEN		// if motor is off, lock plate and signal operation done
 			M_lock();
 			M_Switch := TRUE;
@@ -176,7 +176,7 @@ END_VAR
 END_IF;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_Module_ToolHolder">
+    <LineIds Name="FB_Module_ToolHolder_Old">
       <LineId Id="9" Count="0" />
       <LineId Id="26" Count="6" />
       <LineId Id="22" Count="0" />
@@ -199,21 +199,21 @@ END_IF;]]></ST>
       <LineId Id="117" Count="0" />
       <LineId Id="23" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolder.M_Halt">
+    <LineIds Name="FB_Module_ToolHolder_Old.M_Halt">
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolder.M_Lock">
+    <LineIds Name="FB_Module_ToolHolder_Old.M_Lock">
       <LineId Id="9" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="13" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolder.M_Start">
+    <LineIds Name="FB_Module_ToolHolder_Old.M_Start">
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolder.M_Stop">
+    <LineIds Name="FB_Module_ToolHolder_Old.M_Stop">
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolder.M_Switch">
+    <LineIds Name="FB_Module_ToolHolder_Old.M_Switch">
       <LineId Id="5" Count="0" />
       <LineId Id="52" Count="0" />
       <LineId Id="13" Count="0" />
@@ -235,7 +235,7 @@ END_IF;]]></ST>
       <LineId Id="44" Count="1" />
       <LineId Id="7" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_ToolHolder.M_Unlock">
+    <LineIds Name="FB_Module_ToolHolder_Old.M_Unlock">
       <LineId Id="11" Count="1" />
       <LineId Id="9" Count="0" />
     </LineIds>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
-  <POU Name="FB_Module_4posArm" Id="{1f7187d1-db42-49a5-aba0-40c5809f75ca}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Module_4posArm IMPLEMENTS I_Module
+  <POU Name="FB_Component_4posArm" Id="{1f7187d1-db42-49a5-aba0-40c5809f75ca}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Component_4posArm IMPLEMENTS I_Component
 VAR_INPUT
 	sName			: STRING[50];
 	tTimeout		: TIME := T#0S;
@@ -63,8 +63,6 @@ ELSIF fbIndex3.bSensorActive THEN
 	nCurrentIndex := 3;
 ELSIF fbIndex4.bSensorActive THEN
 	nCurrentIndex := 4;
-ELSE
-	nCurrentIndex := 0;
 END_IF
 
 eState := eNextState;
@@ -179,7 +177,7 @@ END_VAR
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_Module_4posArm">
+    <LineIds Name="FB_Component_4posArm">
       <LineId Id="48" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="56" Count="1" />
@@ -188,7 +186,7 @@ END_IF]]></ST>
       <LineId Id="62" Count="0" />
       <LineId Id="66" Count="3" />
       <LineId Id="72" Count="0" />
-      <LineId Id="74" Count="9" />
+      <LineId Id="74" Count="7" />
       <LineId Id="73" Count="0" />
       <LineId Id="51" Count="1" />
       <LineId Id="98" Count="0" />
@@ -212,23 +210,23 @@ END_IF]]></ST>
       <LineId Id="40" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Disable">
+    <LineIds Name="FB_Component_4posArm.M_Disable">
       <LineId Id="5" Count="6" />
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Enable">
+    <LineIds Name="FB_Component_4posArm.M_Enable">
       <LineId Id="5" Count="6" />
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Halt">
+    <LineIds Name="FB_Component_4posArm.M_Halt">
       <LineId Id="5" Count="5" />
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_Resume">
+    <LineIds Name="FB_Component_4posArm.M_Resume">
       <LineId Id="5" Count="4" />
       <LineId Id="4" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Module_4posArm.M_SetTargetIndex">
+    <LineIds Name="FB_Component_4posArm.M_SetTargetIndex">
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="0" />
       <LineId Id="9" Count="0" />

@@ -2,14 +2,14 @@
 <Refactors>
   <Renames>
     <RenamedType>
-      <Type guid="6e54f69a-70c3-4a40-bea0-3fce0ccc7cde">FB_MODULE_4POSARM</Type>
+      <Type guid="1f7187d1-db42-49a5-aba0-40c5809f75ca">FB_MODULE_4POSARM</Type>
       <From>FB_Module_4posArm</From>
-      <To>FB_Module_4posArm_Old</To>
+      <To>FB_Component_4posArm</To>
     </RenamedType>
     <RenamedType>
-      <Type guid="40d3fec2-1e88-465a-be78-81dbe38d536d">FB_MODULE_COILHOLDER</Type>
-      <From>FB_Module_CoilHolder</From>
-      <To>FB_Module_CoilHolder_Old</To>
+      <Type guid="511696e8-12f8-47da-a29f-70728d219f59">FB_SECTION_TOOLSTATION</Type>
+      <From>FB_Section_ToolStation</From>
+      <To>FB_Section_ToolStation_Old</To>
     </RenamedType>
   </Renames>
 </Refactors>
